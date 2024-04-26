@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
    <meta charset="UTF-8">
    <meta name='description' content="玫枫跟打器, 跟打器, 五笔跟打器, 五笔练习">
@@ -9,48 +10,50 @@
    <link rel="shortcut icon" href="img/logo.png" type="image/png">
    <link rel="stylesheet" href="scss/typepad.css?v=2.68">
 </head>
+
 <body>
 
-<!--自定义文章内容-->
-<div class="editor hidden">
-   <div class="container">
-      <input oninput="editor.changeTitle(this)" class="editor-title" type="text" placeholder="标题">
-      <textarea oninput="editor.changeContent(this)" class="editor-content" name="editor" id="editor" cols="30" rows="10" placeholder="这里填写内容"></textarea>
-      <div class="editor-toolbar">
-         <div class="btn-group">
-            <div class="btn">总字数</div>
-            <div class="btn" id="countCharacter">0</div>
-         </div>
+   <!--自定义文章内容-->
+   <div class="editor hidden">
+      <div class="container">
+         <input oninput="editor.changeTitle(this)" class="editor-title" type="text" placeholder="标题">
+         <textarea oninput="editor.changeContent(this)" class="editor-content" name="editor" id="editor" cols="30"
+            rows="10" placeholder="这里填写内容"></textarea>
+         <div class="editor-toolbar">
+            <div class="btn-group">
+               <div class="btn">总字数</div>
+               <div class="btn" id="countCharacter">0</div>
+            </div>
 
-         <div class="btn-group">
-            <div class="btn">英文标点</div>
-            <div class="btn" id="countSymbolEn">0</div>
-         </div>
-         <div class="btn-group">
-            <div class="btn">中文标点</div>
-            <div class="btn" id="countSymbolZh">0</div>
-         </div>
+            <div class="btn-group">
+               <div class="btn">英文标点</div>
+               <div class="btn" id="countSymbolEn">0</div>
+            </div>
+            <div class="btn-group">
+               <div class="btn">中文标点</div>
+               <div class="btn" id="countSymbolZh">0</div>
+            </div>
 
-         <div class="btn-group">
-            <div class="btn" onclick="editor.trimReturn()">去除换行</div>
-            <div class="btn" onclick="editor.trimSpace()">去除空格</div>
-            <div class="btn" onclick="editor.toZH()">替换成中文标点</div>
-            <div class="btn" onclick="editor.toEN()">替换成英文标点</div>
-         </div>
+            <div class="btn-group">
+               <div class="btn" onclick="editor.trimReturn()">去除换行</div>
+               <div class="btn" onclick="editor.trimSpace()">去除空格</div>
+               <div class="btn" onclick="editor.toZH()">替换成中文标点</div>
+               <div class="btn" onclick="editor.toEN()">替换成英文标点</div>
+            </div>
 
-         <div class="btn-group">
-            <a target="_blank" href="http://kylebing.cn/tools/words" class="btn">《链接：文字标点处理工具》</a>
-         </div>
+            <div class="btn-group">
+               <a target="_blank" href="http://kylebing.cn/tools/words" class="btn">《链接：文字标点处理工具》</a>
+            </div>
 
-         <div class="btn-group">
-            <div class="btn" onclick="editor.hide()">取消</div>
-            <div class="btn" onclick="editor.done(engine)">确定</div>
+            <div class="btn-group">
+               <div class="btn" onclick="editor.hide()">取消</div>
+               <div class="btn" onclick="editor.done(engine)">确定</div>
+            </div>
          </div>
       </div>
    </div>
-</div>
 
-<div id="app">
+   <div id="app">
 
    <!--侧边信息栏-->
    <div class="side-menu">
@@ -92,110 +95,134 @@
          </div>
       </div>
 
-      <!--OPTIONS SETUP-->
-      <div class="info-panel">
-         <div class="switch-item">
-            <div class="label">暗黑模式</div>
-            <div class="wrapper">
-               <input id="darkMode" type="checkbox" onchange="engine.enterDarkMode()">
-               <label class="switch" for="darkMode"></label>
+         <!--OPTIONS SETUP-->
+         <div class="info-panel">
+            <div class="switch-item">
+               <div class="label">暗黑模式</div>
+               <div class="wrapper">
+                  <input id="darkMode" type="checkbox" onchange="engine.enterDarkMode()">
+                  <label class="switch" for="darkMode"></label>
+               </div>
+            </div>
+            <div class="switch-item">
+               <div class="label">全文乱序</div>
+               <div class="wrapper">
+                  <input id="shuffleMode" type="checkbox" onchange="engine.shuffleCurrentArticle()">
+                  <label class="switch" for="shuffleMode"></label>
+               </div>
+            </div>
+            <div class="switch-item">
+               <div class="label">自动发文</div>
+               <div class="wrapper">
+                  <input id="autoNext" type="checkbox" onchange="engine.autoNext()">
+                  <label class="switch" for="autoNext"></label>
+               </div>
+            </div>
+            <div class="switch-item">
+               <div class="label">重复：当前段</div>
+               <div class="wrapper">
+                  <input id="autoRepeat" type="checkbox" onchange="engine.autoRepeat()">
+                  <label class="switch" for="autoRepeat"></label>
+               </div>
+            </div>
+            <div class="switch-item hidden" id="panelRepeatShuffle">
+               <div class="label">重复：乱序</div>
+               <div class="wrapper">
+                  <input id="shuffleRepeat" type="checkbox" onchange="engine.shuffleRepeat()">
+                  <label class="switch" for="shuffleRepeat"></label>
+               </div>
+            </div>
+            <div class="switch-item">
+               <div class="label">大单字</div>
+               <div class="wrapper">
+                  <input id="bigCharacter" type="checkbox" onchange="engine.bigCharacter()">
+                  <label class="switch" for="bigCharacter"></label>
+               </div>
+            </div>
+            <div class="switch-item">
+               <div class="label">历史样式</div>
+               <div class="wrapper">
+                  <input id="historyListMode" type="checkbox" onchange="engine.historyListMode()">
+                  <label class="switch" for="historyListMode"></label>
+               </div>
             </div>
          </div>
-         <div class="switch-item">
-            <div class="label">全文乱序</div>
-            <div class="wrapper">
-               <input id="shuffleMode" type="checkbox" onchange="engine.shuffleCurrentArticle()">
-               <label class="switch" for="shuffleMode"></label>
-            </div>
-         </div>
-         <div class="switch-item">
-            <div class="label">自动发文</div>
-            <div class="wrapper">
-               <input id="autoNext" type="checkbox" onchange="engine.autoNext()">
-               <label class="switch" for="autoNext"></label>
-            </div>
-         </div>
-         <div class="switch-item">
-            <div class="label">重复：当前段</div>
-            <div class="wrapper">
-               <input id="autoRepeat" type="checkbox" onchange="engine.autoRepeat()">
-               <label class="switch" for="autoRepeat"></label>
-            </div>
-         </div>
-         <div class="switch-item hidden" id="panelRepeatShuffle">
-            <div class="label">重复：乱序</div>
-            <div class="wrapper">
-               <input id="shuffleRepeat" type="checkbox" onchange="engine.shuffleRepeat()">
-               <label class="switch" for="shuffleRepeat"></label>
-            </div>
-         </div>
-         <div class="switch-item">
-            <div class="label">大单字</div>
-            <div class="wrapper">
-               <input id="bigCharacter" type="checkbox" onchange="engine.bigCharacter()">
-               <label class="switch" for="bigCharacter"></label>
-            </div>
-         </div>
-         <div class="switch-item">
-            <div class="label">历史样式</div>
-            <div class="wrapper">
-               <input id="historyListMode" type="checkbox" onchange="engine.historyListMode()">
-               <label class="switch" for="historyListMode"></label>
-            </div>
-         </div>
-      </div>
 
-      <!--HELP INFO : KEYS-->
-      <div class="key-info hidden info-panel">
-         <div class="key-info-item word-all">
-            <div>全部按键</div>
-            <div><p></p></div>
+         <!--HELP INFO : KEYS-->
+         <div class="key-info hidden info-panel">
+            <div class="key-info-item word-all">
+               <div>全部按键</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item word-az">
+               <div>A-Z</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item word-space">
+               <div>空格</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item word-backspace">
+               <div>回删</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item word-number">
+               <div>数字</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item hidden word-function">
+               <div>功能键</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item hidden word-shift">
+               <div>Shift</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item hidden word-meta">
+               <div>Command（⌘）</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item hidden word-alt">
+               <div>Option</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item hidden word-ctrl">
+               <div>Control</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item word-semicolon">
+               <div>;</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="key-info-item word-quot">
+               <div>'</div>
+               <div>
+                  <p></p>
+               </div>
+            </div>
          </div>
-         <div class="key-info-item word-az">
-            <div>A-Z</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item word-space">
-            <div>空格</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item word-backspace">
-            <div>回删</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item word-number">
-            <div>数字</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item hidden word-function">
-            <div>功能键</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item hidden word-shift">
-            <div>Shift</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item hidden word-meta">
-            <div>Command（⌘）</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item hidden word-alt">
-            <div>Option</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item hidden word-ctrl">
-            <div>Control</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item word-semicolon">
-            <div>;</div>
-            <div><p></p></div>
-         </div>
-         <div class="key-info-item word-quot">
-            <div>'</div>
-            <div><p></p></div>
-         </div>
-      </div>
 
 
       <!--SCORE CHART-->
@@ -397,7 +424,7 @@
             <a target="_blank" href="https://github.com/KyleBing/rime-wubi86-jidian">极点码表方案</a></p>
       </div>
 
-   </div>
+      </div>
 
    <!--内容区-->
    <div class="type-pad-container">
@@ -450,11 +477,11 @@
          </div>
 
 
-         <!--极简模式-->
-         <div class="btn-group">
-            <div class="btn hidden-sm" onclick="engine.enterStandAloneMode()" title="极简模式">极简模式</div>
+            <!--极简模式-->
+            <div class="btn-group">
+               <div class="btn hidden-sm" onclick="engine.enterStandAloneMode()" title="极简模式">极简模式</div>
+            </div>
          </div>
-      </div>
 
 
       <!--手机端速度-->
@@ -487,23 +514,23 @@
             </div>
          </div>
 
-         <!--对照区-->
-         <div class="template-container">
-            <p class="text"></p>
-         </div>
+            <!--对照区-->
+            <div class="template-container">
+               <p class="text"></p>
+            </div>
 
-         <!--打字区-->
-         <div class="typing-container">
-            <label for="pad" class="hidden"></label>
-            <textarea class="text" id="pad" rows="3"></textarea>
+            <!--打字区-->
+            <div class="typing-container">
+               <label for="pad" class="hidden"></label>
+               <textarea class="text" id="pad" rows="3"></textarea>
+            </div>
+            <div class="standalone-speed-info">
+               <div class="speed">0</div>
+               <div class="count-key-rate">0</div>
+               <div class="count-key-length">0</div>
+               <div class="count-key-backspace">0</div>
+            </div>
          </div>
-         <div class="standalone-speed-info">
-            <div class="speed">0</div>
-            <div class="count-key-rate">0</div>
-            <div class="count-key-length">0</div>
-            <div class="count-key-backspace">0</div>
-         </div>
-      </div>
 
       <!-- 跟打记录 - 新 -->
       <div class="record-container hidden">
@@ -540,28 +567,31 @@
       </div>
    </div>
 
-   <!--进入全屏按钮-->
-   <div class="full-screen full-screen-btn" onclick="enterFullScreenMode()">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABeCAYAAACq0qNuAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAXqADAAQAAAABAAAAXgAAAADsPCiCAAABm0lEQVR4Ae3cQWoCARQD0Np7CT16wYO129lMdpnI+FwJnyb2NYuC6OPrpo/n8+fvnX+173d+cXd+beBHf13w4EcCo1qLH8E/Rr0fU3v235XFjyYAHvxIYFRr8eBHAqNaiwc/EhjVWjz4kcCo1uLBjwRGtRYPfiQwqrV48COBUa3Fgx8JjGotHvxIYFRr8eBHAqNaiwc/EhjVWjz4kcCo1uLBjwRGtRYPfiQwqrV48COBUa3Fgx8JqCVAgAABAgQIECBAgAABAgQIECBAgMBHCTzOvk/l9fr1XTbFKXgjpIibosEnneINfBE3RYNPOsUb+CJuigafdIo38EXcFA0+6RRv4Iu4KRp80inewBdxUzT4pFO8gS/ipmjwSad4A1/ETdHgk07xBr6Im6LBJ53iDXwRN0WDTzrFG/gibooGn3SKN/BF3BQNPukUb+CLuCkafNIp3sAXcVM0+KRTvIEv4qZo8EmneANfxE3R4JNO8Qa+iJuiTz8Rkn7oyttdP5li8Veu6NAF/oBx5VPwV2ofusAfMK58Cv5K7UPXPznoDA8I21eUAAAAAElFTkSuQmCC" alt="fullscreen-button" title="进入全屏模式">
-   </div>
+      <!--进入全屏按钮-->
+      <div class="full-screen full-screen-btn" onclick="enterFullScreenMode()">
+         <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABeCAYAAACq0qNuAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAXqADAAQAAAABAAAAXgAAAADsPCiCAAABm0lEQVR4Ae3cQWoCARQD0Np7CT16wYO129lMdpnI+FwJnyb2NYuC6OPrpo/n8+fvnX+173d+cXd+beBHf13w4EcCo1qLH8E/Rr0fU3v235XFjyYAHvxIYFRr8eBHAqNaiwc/EhjVWjz4kcCo1uLBjwRGtRYPfiQwqrV48COBUa3Fgx8JjGotHvxIYFRr8eBHAqNaiwc/EhjVWjz4kcCo1uLBjwRGtRYPfiQwqrV48COBUa3Fgx8JqCVAgAABAgQIECBAgAABAgQIECBAgMBHCTzOvk/l9fr1XTbFKXgjpIibosEnneINfBE3RYNPOsUb+CJuigafdIo38EXcFA0+6RRv4Iu4KRp80inewBdxUzT4pFO8gS/ipmjwSad4A1/ETdHgk07xBr6Im6LBJ53iDXwRN0WDTzrFG/gibooGn3SKN/BF3BQNPukUb+CLuCkafNIp3sAXcVM0+KRTvIEv4qZo8EmneANfxE3R4JNO8Qa+iJuiTz8Rkn7oyttdP5li8Veu6NAF/oBx5VPwV2ofusAfMK58Cv5K7UPXPznoDA8I21eUAAAAAElFTkSuQmCC"
+            alt="fullscreen-button" title="进入全屏模式">
+      </div>
 
-   <!--TIPS-->
-   <p class="full-screen full-screen-tip hidden">Esc 退出全屏模式</p>
-</div>
+      <!--TIPS-->
+      <p class="full-screen full-screen-tip hidden">Esc 退出全屏模式</p>
+   </div>
 
 <script src="js/require_v2.3.6.js"></script>
 <script src="js/typepad.js?v=2.68"></script>
 
-<script>
-   setTimeout(() => {
-      if (!/^http:\/\/(a\.kylebing\.cn|localhost|192\.168\.\d{1,3}\.\d{1,3})/i.test(location.href)) {
-         let hm = document.createElement("script");
-         hm.src = "https://hm.baidu.com/hm.js?68ab092f69605b8ce99f90c7f1218de3";
-         let s = document.getElementsByTagName("script")[0];
-         s.parentNode.insertBefore(hm, s);
-      }
-   }, 1000)
-</script>
+   <script>
+      setTimeout(() => {
+         if (!/^http:\/\/(a\.kylebing\.cn|localhost|192\.168\.\d{1,3}\.\d{1,3})/i.test(location.href)) {
+            let hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?68ab092f69605b8ce99f90c7f1218de3";
+            let s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+         }
+      }, 1000)
+   </script>
 
 </body>
+
 </html>
