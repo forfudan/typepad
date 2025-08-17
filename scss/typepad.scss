@@ -284,7 +284,23 @@ $colors  : (
     font-size: 14px;
     font-weight: bold;
     color: #495057;
+    margin-bottom: 8px;
+  }
+  
+  .codetable-description {
+    font-size: 13px;
+    color: #6c757d;
     margin-bottom: 10px;
+    line-height: 1.4;
+    
+    a {
+      color: #007bff;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
   
   .codetable-content {

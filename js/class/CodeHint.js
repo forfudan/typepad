@@ -7,7 +7,7 @@ define([], function() {
         constructor() {
             this.codeTable = new Map(); // 存储码表数据
             this.isLoaded = false;
-            this.currentTableName = '宇浩日月.txt'; // 当前码表名称
+            this.currentTableName = '宇浩日月方案'; // 当前码表名称
             this.currentCharElement = document.querySelector('.current-char');
             this.codeListElement = document.querySelector('.code-list');
             this.currentTableElement = document.querySelector('.current-table');
@@ -141,15 +141,17 @@ define([], function() {
          */
         async loadDefaultCodeTable() {
             try {
-                const response = await fetch('public/宇浩日月.txt');
+                // 从GitHub加载宇浩输入法日月方案码表
+                const response = await fetch('https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt');
                 const text = await response.text();
                 this.parseCodeTable(text);
                 this.isLoaded = true;
+                this.currentTableName = '宇浩日月方案';
                 this.updateCurrentTableDisplay();
                 console.log('码表加载完成，共', this.codeTable.size, '条记录');
             } catch (error) {
                 console.error('加载码表失败:', error);
-                this.showMessage('默认码表加载失败', 'error');
+                this.showMessage('默认码表加载失败，请检查网络连接', 'error');
             }
         }
         
