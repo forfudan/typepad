@@ -11,7 +11,8 @@ define(
       'Editor',
       'Result',
       'ResultType',
-      'Score'
+      'Score',
+      'CodeHint'
    ],
    function (
       Reg,
@@ -25,7 +26,8 @@ define(
       Editor,
       Result,
       ResultType,
-      Score
+      Score,
+      CodeHint
    ) {
       const untypedStringClassName = 'untyped-part';
       const HEIGHT_TEMPLATE = 150; // 对照区高度
@@ -58,6 +60,7 @@ define(
             this.keyCount = new KeyCount();
             this.database = new Database();
             this.score = new Score();
+            this.codeHint = new CodeHint(); // 编码提示实例
 
 
             // 按键过滤器
@@ -210,6 +213,7 @@ define(
                   }
                }
             template.innerText = this.currentWords;
+            this.updateCodeHintOnContentChange();
          }
 
          fetchAllLog() {
@@ -737,6 +741,9 @@ define(
                // 获取单词释义
                this.getCurrentCETWordTranslation(arrayTyped.length);
             }
+            
+            // 更新编码提示
+            this.updateCodeHint(arrayTyped.length);
          }
 
          // 显示当前单词的释义
@@ -755,6 +762,13 @@ define(
                }
                tempString = afterString;
             })
+         }
+
+         // 更新编码提示
+         updateCodeHint(currentPosition) {
+            if (this.codeHint) {
+               this.codeHint.updateForPosition(this.currentWords, currentPosition);
+            }
          }
 
          // 英文模式：进入
@@ -864,6 +878,19 @@ define(
             this.stopRefresh();
             this.showTime();
             templateWrapper.scrollTo(0, 0);
+            
+            // 重置编码提示
+            if (this.codeHint) {
+               this.codeHint.updateForPosition(this.currentWords, 0);
+            }
+         }
+
+         // 内容改变时更新编码提示
+         updateCodeHintOnContentChange() {
+            if (this.codeHint) {
+               const currentPosition = typingPad.value.length;
+               this.codeHint.updateForPosition(this.currentWords, currentPosition);
+            }
          }
 
          // 当前段打完

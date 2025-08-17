@@ -205,6 +205,73 @@ $colors  : (
   }
 }
 
+// 编码提示区域样式
+.code-hint-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  
+  .code-hint-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 10px;
+  }
+  
+  .code-hint-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    
+    .current-char {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007bff;
+      min-width: 30px;
+      text-align: center;
+    }
+    
+    .code-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      
+      .code-item {
+        background-color: #e9ecef;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 14px;
+        color: #495057;
+        border: 1px solid #ced4da;
+        
+        &.highlight {
+          background-color: #007bff;
+          color: white;
+          border-color: #0056b3;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: $separate-mobile) {
+    margin: 10px 0;
+    padding: 10px;
+    
+    .code-hint-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      
+      .current-char {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
 // MOBILE
 @media (max-width: $separate-mobile) {
   #app{

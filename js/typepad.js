@@ -33,6 +33,7 @@ require.config({
       'CETWord'     : 'CETWord',
       'Reg'         : 'Reg',
       'Database'    : 'Database',
+      'CodeHint'    : 'CodeHint',
    }
 });
 
