@@ -43,8 +43,9 @@ define([], function() {
                         const code = parts[0];
                         const chars = parts[1];
                         
-                        // 为每个字符记录其编码
-                        for (const char of chars) {
+                        // 只处理单字，过滤掉词语
+                        if (chars.length === 1) {
+                            const char = chars;
                             if (!this.codeTable.has(char)) {
                                 this.codeTable.set(char, []);
                             }
