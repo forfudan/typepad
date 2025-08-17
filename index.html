@@ -535,22 +535,28 @@
       <!-- 编码提示区域 -->
       <div class="code-hint-container">
          <div class="code-hint-title">编码提示</div>
-         <div class="code-hint-main">
-            <div class="code-hint-content">
-               <div class="current-char">-</div>
-               <div class="code-list">
-                  <div class="code-item">请开始打字</div>
-               </div>
+         <div class="code-hint-content">
+            <div class="current-char">-</div>
+            <div class="code-list">
+               <div class="code-item">请开始打字</div>
             </div>
-            <div class="code-hint-upload">
-               <input type="file" id="codeTableFile" accept=".txt" style="display: none;">
-               <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
-                  上传码表
-               </button>
-               <div class="upload-status">
-                  <div class="current-table">当前：宇浩日月.txt</div>
-                  <div class="upload-message"></div>
-               </div>
+         </div>
+      </div>
+
+      <!-- 码表管理区域 -->
+      <div class="codetable-manager">
+         <div class="codetable-title">码表管理</div>
+         <div class="codetable-content">
+            <div class="upload-hint">
+               支持上传自定义码表文件（UTF-8编码），格式为：编码[空格/Tab]字符，每行一组
+            </div>
+            <input type="file" id="codeTableFile" accept=".txt" style="display: none;">
+            <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
+               上传码表
+            </button>
+            <div class="upload-status">
+               <div class="current-table">当前：宇浩日月.txt</div>
+               <div class="upload-message"></div>
             </div>
          </div>
       </div>

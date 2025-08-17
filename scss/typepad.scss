@@ -207,7 +207,7 @@ $colors  : (
 
 // 编码提示区域样式
 .code-hint-container {
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
   padding: 15px;
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -220,118 +220,133 @@ $colors  : (
     margin-bottom: 10px;
   }
   
-  .code-hint-main {
+  .code-hint-content {
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 15px;
     
-    .code-hint-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      
-      .current-char {
-        font-size: 24px;
-        font-weight: bold;
-        color: #007bff;
-        min-width: 30px;
-        text-align: center;
-      }
-      
-      .code-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        
-        .code-item {
-          background-color: #e9ecef;
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-family: monospace;
-          font-size: 14px;
-          color: #495057;
-          border: 1px solid #ced4da;
-          
-          &.highlight {
-            background-color: #007bff;
-            color: white;
-            border-color: #0056b3;
-          }
-        }
-      }
+    .current-char {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007bff;
+      min-width: 30px;
+      text-align: center;
     }
     
-    .code-hint-upload {
-      flex-shrink: 0;
-      width: 200px;
+    .code-list {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 8px;
       
-      .upload-btn {
-        background-color: #28a745;
-        color: white;
-        border: none;
+      .code-item {
+        background-color: #e9ecef;
+        padding: 4px 8px;
         border-radius: 4px;
-        padding: 8px 16px;
+        font-family: monospace;
         font-size: 14px;
-        cursor: pointer;
-        transition: background-color 0.2s;
+        color: #495057;
+        border: 1px solid #ced4da;
         
-        &:hover {
-          background-color: #218838;
-        }
-        
-        &:active {
-          background-color: #1e7e34;
-        }
-      }
-      
-      .upload-status {
-        .current-table {
-          font-size: 12px;
-          color: #6c757d;
-          margin-bottom: 4px;
-        }
-        
-        .upload-message {
-          font-size: 12px;
-          min-height: 16px;
-          
-          &.success {
-            color: #28a745;
-          }
-          
-          &.error {
-            color: #dc3545;
-          }
+        &.highlight {
+          background-color: #007bff;
+          color: white;
+          border-color: #0056b3;
         }
       }
     }
   }
   
   @media (max-width: $separate-mobile) {
-    margin: 10px 0;
+    margin: 10px 0 5px 0;
     padding: 10px;
     
-    .code-hint-main {
+    .code-hint-content {
       flex-direction: column;
-      gap: 15px;
+      align-items: flex-start;
+      gap: 10px;
       
-      .code-hint-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        
-        .current-char {
-          font-size: 20px;
-        }
-      }
-      
-      .code-hint-upload {
-        width: 100%;
+      .current-char {
+        font-size: 20px;
       }
     }
+  }
+}
+
+// 码表管理区域样式
+.codetable-manager {
+  margin: 10px 0 20px 0;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  
+  .codetable-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 10px;
+  }
+  
+  .codetable-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+    .upload-hint {
+      font-size: 12px;
+      color: #6c757d;
+      background-color: #f8f9fa;
+      padding: 8px 10px;
+      border-radius: 4px;
+      border-left: 3px solid #17a2b8;
+      line-height: 1.4;
+    }
+    
+    .upload-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: fit-content;
+      
+      &:hover {
+        background-color: #218838;
+      }
+      
+      &:active {
+        background-color: #1e7e34;
+      }
+    }
+    
+    .upload-status {
+      .current-table {
+        font-size: 13px;
+        color: #6c757d;
+        margin-bottom: 4px;
+      }
+      
+      .upload-message {
+        font-size: 12px;
+        min-height: 16px;
+        
+        &.success {
+          color: #28a745;
+        }
+        
+        &.error {
+          color: #dc3545;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: $separate-mobile) {
+    margin: 5px 0 10px 0;
+    padding: 10px;
   }
 }
 

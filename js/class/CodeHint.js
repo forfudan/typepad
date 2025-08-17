@@ -201,7 +201,7 @@ define([], function() {
          */
         showCodeForChar(char) {
             if (!this.isLoaded) {
-                this.updateDisplay('-', ['码表加载中...']);
+                this.updateDisplay('-', ['开始输入后显示编码提示...']);
                 return;
             }
             
