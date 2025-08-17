@@ -1757,12 +1757,34 @@ body {
   font-size: 14px;
   font-weight: bold;
   color: #495057;
+  margin-bottom: 8px;
+}
+.codetable-manager .codetable-description {
+  font-size: 13px;
+  color: #6c757d;
   margin-bottom: 10px;
+  line-height: 1.4;
+}
+.codetable-manager .codetable-description a {
+  color: #007bff;
+  text-decoration: none;
+}
+.codetable-manager .codetable-description a:hover {
+  text-decoration: underline;
 }
 .codetable-manager .codetable-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.codetable-manager .codetable-content .upload-hint {
+  font-size: 12px;
+  color: #6c757d;
+  background-color: #f8f9fa;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border-left: 3px solid #17a2b8;
+  line-height: 1.4;
 }
 .codetable-manager .codetable-content .upload-btn {
   background-color: #28a745;
@@ -1780,6 +1802,37 @@ body {
 }
 .codetable-manager .codetable-content .upload-btn:active {
   background-color: #1e7e34;
+}
+.codetable-manager .codetable-content .builtin-codetable {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+.codetable-manager .codetable-content .builtin-codetable .builtin-label {
+  font-size: 13px;
+  color: #495057;
+  font-weight: 500;
+}
+.codetable-manager .codetable-content .builtin-codetable .builtin-select {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: white;
+  color: #495057;
+  cursor: pointer;
+}
+.codetable-manager .codetable-content .builtin-codetable .builtin-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+.codetable-manager .codetable-content .builtin-codetable .builtin-select:hover {
+  border-color: #adb5bd;
 }
 .codetable-manager .codetable-content .upload-status .current-table {
   font-size: 13px;

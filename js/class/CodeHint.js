@@ -13,11 +13,45 @@ define([], function() {
             this.currentTableElement = document.querySelector('.current-table');
             this.uploadMessageElement = document.querySelector('.upload-message');
             
+            // 内置码表配置
+            this.builtinCodeTables = {
+                'yuhao-riyue': {
+                    name: '宇浩日月方案',
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt'
+                },
+                'qingyun-joy': {
+                    name: '卿云输入法',
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt'
+                }
+            };
+            
             // 初始化文件上传功能
             this.initFileUpload();
             
+            // 初始化选择框和加载保存的方案
+            this.initBuiltinSelector();
+            
             // 加载默认码表
             this.loadDefaultCodeTable();
+        }
+        
+        /**
+         * 初始化内置码表选择器
+         */
+        initBuiltinSelector() {
+            // 从localStorage读取保存的方案
+            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-riyue';
+            
+            // 设置选择框的值
+            setTimeout(() => {
+                const selectElement = document.getElementById('builtinCodeTableSelect');
+                if (selectElement) {
+                    selectElement.value = savedScheme;
+                }
+            }, 100);
+            
+            // 更新当前方案
+            this.currentScheme = savedScheme;
         }
         
         /**
@@ -136,22 +170,73 @@ define([], function() {
         /**
          * 加载默认码表文件
          */
-        /**
-         * 加载默认码表文件
-         */
         async loadDefaultCodeTable() {
+            // 从localStorage读取保存的方案，如果没有则使用默认方案
+            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-riyue';
+            await this.loadBuiltinCodeTable(savedScheme);
+        }
+        
+        /**
+         * 加载内置码表
+         * @param {string} tableKey 码表键名
+         */
+        async loadBuiltinCodeTable(tableKey) {
+            const tableConfig = this.builtinCodeTables[tableKey];
+            if (!tableConfig) {
+                console.error('未找到码表配置:', tableKey);
+                return;
+            }
+            
             try {
-                // 从GitHub加载宇浩输入法日月方案码表
-                const response = await fetch('https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt');
+                this.showMessage('正在加载码表...', '');
+                const response = await fetch(tableConfig.url);
                 const text = await response.text();
                 this.parseCodeTable(text);
                 this.isLoaded = true;
-                this.currentTableName = '宇浩日月方案';
+                this.currentTableName = tableConfig.name;
                 this.updateCurrentTableDisplay();
-                console.log('码表加载完成，共', this.codeTable.size, '条记录');
+                this.showMessage('码表加载成功！', 'success');
+                console.log(`${tableConfig.name}加载完成，共`, this.codeTable.size, '条记录');
             } catch (error) {
                 console.error('加载码表失败:', error);
-                this.showMessage('默认码表加载失败，请检查网络连接', 'error');
+                this.showMessage('码表加载失败，请检查网络连接', 'error');
+            }
+        }
+        
+        /**
+         * 切换内置码表
+         * @param {string} tableKey 码表键名
+         */
+        async switchBuiltinCodeTable(tableKey) {
+            console.log('切换码表到:', tableKey);
+            
+            // 保存用户选择到localStorage
+            localStorage.setItem('codeHintScheme', tableKey);
+            this.currentScheme = tableKey;
+            
+            // 加载新码表
+            await this.loadBuiltinCodeTable(tableKey);
+            
+            // 更新选择框
+            const selectElement = document.getElementById('builtinCodeTableSelect');
+            if (selectElement) {
+                selectElement.value = tableKey;
+            }
+            
+            // 强制刷新当前显示
+            console.log('当前码表大小:', this.codeTable.size);
+            
+            // 重新显示当前字符的编码
+            this.refreshCurrentChar();
+            
+            // 如果当前没有字符显示，至少显示一个示例
+            if (!this.currentCharElement || this.currentCharElement.textContent === '-') {
+                // 显示码表的第一个字符作为示例
+                const firstChar = this.codeTable.keys().next().value;
+                if (firstChar) {
+                    this.showCodeForChar(firstChar);
+                    console.log('显示示例字符:', firstChar);
+                }
             }
         }
         
@@ -190,10 +275,19 @@ define([], function() {
          * 刷新当前字符的编码显示
          */
         refreshCurrentChar() {
-            // 这个方法将在Engine中被调用，用于刷新当前显示
-            const currentChar = this.currentCharElement ? this.currentCharElement.textContent : '';
-            if (currentChar && currentChar !== '-') {
-                this.showCodeForChar(currentChar);
+            // 尝试从Engine获取当前位置和文本
+            if (typeof engine !== 'undefined' && engine.currentWords) {
+                const typingPad = document.getElementById('pad');
+                const currentPosition = typingPad ? typingPad.value.length : 0;
+                this.updateForPosition(engine.currentWords, currentPosition);
+            } else {
+                // 备用方案：从current-char元素获取
+                const currentChar = this.currentCharElement ? this.currentCharElement.textContent : '';
+                if (currentChar && currentChar !== '-') {
+                    this.showCodeForChar(currentChar);
+                } else {
+                    this.showCodeForChar('');
+                }
             }
         }
         

@@ -338,6 +338,42 @@ $colors  : (
       }
     }
     
+    .builtin-codetable {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      
+      .builtin-label {
+        font-size: 13px;
+        color: #495057;
+        font-weight: 500;
+      }
+      
+      .builtin-select {
+        padding: 6px 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 13px;
+        background-color: white;
+        color: #495057;
+        cursor: pointer;
+        
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        &:hover {
+          border-color: #adb5bd;
+        }
+      }
+    }
+    
     .upload-status {
       .current-table {
         font-size: 13px;

@@ -364,6 +364,18 @@
          </div>
       </div>
 
+      <!--ABOUT INFO-->
+      <div class="info-panel hidden-sm">
+         <div class="logo">
+            <img src="https://raw.githubusercontent.com/forfudan/yu/main/src/public/logo_blue.png" alt="">
+            <h1>宇浩輸入法定製版<br>(<a target="_blank" href="https://shurufa.app" >shurufa.app</a>)</h1>
+         </div>
+         <div class="copyright">
+            <a target="_blank" href="http://zhuyuhao.com" class="link">Dr Yuhao Zhu</a>
+            <p>2025.08.18</p>
+         </div>
+      </div>
+
       <!--ShortCut-->
       <div class="info-panel hidden-sm">
          <div class="key-info-item">
@@ -547,7 +559,7 @@
       <div class="codetable-manager">
          <div class="codetable-title">码表管理</div>
          <div class="codetable-description">
-            默认编码提示采用宇浩输入法日月方案（<a href="https://shurufa.app/" target="_blank">官网链接</a>）
+            默认编码提示采用宇浩输入法日月方案（<a href="https://shurufa.app/" target="_blank">shurufa.app</a>）
          </div>
          <div class="codetable-content">
             <div class="upload-hint">
@@ -557,6 +569,16 @@
             <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
                上传码表
             </button>
+            
+            <!-- 内置码表选择 -->
+            <div class="builtin-codetable">
+               <label for="builtinCodeTableSelect" class="builtin-label">选择内置方案：</label>
+               <select id="builtinCodeTableSelect" class="builtin-select" onchange="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.switchBuiltinCodeTable(this.value)">
+                  <option value="yuhao-riyue" selected>宇浩输入法 - 日月方案</option>
+                  <option value="qingyun-joy">卿云输入法</option>
+               </select>
+            </div>
+            
             <div class="upload-status">
                <div class="current-table">当前：宇浩日月方案</div>
                <div class="upload-message"></div>
@@ -614,6 +636,25 @@
 <script src="js/typepad.js?v=2.69"></script>
 
    <script>
+      // 页面加载完成后自动触发重打按钮
+      window.addEventListener('load', () => {
+         setTimeout(() => {
+            // 确保engine对象已经加载完成
+            if (typeof engine !== 'undefined' && engine.reset) {
+               engine.reset();
+               console.log('页面加载完成，自动执行重打');
+            } else {
+               // 如果engine还未加载，再等待一段时间
+               setTimeout(() => {
+                  if (typeof engine !== 'undefined' && engine.reset) {
+                     engine.reset();
+                     console.log('延迟执行重打');
+                  }
+               }, 1000);
+            }
+         }, 500);
+      });
+
       setTimeout(() => {
          if (!/^http:\/\/(a\.kylebing\.cn|localhost|192\.168\.\d{1,3}\.\d{1,3})/i.test(location.href)) {
             let hm = document.createElement("script");
