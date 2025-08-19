@@ -62,6 +62,8 @@ define(
             this.score = new Score();
             this.codeHint = new CodeHint(); // 编码提示实例
 
+            // 初始化方案名称输入框
+            this.initSchemeName();
 
             // 按键过滤器
             /****
@@ -791,6 +793,33 @@ define(
             this.database.delete(id, sender)
          }
 
+         /**
+          * 初始化方案名称输入框
+          */
+         initSchemeName() {
+            const schemeNameInput = document.getElementById('currentSchemeName');
+            if (schemeNameInput) {
+                // 从localStorage读取保存的方案名称
+                const savedSchemeName = localStorage.getItem('currentSchemeName') || '';
+                schemeNameInput.value = savedSchemeName;
+            }
+         }
+
+         /**
+          * 保存当前方案名称
+          */
+         saveCurrentSchemeName(schemeName) {
+            localStorage.setItem('currentSchemeName', schemeName || '');
+            console.log('方案名称已保存:', schemeName || '未填写');
+         }
+
+         /**
+          * 获取当前方案名称
+          */
+         getCurrentSchemeName() {
+            return localStorage.getItem('currentSchemeName') || '未填写';
+         }
+
          copyScore(sender) {
             // 獲取當前行的成績數據
             const row = sender.closest('tr');
@@ -819,6 +848,7 @@ define(
             scoreText += `文章類型: ${articleType}\n`;
             if (articleName) scoreText += `文章: ${articleName}\n`;
             if (time) scoreText += `時間: ${time}\n`;
+            scoreText += `方案: ${this.getCurrentSchemeName()}\n`;
             scoreText += `來自: https://genda.shurufa.app`;
             
             // 複製成績到剪貼板
@@ -872,6 +902,50 @@ define(
             } else {
                this.database.clear(this.config)
             }
+         }
+
+         // 添加测试记录（用于测试复制功能）
+         addTestRecord() {
+            const testRecord = {
+               speed: 120.5,
+               codeLength: 2.3,
+               hitRate: 98.5,
+               backspace: 5,
+               wordCount: 300,
+               timeStart: Date.now(),
+               duration: 150000 // 2分30秒
+            };
+            
+            const testConfig = {
+               IDBIndex: Date.now(),
+               articleIdentifier: 'test',
+               articleName: '测试文章',
+               articleType: 1,
+               isAutoRepeat: false,
+               repeatCountCurrent: 1
+            };
+            
+            // 手动创建HTML并插入到表格
+            const currentScheme = this.getCurrentSchemeName();
+            const row = `<tr>  
+              <td class="text-center">${testConfig.IDBIndex}</td>
+              <td class="bold galvji speed text-right lv-4">${testRecord.speed.toFixed(2)}</td>
+              <td class="hidden-sm">${testRecord.hitRate.toFixed(2)}</td>
+              <td class="hidden-sm">${testRecord.codeLength.toFixed(2)}</td>
+              <td class="hidden-sm">${testRecord.backspace}</td>
+              <td>${testRecord.wordCount}</td>
+              <td class="time">02:30</td>
+              <td class="text-center">中文</td>
+              <td>${testConfig.articleName}</td>
+              <td class="hidden-sm time">${new Date().toLocaleString()}</td>
+              <td><button class="btn btn-danger btn-sm" onclick="engine.delete(${testConfig.IDBIndex}, this)" type="button">删除</button></td>
+              <td><button class="btn btn-primary btn-sm" onclick="engine.copyScore(this)" type="button" title="复制成绩到剪贴板">📋</button></td>
+            </tr>`;
+            
+            const tbody = document.querySelector('tbody');
+            tbody.insertAdjacentHTML('afterbegin', row);
+            
+            console.log(`测试记录已添加，当前方案: ${currentScheme}`);
          }
 
 

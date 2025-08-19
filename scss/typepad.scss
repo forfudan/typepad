@@ -402,6 +402,66 @@ $colors  : (
   }
 }
 
+// 方案名称设置区域样式
+.scheme-name-container {
+  margin: 10px 0 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  
+  .scheme-name-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 10px;
+  }
+  
+  .scheme-name-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    .scheme-name-label {
+      font-size: 13px;
+      color: #495057;
+      font-weight: 500;
+    }
+    
+    .scheme-name-input {
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: white;
+      color: #495057;
+      width: 100%;
+      max-width: 300px;
+      
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      }
+      
+      &::placeholder {
+        color: #6c757d;
+      }
+    }
+    
+    .scheme-name-hint {
+      font-size: 12px;
+      color: #6c757d;
+      line-height: 1.4;
+    }
+  }
+  
+  @media (max-width: $separate-mobile) {
+    margin: 5px 0 10px 0;
+    padding: 10px;
+  }
+}
+
 // MOBILE
 @media (max-width: $separate-mobile) {
   #app{

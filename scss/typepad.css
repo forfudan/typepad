@@ -1259,6 +1259,31 @@ body.black .codetable-manager .codetable-content .upload-status .upload-message.
 body.black .codetable-manager .codetable-content .upload-status .upload-message.error {
   color: #FF3B30;
 }
+body.black .scheme-name-container {
+  background-color: #1c1f24;
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .scheme-name-container .scheme-name-title {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .scheme-name-container .scheme-name-content .scheme-name-label {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .scheme-name-container .scheme-name-content .scheme-name-input {
+  background-color: rgb(63.75, 63.75, 63.75);
+  color: rgb(229.5, 229.5, 229.5);
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .scheme-name-container .scheme-name-content .scheme-name-input:focus {
+  border-color: #00afff;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.25);
+}
+body.black .scheme-name-container .scheme-name-content .scheme-name-input::placeholder {
+  color: rgb(140.25, 140.25, 140.25);
+}
+body.black .scheme-name-container .scheme-name-content .scheme-name-hint {
+  color: rgb(165.75, 165.75, 165.75);
+}
 
 .animated {
   -webkit-animation-duration: 0.25s;
@@ -1929,6 +1954,59 @@ body {
 }
 @media (max-width: 768px) {
   .codetable-manager {
+    margin: 5px 0 10px 0;
+    padding: 10px;
+  }
+}
+
+.scheme-name-container {
+  margin: 10px 0 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+.scheme-name-container .scheme-name-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #495057;
+  margin-bottom: 10px;
+}
+.scheme-name-container .scheme-name-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.scheme-name-container .scheme-name-content .scheme-name-label {
+  font-size: 13px;
+  color: #495057;
+  font-weight: 500;
+}
+.scheme-name-container .scheme-name-content .scheme-name-input {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  color: #495057;
+  width: 100%;
+  max-width: 300px;
+}
+.scheme-name-container .scheme-name-content .scheme-name-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+.scheme-name-container .scheme-name-content .scheme-name-input::placeholder {
+  color: #6c757d;
+}
+.scheme-name-container .scheme-name-content .scheme-name-hint {
+  font-size: 12px;
+  color: #6c757d;
+  line-height: 1.4;
+}
+@media (max-width: 768px) {
+  .scheme-name-container {
     margin: 5px 0 10px 0;
     padding: 10px;
   }

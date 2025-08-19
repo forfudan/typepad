@@ -593,8 +593,8 @@
             </div>
             
             <div class="upload-status">
-               <div class="current-table">当前：宇浩·日月</div>
-               <div class="upload-message"></div>
+               <span class="current-table">当前：宇浩·日月</span>
+               <span class="upload-message"></span>
             </div>
          </div>
       </div>
@@ -608,6 +608,18 @@
          <!--                  <div class="code-length"></div>-->
          <!--               </div>-->
          <!--            </div>-->
+      </div>
+
+      <!-- 方案名称设置区域 -->
+      <div class="scheme-name-container">
+         <div class="scheme-name-title">当前方案设置</div>
+         <div class="scheme-name-content">
+            <label for="currentSchemeName" class="scheme-name-label">方案名称：</label>
+            <input type="text" id="currentSchemeName" class="scheme-name-input" 
+                   placeholder="请输入当前使用的输入法方案名称" 
+                   onchange="if(typeof engine !== 'undefined') engine.saveCurrentSchemeName(this.value)">
+            <div class="scheme-name-hint">此名称将显示在成绩记录中，帮助区分你在使用不同方案时的成绩</div>
+         </div>
       </div>
 
       <!-- 成绩列表 -->

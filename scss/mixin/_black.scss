@@ -440,4 +440,39 @@ body.black {
       }
     }
   }
+
+  // 方案名称设置区域 - 暗黑模式
+  .scheme-name-container {
+    background-color: $black-bg;
+    border-color: $black-color-border;
+    
+    .scheme-name-title {
+      color: $black-color-text;
+    }
+    
+    .scheme-name-content {
+      .scheme-name-label {
+        color: $black-color-text;
+      }
+      
+      .scheme-name-input {
+        background-color: $black-btn-bg;
+        color: $black-color-text;
+        border-color: $black-color-border;
+        
+        &:focus {
+          border-color: $cyan;
+          box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.25);
+        }
+        
+        &::placeholder {
+          color: $black-color-text-comment;
+        }
+      }
+      
+      .scheme-name-hint {
+        color: $black-color-text-info;
+      }
+    }
+  }
 }
