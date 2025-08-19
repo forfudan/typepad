@@ -565,6 +565,16 @@
             <div class="upload-hint">
                支持上传自定义码表文件（UTF-8编码），格式为：编码[空格/Tab]字符，每行一组
             </div>
+            
+            <!-- 格式选择 -->
+            <div class="builtin-codetable">
+               <label for="codeTableFormat" class="builtin-label">码表格式：</label>
+               <select id="codeTableFormat" class="builtin-select">
+                  <option value="code_first" selected>编码在前，汉字在后</option>
+                  <option value="char_first">汉字在前，编码在后</option>
+               </select>
+            </div>
+            
             <input type="file" id="codeTableFile" accept=".txt" style="display: none;">
             <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
                上传码表
@@ -575,11 +585,13 @@
                <label for="builtinCodeTableSelect" class="builtin-label">选择内置方案：</label>
                <select id="builtinCodeTableSelect" class="builtin-select" onchange="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.switchBuiltinCodeTable(this.value)">
                   <option value="yuhao-ming" selected>宇浩·日月</option>
-                  <option value="yuhao-star">宇浩·星陳</option>
                   <option value="yuhao-joy">卿云输入法</option>
+                  <option value="yuhao-light">宇浩·光华</option>
+                  <option value="yuhao-star">宇浩·星陳</option>
                   <option value="sky">宋天·天碼</option>
                   <option value="hao-xi">好码·淅码</option>
                   <option value="hao-sy">好码·松烟</option>
+                  <option value="sample-char-first">示例·汉字在前格式</option>
                </select>
             </div>
             

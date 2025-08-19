@@ -17,29 +17,39 @@ define([], function () {
             this.builtinCodeTables = {
                 'yuhao-ming': {
                     name: '宇浩·日月·大明输入法',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt'
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt',
+                    format: 'code_first'
                 },
                 'yuhao-joy': {
                     name: '卿云',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt'
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt',
+                    format: 'code_first'
+                },
+                'yuhao-light': {
+                    name: '宇浩·光华',
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-light.txt',
+                    format: 'code_first'
                 },
                 'yuhao-star': {
                     name: '宇浩·星陈',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt'
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt',
+                    format: 'code_first'
                 },
                 'sky': {
                     name: '宋天·天码',
-                    url: 'https://raw.githubusercontent.com/forfudan/tianma-sky/main/mabiao-sky.txt'
+                    url: 'https://raw.githubusercontent.com/forfudan/tianma-sky/main/mabiao-sky.txt',
+                    format: 'code_first'
                 },
                 'hao-xi': {
                     name: '好码·淅码',
-                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-xi.txt'
+                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-xi.txt',
+                    format: 'code_first'
                 },
                 'hao-sy': {
                     name: '好码·松烟',
-                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-sy.txt'
+                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-sy.txt',
+                    format: 'code_first'
                 },
-
             };
 
             // 初始化文件上传功能
@@ -101,7 +111,11 @@ define([], function () {
                 const isValid = this.validateCodeTable(text);
 
                 if (isValid) {
-                    this.parseCodeTable(text);
+                    // 获取用户选择的格式
+                    const formatSelect = document.getElementById('codeTableFormat');
+                    const format = formatSelect ? formatSelect.value : 'code_first';
+                    
+                    this.parseCodeTable(text, format);
                     this.isLoaded = true;
                     this.currentTableName = file.name;
                     this.updateCurrentTableDisplay();
@@ -208,7 +222,7 @@ define([], function () {
                 this.showMessage('正在加载码表...', '');
                 const response = await fetch(tableConfig.url);
                 const text = await response.text();
-                this.parseCodeTable(text);
+                this.parseCodeTable(text, tableConfig.format || 'code_first');
                 this.isLoaded = true;
                 this.currentTableName = tableConfig.name;
                 this.updateCurrentTableDisplay();
@@ -261,7 +275,7 @@ define([], function () {
          * 解析码表文件
          * @param {string} text 码表文件内容
          */
-        parseCodeTable(text) {
+        parseCodeTable(text, format = 'code_first') {
             // 清空现有码表
             this.codeTable.clear();
 
@@ -272,8 +286,17 @@ define([], function () {
                     // 支持制表符或空格分隔
                     const parts = trimmedLine.split(/\t| +/);
                     if (parts.length >= 2) {
-                        const code = parts[0].trim();
-                        const chars = parts[1].trim();
+                        let code, chars;
+                        
+                        if (format === 'char_first') {
+                            // 汉字在前，编码在后
+                            chars = parts[0].trim();
+                            code = parts[1].trim();
+                        } else {
+                            // 编码在前，汉字在后 (默认)
+                            code = parts[0].trim();
+                            chars = parts[1].trim();
+                        }
 
                         // 只处理单字，过滤掉词语
                         if (chars.length === 1) {
