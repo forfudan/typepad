@@ -561,40 +561,35 @@
          <div class="codetable-content">
             <div class="upload-hint">
                <p>支持上传自定义码表文件(UTF-8), 格式为 编码[空格/Tab]字符，或 字符[空格/Tab]编码</p>
-               <p>默认编码提示为世上首款纯形前缀码　<a href="https://shurufa.app/" target="_blank"><b>宇浩·日月</b></a></p>
+               <p>默认编码提示为世上首款纯形前缀码　<a href="https://shurufa.app/" target="_blank"><b>宇浩·日月 (shurufa.app)</b></a></p>
             </div>
             
-            <!-- 格式选择 -->
+            <!-- 格式选择和上传按钮 -->
             <div class="builtin-codetable">
                <label for="codeTableFormat" class="builtin-label">码表格式：</label>
                <select id="codeTableFormat" class="builtin-select">
                   <option value="code_first" selected>编码在前，汉字在后</option>
                   <option value="char_first">汉字在前，编码在后</option>
                </select>
-            </div>
-            
-            <input type="file" id="codeTableFile" accept=".txt" style="display: none;">
-            <div style="display: flex; gap: 10px; align-items: center;">
                <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
-                  上传码表
+                  上传
                </button>
                <button class="upload-btn" onclick="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.clearUserCodeTableAndReload()" 
                        style="background-color: #dc3545;" title="清除已上传的码表，切换回内置方案">
-                  清除自定义码表
+                  清除
                </button>
             </div>
             
-            <!-- 内置码表选择 -->
+            <input type="file" id="codeTableFile" accept=".txt" style="display: none;">
+            
+            <!-- 内置码表选择和状态 -->
             <div class="builtin-codetable">
-               <label for="builtinCodeTableSelect" class="builtin-label">选择内置方案：</label>
+               <label for="builtinCodeTableSelect" class="builtin-label">选择内置编码提示：</label>
                <select id="builtinCodeTableSelect" class="builtin-select" onchange="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.switchBuiltinCodeTable(this.value)">
                   <!-- 选项将由JavaScript动态生成 -->
                </select>
-            </div>
-            
-            <div class="upload-status">
-               <div class="current-table">当前：宇浩·日月</div>
-               <div class="upload-message"></div>
+               <span class="current-table">当前：宇浩·日月</span>
+               <span class="upload-message"></span>
             </div>
          </div>
       </div>
@@ -608,6 +603,16 @@
          <!--                  <div class="code-length"></div>-->
          <!--               </div>-->
          <!--            </div>-->
+      </div>
+
+      <!-- 方案名称设置区域 -->
+      <div class="scheme-name-container">
+         <div class="scheme-name-title">方案名称设置</div>
+         <div class="scheme-name-content">
+            <input type="text" id="currentSchemeName" class="scheme-name-input" 
+                   placeholder="请输入当前使用输入方案以显示在成绩中" 
+                   onchange="if(typeof engine !== 'undefined') engine.saveCurrentSchemeName(this.value)">
+         </div>
       </div>
 
       <!-- 成绩列表 -->

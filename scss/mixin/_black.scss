@@ -387,18 +387,6 @@ body.black {
         border-left-color: $cyan;
       }
       
-      .upload-btn {
-        background-color: $green;
-        
-        &:hover {
-          background-color: darken($green, 10%);
-        }
-        
-        &:active {
-          background-color: darken($green, 15%);
-        }
-      }
-      
       .builtin-codetable {
         background-color: $black-btn-bg;
         border-color: $black-color-border;
@@ -421,21 +409,47 @@ body.black {
             border-color: $black-color-border-highlight;
           }
         }
-      }
-      
-      .upload-status {
-        .current-table {
-          color: $black-color-text-info;
+        
+        .upload-btn {
+          background-color: $cyan;
+          color: $black-bg;
+          border-color: $cyan;
+          
+          &:hover {
+            background-color: darken($cyan, 10%);
+          }
         }
         
-        .upload-message {
-          &.success {
-            color: $green;
-          }
-          
-          &.error {
-            color: $red;
-          }
+        .current-table, .upload-message {
+          color: $black-color-text-info;
+        }
+      }
+      
+    }
+  }
+
+  // 方案名称设置区域 - 暗黑模式
+  .scheme-name-container {
+    background-color: $black-bg;
+    border-color: $black-color-border;
+    
+    .scheme-name-title {
+      color: $black-color-text;
+    }
+    
+    .scheme-name-content {
+      .scheme-name-input {
+        background-color: $black-btn-bg;
+        color: $black-color-text;
+        border-color: $black-color-border;
+        
+        &:focus {
+          border-color: $cyan;
+          box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.25);
+        }
+        
+        &::placeholder {
+          color: $black-color-text-comment;
         }
       }
     }
