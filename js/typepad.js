@@ -21,6 +21,7 @@ const DBName = "TypePad";
 
 let engine; // 暴露 engine 以用于 html 绑定方法用
 let editor;
+let keyHeatmap; // 暴露 keyHeatmap 以用于 html 绑定方法用
 
 // require config
 require.config({
@@ -34,6 +35,7 @@ require.config({
       'Reg'         : 'Reg',
       'Database'    : 'Database',
       'CodeHint'    : 'CodeHint',
+      'KeyHeatmap'  : 'KeyHeatmap',
    }
 });
 
@@ -52,6 +54,7 @@ require(['ArticleType', 'Article', 'Engine', 'Editor'],
    function (ArticleType, Article, Engine, Editor) {
       engine = new Engine();
       editor = new Editor();
+      keyHeatmap = engine.keyHeatmap; // 暴露热力图实例
 
       engine.loadArticleOptions(); // 载入文章选项列表
       engine.applyConfig();  // 设置 config

@@ -12,7 +12,8 @@ define(
       'Result',
       'ResultType',
       'Score',
-      'CodeHint'
+      'CodeHint',
+      'KeyHeatmap'
    ],
    function (
       Reg,
@@ -27,7 +28,8 @@ define(
       Result,
       ResultType,
       Score,
-      CodeHint
+      CodeHint,
+      KeyHeatmap
    ) {
       const untypedStringClassName = 'untyped-part';
       const HEIGHT_TEMPLATE = 150; // 对照区高度
@@ -61,6 +63,7 @@ define(
             this.database = new Database();
             this.score = new Score();
             this.codeHint = new CodeHint(); // 编码提示实例
+            this.keyHeatmap = new KeyHeatmap(); // 按键热力图实例
 
             // 初始化方案名称输入框
             this.initSchemeName();
@@ -97,6 +100,10 @@ define(
             }
             typingPad.onkeyup = e => {
                e.preventDefault();
+               
+               // 记录按键到热力图，区分左右修饰键哦
+               this.keyHeatmap.recordKeyWithLocation(e);
+               
                if (!this.isFinished && this.isStarted) {
                   this.keyCount.countKeys(e);
                   this.compare();

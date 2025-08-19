@@ -1271,6 +1271,48 @@ body.black .scheme-name-container .scheme-name-content .scheme-name-input:focus 
 body.black .scheme-name-container .scheme-name-content .scheme-name-input::placeholder {
   color: rgb(140.25, 140.25, 140.25);
 }
+body.black .key-heatmap-container {
+  background-color: rgb(63.75, 63.75, 63.75);
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .key-heatmap-container .key-heatmap-header h3 {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button {
+  background-color: #00afff;
+  color: #1c1f24;
+  border-color: #00afff;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button:hover {
+  background-color: #008ccc;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset {
+  background-color: #FF3B30;
+  color: white;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset:hover {
+  background-color: rgb(252, 13.3913043478, 0);
+}
+body.black .key-heatmap-container .key-heatmap-legend {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .key-heatmap-container .key-heatmap-legend .legend-gradient {
+  background: linear-gradient(to right, rgba(0, 188, 212, 0.1), rgba(0, 188, 212, 0.3), rgba(0, 188, 212, 0.6), rgba(0, 188, 212, 0.9), rgb(0, 188, 212));
+}
+body.black .key-heatmap-container .key-heatmap-board .key-row .key-item {
+  background-color: rgba(0, 188, 212, calc(var(--intensity, 0) * 0.8 + 0.1));
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .key-heatmap-container .key-heatmap-board .key-row .key-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
+}
+body.black .key-heatmap-container .key-heatmap-stats {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .key-heatmap-container .key-heatmap-stats .total-keys, body.black .key-heatmap-container .key-heatmap-stats .max-frequency {
+  color: rgb(229.5, 229.5, 229.5);
+}
 
 .animated {
   -webkit-animation-duration: 0.25s;
@@ -2053,6 +2095,226 @@ body {
   .type-pad-standalone {
     padding: 10px;
   }
+}
+
+.key-heatmap-container {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+.key-heatmap-container.hidden {
+  display: none;
+}
+.key-heatmap-container .key-heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.key-heatmap-container .key-heatmap-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #495057;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls {
+  display: flex;
+  gap: 10px;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button {
+  padding: 6px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button:hover {
+  background-color: #0056b3;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset {
+  background-color: #dc3545;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset:hover {
+  background-color: #c82333;
+}
+.key-heatmap-container .key-heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  color: #6c757d;
+}
+.key-heatmap-container .key-heatmap-legend .legend-gradient {
+  width: 100px;
+  height: 10px;
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0.9), rgb(59, 130, 246));
+  border-radius: 5px;
+}
+.key-heatmap-container .key-heatmap-board {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.4vw, 4px);
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+.key-heatmap-container .key-heatmap-board .key-row {
+  display: flex;
+  gap: clamp(2px, 0.4vw, 4px);
+  justify-content: center;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item {
+  min-width: clamp(35px, 4vw, 50px);
+  height: clamp(40px, 4.5vw, 55px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(59, 130, 246, calc(var(--intensity, 0) * 0.8 + 0.1));
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: clamp(10px, 1.2vw, 14px);
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: clamp(2px, 0.3vw, 4px);
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
+  font-size: clamp(10px, 1.2vw, 14px);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
+  font-size: clamp(8px, 1vw, 14px);
+  line-height: 1;
+  opacity: 0.8;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
+  min-width: clamp(75px, 8.5vw, 110px);
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
+  min-width: clamp(60px, 6.5vw, 85px);
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
+  min-width: clamp(85px, 9.5vw, 125px);
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
+  min-width: clamp(180px, 22vw, 280px);
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
+  min-width: clamp(50px, 5.5vw, 70px);
+}
+.key-heatmap-container .key-heatmap-stats {
+  display: flex;
+  justify-content: space-around;
+  font-size: 12px;
+  color: #6c757d;
+}
+.key-heatmap-container .key-heatmap-stats span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.key-heatmap-container .key-heatmap-stats span .total-keys, .key-heatmap-container .key-heatmap-stats span .max-frequency {
+  font-weight: bold;
+  color: #495057;
+}
+
+@media (max-width: 768px) {
+  .key-heatmap-container {
+    margin: 10px 0;
+    padding: 10px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row {
+    gap: clamp(1px, 0.3vw, 3px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item {
+    min-width: clamp(25px, 3.5vw, 35px);
+    height: clamp(25px, 3.5vw, 40px);
+    font-size: clamp(8px, 1vw, 12px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
+    font-size: clamp(7px, 0.9vw, 11px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
+    font-size: clamp(6px, 0.8vw, 10px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
+    min-width: clamp(50px, 7vw, 75px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
+    min-width: clamp(40px, 5.5vw, 60px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
+    min-width: clamp(55px, 8vw, 85px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
+    min-width: clamp(100px, 18vw, 180px);
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
+    min-width: clamp(30px, 4.5vw, 50px);
+  }
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row {
+  gap: clamp(4px, 0.6vw, 8px);
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item {
+  min-width: clamp(60px, 6vw, 85px);
+  height: clamp(50px, 6vw, 70px);
+  font-size: clamp(14px, 1.6vw, 18px);
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
+  font-size: clamp(13px, 1.5vw, 17px);
+  margin-bottom: 3px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
+  font-size: clamp(11px, 1.3vw, 15px);
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
+  min-width: clamp(120px, 12vw, 160px);
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
+  min-width: clamp(90px, 9vw, 120px);
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
+  min-width: clamp(130px, 13vw, 180px);
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
+  min-width: clamp(280px, 30vw, 400px);
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
+  min-width: clamp(70px, 7vw, 95px);
 }
 
 /*# sourceMappingURL=typepad.css.map */

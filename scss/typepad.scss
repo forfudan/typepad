@@ -455,3 +455,223 @@ $colors  : (
 
 @import "./mixin/standalone";
 
+// 按键热力图样式
+.key-heatmap-container {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  
+  &.hidden {
+    display: none;
+  }
+  
+  .key-heatmap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #495057;
+    }
+    
+    .key-heatmap-controls {
+      display: flex;
+      gap: 10px;
+      
+      button {
+        padding: 6px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: white;
+        font-size: 12px;
+        cursor: pointer;
+        
+        &:hover {
+          background-color: #0056b3;
+        }
+        
+        &.key-heatmap-reset {
+          background-color: #dc3545;
+          
+          &:hover {
+            background-color: #c82333;
+          }
+        }
+      }
+    }
+  }
+  
+  .key-heatmap-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #6c757d;
+    
+    .legend-gradient {
+      width: 100px;
+      height: 10px;
+      background: linear-gradient(to right, 
+        rgba(59, 130, 246, 0.1), 
+        rgba(59, 130, 246, 0.3),
+        rgba(59, 130, 246, 0.6),
+        rgba(59, 130, 246, 0.9),
+        rgba(59, 130, 246, 1)
+      );
+      border-radius: 5px;
+    }
+  }
+  
+  .key-heatmap-board {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2px, 0.4vw, 4px);
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    
+    .key-row {
+      display: flex;
+      gap: clamp(2px, 0.4vw, 4px);
+      justify-content: center;
+      
+      .key-item {
+        min-width: clamp(35px, 4vw, 50px);
+        height: clamp(40px, 4.5vw, 55px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(59, 130, 246, calc(var(--intensity, 0) * 0.8 + 0.1));
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-size: clamp(10px, 1.2vw, 14px);
+        font-weight: 500;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: clamp(2px, 0.3vw, 4px);
+        
+        .key-label {
+          font-size: clamp(10px, 1.2vw, 14px);
+          line-height: 1;
+          margin-bottom: 2px;
+        }
+        
+        .key-percentage {
+          font-size: clamp(8px, 1vw, 14px);
+          line-height: 1;
+          opacity: 0.8;
+        }
+        
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        // 特殊键的宽度 - 响应式
+        &.key-wide { min-width: clamp(75px, 8.5vw, 110px); }      // Backspace
+        &.key-medium { min-width: clamp(60px, 6.5vw, 85px); }     // Tab, Caps, Enter
+        &.key-large { min-width: clamp(85px, 9.5vw, 125px); }     // Shift
+        &.key-space { min-width: clamp(180px, 22vw, 280px); }     // Space
+        &.key-small { min-width: clamp(50px, 5.5vw, 70px); }      // Ctrl, Alt
+      }
+    }
+  }
+  
+  .key-heatmap-stats {
+    display: flex;
+    justify-content: space-around;
+    font-size: 12px;
+    color: #6c757d;
+    
+    span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      
+      .total-keys, .max-frequency {
+        font-weight: bold;
+        color: #495057;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .key-heatmap-container {
+    margin: 10px 0;
+    padding: 10px;
+    
+    .key-heatmap-board {
+      .key-row {
+        gap: clamp(1px, 0.3vw, 3px);
+        
+        .key-item {
+          min-width: clamp(25px, 3.5vw, 35px);
+          height: clamp(25px, 3.5vw, 40px);
+          font-size: clamp(8px, 1vw, 12px);
+          
+          .key-label {
+            font-size: clamp(7px, 0.9vw, 11px);
+          }
+          
+          .key-percentage {
+            font-size: clamp(6px, 0.8vw, 10px);
+          }
+          
+          &.key-wide { min-width: clamp(50px, 7vw, 75px); }
+          &.key-medium { min-width: clamp(40px, 5.5vw, 60px); }
+          &.key-large { min-width: clamp(55px, 8vw, 85px); }
+          &.key-space { min-width: clamp(100px, 18vw, 180px); }
+          &.key-small { min-width: clamp(30px, 4.5vw, 50px); }
+        }
+      }
+    }
+  }
+}
+
+// 全屏模式下热力图放大
+:fullscreen .key-heatmap-container,
+:-webkit-full-screen .key-heatmap-container,
+:-moz-full-screen .key-heatmap-container {
+  .key-heatmap-board {
+    .key-row {
+      gap: clamp(4px, 0.6vw, 8px);
+      
+      .key-item {
+        min-width: clamp(60px, 6vw, 85px);
+        height: clamp(50px, 6vw, 70px);
+        font-size: clamp(14px, 1.6vw, 18px);
+        
+        .key-label {
+          font-size: clamp(13px, 1.5vw, 17px);
+          margin-bottom: 3px;
+        }
+        
+        .key-percentage {
+          font-size: clamp(11px, 1.3vw, 15px);
+        }
+        
+        // 全屏模式下特殊键的宽度 - 响应式
+        &.key-wide { min-width: clamp(120px, 12vw, 160px); }      // Backspace
+        &.key-medium { min-width: clamp(90px, 9vw, 120px); }      // Tab, Caps, Enter
+        &.key-large { min-width: clamp(130px, 13vw, 180px); }     // Shift
+        &.key-space { min-width: clamp(280px, 30vw, 400px); }     // Space
+        &.key-small { min-width: clamp(70px, 7vw, 95px); }        // Ctrl, Alt
+      }
+    }
+  }
+}
+

@@ -454,4 +454,73 @@ body.black {
       }
     }
   }
+
+  // 按键热力图黑暗模式样式
+  .key-heatmap-container {
+    background-color: $black-btn-bg;
+    border-color: $black-color-border;
+    
+    .key-heatmap-header {
+      h3 {
+        color: $black-color-text;
+      }
+      
+      .key-heatmap-controls {
+        button {
+          background-color: $cyan;
+          color: $black-bg;
+          border-color: $cyan;
+          
+          &:hover {
+            background-color: darken($cyan, 10%);
+          }
+          
+          &.key-heatmap-reset {
+            background-color: $red;
+            color: white;
+            
+            &:hover {
+              background-color: darken($red, 10%);
+            }
+          }
+        }
+      }
+    }
+    
+    .key-heatmap-legend {
+      color: $black-color-text-info;
+      
+      .legend-gradient {
+        background: linear-gradient(to right, 
+          rgba(0, 188, 212, 0.1), 
+          rgba(0, 188, 212, 0.3),
+          rgba(0, 188, 212, 0.6),
+          rgba(0, 188, 212, 0.9),
+          rgba(0, 188, 212, 1)
+        );
+      }
+    }
+    
+    .key-heatmap-board {
+      .key-row {
+        .key-item {
+          background-color: rgba(0, 188, 212, calc(var(--intensity, 0) * 0.8 + 0.1));
+          border-color: $black-color-border;
+          color: $black-color-text;
+          
+          &:hover {
+            box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
+          }
+        }
+      }
+    }
+    
+    .key-heatmap-stats {
+      color: $black-color-text-info;
+      
+      .total-keys, .max-frequency {
+        color: $black-color-text;
+      }
+    }
+  }
 }

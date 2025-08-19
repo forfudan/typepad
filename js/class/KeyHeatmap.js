@@ -1,0 +1,351 @@
+define([], function () {
+    /**
+     * 按键热力图管理类
+     * 记录和可视化按键频率
+     */
+    class KeyHeatmap {
+        constructor() {
+            this.container = null;
+            this.maxFrequency = 1;
+            this.keyStats = this.loadKeyStats();
+            this.init();
+        }
+
+        /**
+         * 从localStorage加载按键统计数据
+         */
+        loadKeyStats() {
+            const saved = localStorage.getItem('typepad_key_stats');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    const stats = data.stats || {};
+                    // 重新计算maxFrequency，确保准确性
+                    this.maxFrequency = Object.keys(stats).length > 0 
+                        ? Math.max(...Object.values(stats)) 
+                        : 1;
+                    return stats;
+                } catch (e) {
+                    console.warn('Failed to load key stats:', e);
+                }
+            }
+            this.maxFrequency = 1;
+            return {};
+        }
+
+        /**
+         * 保存按键统计数据到localStorage
+         */
+        saveKeyStats() {
+            const data = {
+                stats: this.keyStats,
+                maxFrequency: this.maxFrequency,
+                lastUpdate: Date.now()
+            };
+            localStorage.setItem('typepad_key_stats', JSON.stringify(data));
+        }
+
+        /**
+         * 处理修饰键的位置检测
+         * 我们要严格区分左右修饰键，
+         * 例如左Shift和右Shift是不同的按键。
+         * 这样可以更准确地反映按键的使用频率和热力分布。
+         * 并且了解左右手的实际负荷。
+         */
+        recordKeyWithLocation(event) {
+            const key = event.key;
+            let normalizedKey = this.normalizeKey(key);
+            
+            // 严格区分左右修饰键
+            if (key === 'Shift') {
+                normalizedKey = event.location === 1 ? 'LShift' : 'RShift';
+            } else if (key === 'Control') {
+                normalizedKey = event.location === 1 ? 'LCtrl' : 'RCtrl';
+            } else if (key === 'Alt') {
+                normalizedKey = event.location === 1 ? 'LAlt' : 'RAlt';
+            } else if (key === 'Meta') {
+                normalizedKey = event.location === 1 ? 'LCmd' : 'RCmd';
+            }
+            
+            if (normalizedKey) {
+                this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
+                this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
+                this.saveKeyStats();
+                this.updateDisplay();
+            }
+        }
+
+        /**
+         * 记录按键
+         */
+        recordKey(key) {
+            // 将按键转换为大写以统一处理
+            const normalizedKey = this.normalizeKey(key);
+            
+            if (normalizedKey) {
+                this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
+                this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
+                this.saveKeyStats();
+                this.updateDisplay();
+            }
+        }
+
+        /**
+         * 标准化按键名称
+         */
+        normalizeKey(key) {
+            // 特殊键名映射
+            const keyMap = {
+                ' ': 'Space',
+                'Enter': 'Enter',
+                'Backspace': 'Backspace',
+                'Tab': 'Tab',
+                'CapsLock': 'Caps',
+                'Escape': 'Esc'
+            };
+
+            if (keyMap[key]) {
+                return keyMap[key];
+            }
+
+            // 字母、数字、符号直接使用大写
+            if (key.length === 1) {
+                return key.toUpperCase();
+            }
+
+            return null;
+        }
+
+        /**
+         * 初始化热力图容器
+         */
+        init() {
+            this.createContainer();
+            this.createKeyboard();
+            this.updateDisplay();
+        }
+
+        /**
+         * 创建热力图容器
+         */
+        createContainer() {
+            const container = document.createElement('div');
+            container.className = 'key-heatmap-container';
+            container.innerHTML = `
+                <div class="key-heatmap-header">
+                    <h3>按键频率热力图</h3>
+                    <div class="key-heatmap-controls">
+                        <button class="key-heatmap-export" onclick="keyHeatmap.exportStats()">导出数据</button>
+                        <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">导入数据(增量)</button>
+                        <button class="key-heatmap-reset" onclick="keyHeatmap.resetStats()">重置统计</button>
+                    </div>
+                </div>
+                <input type="file" id="keyHeatmapFileInput" accept=".json" style="display: none;" onchange="keyHeatmap.handleFileImport(event)">
+                <div class="key-heatmap-legend">
+                    <span>低频</span>
+                    <div class="legend-gradient"></div>
+                    <span>高频</span>
+                </div>
+                <div class="key-heatmap-board"></div>
+                <div class="key-heatmap-stats">
+                    <span>总按键数: <span class="total-keys">0</span></span>
+                    <span>最高频率: <span class="max-frequency">0</span></span>
+                </div>
+            `;
+
+            // 找到成绩表格容器并在其后插入热力图
+            const tableContainer = document.querySelector('.table-container');
+            if (tableContainer) {
+                tableContainer.insertAdjacentElement('afterend', container);
+            } else {
+                // 如果找不到表格容器，则添加到页面底部
+                document.body.appendChild(container);
+            }
+            this.container = container;
+        }
+
+        /**
+         * 创建键盘布局
+         * 和其他的网站的热力图不同，这里宇浩认为应当创建一个完整的键盘布局，
+         * 包括所有的字母、数字和符号键，以及常用的功能键。
+         * 这样可以更直观地展示按键的使用频率和热力分布。
+         * 在输入法界，通常认为左手理论按键频率太大不好，
+         * 但是实际上右手的实际按键频率也很高，因为符号区、回车键、回改键
+         * 以及其他常用的功能键都在右手区域。
+         */
+        createKeyboard() {
+            const keyboard = this.container.querySelector('.key-heatmap-board');
+            
+            // 键盘布局定义，严格区分左右修饰键
+            const layout = [
+                ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
+                ['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
+                ['Caps', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'Enter'],
+                ['LShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'RShift'],
+                ['LCtrl', 'LAlt', 'Space', 'RAlt', 'RCtrl']
+            ];
+
+            layout.forEach(row => {
+                const rowElement = document.createElement('div');
+                rowElement.className = 'key-row';
+                
+                row.forEach(key => {
+                    const keyElement = document.createElement('div');
+                    keyElement.className = 'key-item';
+                    keyElement.dataset.key = key;
+                    
+                    // 创建按键内容结构：字母 + 百分比
+                    keyElement.innerHTML = `
+                        <div class="key-label">${key}</div>
+                        <div class="key-percentage">0%</div>
+                    `;
+                    
+                    // 设置特殊键的宽度
+                    if (key === 'Backspace') keyElement.classList.add('key-wide');
+                    else if (key === 'Tab') keyElement.classList.add('key-medium');
+                    else if (key === 'Caps') keyElement.classList.add('key-medium');
+                    else if (key === 'Enter') keyElement.classList.add('key-medium');
+                    else if (key === 'LShift' || key === 'RShift') keyElement.classList.add('key-large');
+                    else if (key === 'Space') keyElement.classList.add('key-space');
+                    else if (key === 'LCtrl' || key === 'RCtrl' || key === 'LAlt' || key === 'RAlt') keyElement.classList.add('key-small');
+                    
+                    rowElement.appendChild(keyElement);
+                });
+                
+                keyboard.appendChild(rowElement);
+            });
+        }
+
+        /**
+         * 更新热力图显示
+         */
+        updateDisplay() {
+            if (!this.container) return;
+
+            const totalKeys = Object.values(this.keyStats).reduce((sum, count) => sum + count, 0);
+            this.container.querySelector('.total-keys').textContent = totalKeys.toLocaleString();
+            this.container.querySelector('.max-frequency').textContent = this.maxFrequency.toLocaleString();
+
+            // 更新每个按键的热力图显示
+            this.container.querySelectorAll('.key-item').forEach(keyElement => {
+                const key = keyElement.dataset.key;
+                const frequency = this.keyStats[key] || 0;
+                const intensity = this.maxFrequency > 0 ? frequency / this.maxFrequency : 0;
+                const percentage = totalKeys > 0 ? ((frequency / totalKeys) * 100).toFixed(1) : '0.0';
+                
+                // 设置热力图颜色
+                keyElement.style.setProperty('--intensity', intensity);
+                keyElement.setAttribute('title', `${key}: ${frequency} 次 (${percentage}%)`);
+                
+                // 更新百分比显示
+                const percentageElement = keyElement.querySelector('.key-percentage');
+                if (percentageElement) {
+                    percentageElement.textContent = `${percentage}%`;
+                }
+            });
+        }
+
+        /**
+         * 导出统计数据
+         */
+        exportStats() {
+            const data = {
+                stats: this.keyStats,
+                maxFrequency: this.maxFrequency,
+                totalKeys: Object.values(this.keyStats).reduce((sum, count) => sum + count, 0),
+                exportTime: new Date().toISOString(),
+                version: '1.0',
+                website: 'https://genda.shurufa.app',
+                description: '按鍵熱力圖統計數據',
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `genda.shurufa.app-key-stats-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(link.href);
+        }
+
+        /**
+         * 导入统计数据
+         */
+        importStats() {
+            document.getElementById('keyHeatmapFileInput').click();
+        }
+
+        /**
+         * 处理文件导入
+         */
+        handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.stats && typeof data.stats === 'object') {
+                        // 合并统计数据
+                        Object.keys(data.stats).forEach(key => {
+                            this.keyStats[key] = (this.keyStats[key] || 0) + data.stats[key];
+                        });
+                        
+                        // 重新计算最大频率
+                        this.maxFrequency = Object.keys(this.keyStats).length > 0 
+                            ? Math.max(...Object.values(this.keyStats)) 
+                            : 1;
+                        
+                        this.saveKeyStats();
+                        this.updateDisplay();
+                        
+                        alert('数据导入成功了哟！开心开心！不过注意一下，导入数据没有覆盖现有数据，而是增量合并哦！');
+                    } else {
+                        alert('文件格式错误了哟！');
+                    }
+                } catch (error) {
+                    alert('文件解析失败：' + error.message);
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // 清除文件输入，允许重复选择同一文件
+            event.target.value = '';
+        }
+
+        /**
+         * 重置统计数据
+         */
+        resetStats() {
+            if (confirm('你确定要重置所有按键统计数据吗？最好先备份一下数据哦！')) {
+                this.keyStats = {};
+                this.maxFrequency = 1;
+                this.saveKeyStats();
+                this.updateDisplay();
+            }
+        }
+
+        /**
+         * 获取按键统计摘要
+         */
+        getStatsSummary() {
+            const totalKeys = Object.values(this.keyStats).reduce((sum, count) => sum + count, 0);
+            const topKeys = Object.entries(this.keyStats)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10);
+            
+            return {
+                totalKeys,
+                topKeys,
+                maxFrequency: this.maxFrequency
+            };
+        }
+    }
+
+    return KeyHeatmap;
+});
