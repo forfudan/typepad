@@ -1271,6 +1271,48 @@ body.black .scheme-name-container .scheme-name-content .scheme-name-input:focus 
 body.black .scheme-name-container .scheme-name-content .scheme-name-input::placeholder {
   color: rgb(140.25, 140.25, 140.25);
 }
+body.black .key-heatmap-container {
+  background-color: rgb(63.75, 63.75, 63.75);
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .key-heatmap-container .key-heatmap-header h3 {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button {
+  background-color: #00afff;
+  color: #1c1f24;
+  border-color: #00afff;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button:hover {
+  background-color: #008ccc;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset {
+  background-color: #FF3B30;
+  color: white;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset:hover {
+  background-color: rgb(252, 13.3913043478, 0);
+}
+body.black .key-heatmap-container .key-heatmap-legend {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .key-heatmap-container .key-heatmap-legend .legend-gradient {
+  background: linear-gradient(to right, rgba(0, 188, 212, 0.1), rgba(0, 188, 212, 0.3), rgba(0, 188, 212, 0.6), rgba(0, 188, 212, 0.9), rgb(0, 188, 212));
+}
+body.black .key-heatmap-container .key-heatmap-board .key-row .key-item {
+  background-color: rgba(0, 188, 212, calc(var(--intensity, 0) * 0.8 + 0.1));
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .key-heatmap-container .key-heatmap-board .key-row .key-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
+}
+body.black .key-heatmap-container .key-heatmap-stats {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .key-heatmap-container .key-heatmap-stats .total-keys, body.black .key-heatmap-container .key-heatmap-stats .max-frequency {
+  color: rgb(229.5, 229.5, 229.5);
+}
 
 .animated {
   -webkit-animation-duration: 0.25s;
@@ -2052,6 +2094,171 @@ body {
 @media (max-width: 500px) {
   .type-pad-standalone {
     padding: 10px;
+  }
+}
+
+.key-heatmap-container {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+.key-heatmap-container.hidden {
+  display: none;
+}
+.key-heatmap-container .key-heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.key-heatmap-container .key-heatmap-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #495057;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls {
+  display: flex;
+  gap: 10px;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button {
+  padding: 6px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button:hover {
+  background-color: #0056b3;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset {
+  background-color: #dc3545;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset:hover {
+  background-color: #c82333;
+}
+.key-heatmap-container .key-heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  color: #6c757d;
+}
+.key-heatmap-container .key-heatmap-legend .legend-gradient {
+  width: 100px;
+  height: 10px;
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0.9), rgb(59, 130, 246));
+  border-radius: 5px;
+}
+.key-heatmap-container .key-heatmap-board {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 15px;
+}
+.key-heatmap-container .key-heatmap-board .key-row {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item {
+  min-width: 40px;
+  height: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(59, 130, 246, calc(var(--intensity, 0) * 0.8 + 0.1));
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
+  font-size: 10px;
+  line-height: 1;
+  margin-bottom: 1px;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
+  font-size: 8px;
+  line-height: 1;
+  opacity: 0.8;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
+  min-width: 80px;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
+  min-width: 60px;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
+  min-width: 90px;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
+  min-width: 200px;
+}
+.key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
+  min-width: 50px;
+}
+.key-heatmap-container .key-heatmap-stats {
+  display: flex;
+  justify-content: space-around;
+  font-size: 12px;
+  color: #6c757d;
+}
+.key-heatmap-container .key-heatmap-stats span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.key-heatmap-container .key-heatmap-stats span .total-keys, .key-heatmap-container .key-heatmap-stats span .max-frequency {
+  font-weight: bold;
+  color: #495057;
+}
+
+@media (max-width: 768px) {
+  .key-heatmap-container {
+    margin: 10px 0;
+    padding: 15px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item {
+    min-width: 30px;
+    height: 30px;
+    font-size: 10px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
+    font-size: 8px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
+    font-size: 6px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
+    min-width: 60px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
+    min-width: 45px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
+    min-width: 65px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
+    min-width: 120px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
+    min-width: 35px;
   }
 }
 
