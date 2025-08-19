@@ -135,8 +135,8 @@ define([], function () {
                 <div class="key-heatmap-header">
                     <h3>按键频率热力图</h3>
                     <div class="key-heatmap-controls">
-                        <button class="key-heatmap-export" onclick="keyHeatmap.exportStats()">导出</button>
-                        <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">导入</button>
+                        <button class="key-heatmap-export" onclick="keyHeatmap.exportStats()">导出数据</button>
+                        <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">导入数据(增量)</button>
                         <button class="key-heatmap-reset" onclick="keyHeatmap.resetStats()">重置统计</button>
                     </div>
                 </div>
@@ -303,9 +303,9 @@ define([], function () {
                         this.saveKeyStats();
                         this.updateDisplay();
                         
-                        alert('数据导入成功！');
+                        alert('数据导入成功了哟！开心开心！不过注意一下，导入数据没有覆盖现有数据，而是增量合并哦！');
                     } else {
-                        alert('文件格式错误！');
+                        alert('文件格式错误了哟！');
                     }
                 } catch (error) {
                     alert('文件解析失败：' + error.message);
@@ -322,7 +322,7 @@ define([], function () {
          * 重置统计数据
          */
         resetStats() {
-            if (confirm('确定要重置所有按键统计数据吗？')) {
+            if (confirm('你确定要重置所有按键统计数据吗？最好先备份一下数据哦！')) {
                 this.keyStats = {};
                 this.maxFrequency = 1;
                 this.saveKeyStats();
