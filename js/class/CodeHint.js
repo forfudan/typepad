@@ -7,7 +7,7 @@ define([], function () {
         constructor() {
             this.codeTable = new Map(); // 存储码表数据
             this.isLoaded = false;
-            this.currentTableName = '宇浩日月方案'; // 当前码表名称
+            this.currentTableName = '宇浩·日月'; // 当前码表名称
             this.currentCharElement = document.querySelector('.current-char');
             this.codeListElement = document.querySelector('.code-list');
             this.currentTableElement = document.querySelector('.current-table');
@@ -16,30 +16,40 @@ define([], function () {
             // 内置码表配置
             this.builtinCodeTables = {
                 'yuhao-ming': {
-                    name: '宇浩·日月·大明输入法',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt'
+                    name: '宇浩·日月',
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt',
+                    format: 'code_first'
                 },
                 'yuhao-joy': {
                     name: '卿云',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt'
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt',
+                    format: 'code_first'
+                },
+                'yuhao-light': {
+                    name: '宇浩·光华',
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-light.txt',
+                    format: 'code_first'
                 },
                 'yuhao-star': {
                     name: '宇浩·星陈',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt'
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt',
+                    format: 'code_first'
                 },
                 'sky': {
                     name: '宋天·天码',
-                    url: 'https://raw.githubusercontent.com/forfudan/tianma-sky/main/mabiao-sky.txt'
+                    url: 'https://raw.githubusercontent.com/forfudan/tianma-sky/main/mabiao-sky.txt',
+                    format: 'code_first'
                 },
                 'hao-xi': {
                     name: '好码·淅码',
-                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-xi.txt'
+                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-xi.txt',
+                    format: 'code_first'
                 },
                 'hao-sy': {
                     name: '好码·松烟',
-                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-sy.txt'
+                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-sy.txt',
+                    format: 'code_first'
                 },
-
             };
 
             // 初始化文件上传功能
@@ -101,11 +111,18 @@ define([], function () {
                 const isValid = this.validateCodeTable(text);
 
                 if (isValid) {
-                    this.parseCodeTable(text);
+                    // 获取用户选择的格式
+                    const formatSelect = document.getElementById('codeTableFormat');
+                    const format = formatSelect ? formatSelect.value : 'code_first';
+                    
+                    this.parseCodeTable(text, format);
                     this.isLoaded = true;
                     this.currentTableName = file.name;
                     this.updateCurrentTableDisplay();
                     this.showMessage('码表上传成功！', 'success');
+
+                    // 保存用户上传的码表到localStorage
+                    this.saveUserCodeTable(text, format, file.name);
 
                     // 重新显示当前字符的编码
                     this.refreshCurrentChar();
@@ -176,6 +193,75 @@ define([], function () {
         }
 
         /**
+         * 保存用户上传的码表到localStorage
+         */
+        saveUserCodeTable(text, format, filename) {
+            const userCodeTable = {
+                text: text,
+                format: format,
+                filename: filename,
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('userCodeTable', JSON.stringify(userCodeTable));
+            localStorage.setItem('codeTableSource', 'user'); // 标记当前使用的是用户码表
+            console.log('用户码表已保存到localStorage');
+        }
+
+        /**
+         * 加载用户上传的码表
+         */
+        loadUserCodeTable() {
+            try {
+                const savedCodeTable = localStorage.getItem('userCodeTable');
+                if (savedCodeTable) {
+                    const userCodeTable = JSON.parse(savedCodeTable);
+                    this.parseCodeTable(userCodeTable.text, userCodeTable.format);
+                    this.isLoaded = true;
+                    this.currentTableName = userCodeTable.filename;
+                    this.updateCurrentTableDisplay();
+                    console.log('已加载用户上传的码表:', userCodeTable.filename);
+                    return true;
+                }
+            } catch (error) {
+                console.error('加载用户码表失败:', error);
+                localStorage.removeItem('userCodeTable');
+                localStorage.removeItem('codeTableSource');
+            }
+            return false;
+        }
+
+        /**
+         * 清除用户上传的码表
+         */
+        clearUserCodeTable() {
+            localStorage.removeItem('userCodeTable');
+            localStorage.removeItem('codeTableSource');
+            console.log('用户码表已清除');
+        }
+
+        /**
+         * 清除用户码表并重新加载内置方案
+         */
+        async clearUserCodeTableAndReload() {
+            this.clearUserCodeTable();
+            
+            // 重新加载默认内置方案
+            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
+            await this.loadBuiltinCodeTable(savedScheme);
+            
+            // 更新选择器
+            setTimeout(() => {
+                const selectElement = document.getElementById('builtinCodeTableSelect');
+                if (selectElement) {
+                    selectElement.value = savedScheme;
+                }
+            }, 100);
+            
+            this.showMessage('已切换回内置方案', 'success');
+        }
+
+        /**
          * 更新当前码表显示
          */
         updateCurrentTableDisplay() {
@@ -188,7 +274,25 @@ define([], function () {
          * 加载默认码表文件
          */
         async loadDefaultCodeTable() {
-            // 从localStorage读取保存的方案，如果没有则使用默认方案
+            // 检查是否有用户上传的码表
+            const codeTableSource = localStorage.getItem('codeTableSource');
+            
+            if (codeTableSource === 'user') {
+                // 尝试加载用户上传的码表
+                const userLoaded = this.loadUserCodeTable();
+                if (userLoaded) {
+                    // 如果成功加载用户码表，将选择器设置为空或特殊值
+                    setTimeout(() => {
+                        const selectElement = document.getElementById('builtinCodeTableSelect');
+                        if (selectElement) {
+                            selectElement.value = ''; // 不选择任何内置方案
+                        }
+                    }, 100);
+                    return;
+                }
+            }
+            
+            // 如果没有用户码表或加载失败，则加载内置码表
             const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
             await this.loadBuiltinCodeTable(savedScheme);
         }
@@ -208,12 +312,15 @@ define([], function () {
                 this.showMessage('正在加载码表...', '');
                 const response = await fetch(tableConfig.url);
                 const text = await response.text();
-                this.parseCodeTable(text);
+                this.parseCodeTable(text, tableConfig.format || 'code_first');
                 this.isLoaded = true;
                 this.currentTableName = tableConfig.name;
                 this.updateCurrentTableDisplay();
                 this.showMessage('码表加载成功！', 'success');
                 console.log(`${tableConfig.name}加载完成，共`, this.codeTable.size, '条记录');
+                
+                // 切换到内置码表时，清除用户码表标记
+                localStorage.setItem('codeTableSource', 'builtin');
             } catch (error) {
                 console.error('加载码表失败:', error);
                 this.showMessage('码表加载失败，请检查网络连接', 'error');
@@ -261,7 +368,7 @@ define([], function () {
          * 解析码表文件
          * @param {string} text 码表文件内容
          */
-        parseCodeTable(text) {
+        parseCodeTable(text, format = 'code_first') {
             // 清空现有码表
             this.codeTable.clear();
 
@@ -272,8 +379,17 @@ define([], function () {
                     // 支持制表符或空格分隔
                     const parts = trimmedLine.split(/\t| +/);
                     if (parts.length >= 2) {
-                        const code = parts[0].trim();
-                        const chars = parts[1].trim();
+                        let code, chars;
+                        
+                        if (format === 'char_first') {
+                            // 汉字在前，编码在后
+                            chars = parts[0].trim();
+                            code = parts[1].trim();
+                        } else {
+                            // 编码在前，汉字在后 (默认)
+                            code = parts[0].trim();
+                            chars = parts[1].trim();
+                        }
 
                         // 只处理单字，过滤掉词语
                         if (chars.length === 1) {

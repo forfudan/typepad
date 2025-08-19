@@ -558,25 +558,39 @@
       <!-- 码表管理区域 -->
       <div class="codetable-manager">
          <div class="codetable-title">码表管理</div>
-         <div class="codetable-description">
-            默认编码提示采用世上首款纯形前缀码　<b>宇浩·日月</b>（<a href="https://shurufa.app/" target="_blank">shurufa.app</a>）
-         </div>
          <div class="codetable-content">
             <div class="upload-hint">
-               支持上传自定义码表文件（UTF-8编码），格式为：编码[空格/Tab]字符，每行一组
+               支持上传自定义码表文件(UTF-8), 格式为 编码[空格/Tab]字符，或 字符[空格/Tab]编码
             </div>
+            
+            <!-- 格式选择 -->
+            <div class="builtin-codetable">
+               <label for="codeTableFormat" class="builtin-label">码表格式：</label>
+               <select id="codeTableFormat" class="builtin-select">
+                  <option value="code_first" selected>编码在前，汉字在后</option>
+                  <option value="char_first">汉字在前，编码在后</option>
+               </select>
+            </div>
+            
             <input type="file" id="codeTableFile" accept=".txt" style="display: none;">
-            <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
-               上传码表
-            </button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+               <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
+                  上传码表
+               </button>
+               <button class="upload-btn" onclick="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.clearUserCodeTableAndReload()" 
+                       style="background-color: #dc3545;" title="清除已上传的码表，切换回内置方案">
+                  清除自定义码表
+               </button>
+            </div>
             
             <!-- 内置码表选择 -->
             <div class="builtin-codetable">
                <label for="builtinCodeTableSelect" class="builtin-label">选择内置方案：</label>
                <select id="builtinCodeTableSelect" class="builtin-select" onchange="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.switchBuiltinCodeTable(this.value)">
                   <option value="yuhao-ming" selected>宇浩·日月</option>
-                  <option value="yuhao-star">宇浩·星陳</option>
                   <option value="yuhao-joy">卿云输入法</option>
+                  <option value="yuhao-light">宇浩·光华</option>
+                  <option value="yuhao-star">宇浩·星陳</option>
                   <option value="sky">宋天·天碼</option>
                   <option value="hao-xi">好码·淅码</option>
                   <option value="hao-sy">好码·松烟</option>
@@ -584,7 +598,7 @@
             </div>
             
             <div class="upload-status">
-               <div class="current-table">当前：宇浩·日月·大明输入法</div>
+               <div class="current-table">当前：<b>宇浩·日月</b> 世上首款纯形前缀码 (<a href="https://shurufa.app/" target="_blank">shurufa.app</a>)</div>
                <div class="upload-message"></div>
             </div>
          </div>
