@@ -2158,17 +2158,21 @@ body {
 .key-heatmap-container .key-heatmap-board {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: clamp(2px, 0.4vw, 4px);
   margin-bottom: 15px;
+  width: 100%;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 .key-heatmap-container .key-heatmap-board .key-row {
   display: flex;
-  gap: 4px;
+  gap: clamp(2px, 0.4vw, 4px);
   justify-content: center;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item {
-  min-width: 50px;
-  height: 55px;
+  min-width: clamp(35px, 4vw, 50px);
+  height: clamp(40px, 4.5vw, 55px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2176,20 +2180,20 @@ body {
   background-color: rgba(59, 130, 246, calc(var(--intensity, 0) * 0.8 + 0.1));
   border: 1px solid #dee2e6;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: clamp(10px, 1.2vw, 14px);
   font-weight: 500;
   color: #495057;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding: 4px;
+  padding: clamp(2px, 0.3vw, 4px);
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
-  font-size: 14px;
+  font-size: clamp(10px, 1.2vw, 14px);
   line-height: 1;
   margin-bottom: 2px;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
-  font-size: 14px;
+  font-size: clamp(8px, 1vw, 14px);
   line-height: 1;
   opacity: 0.8;
 }
@@ -2198,19 +2202,19 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
-  min-width: 110px;
+  min-width: clamp(75px, 8.5vw, 110px);
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
-  min-width: 85px;
+  min-width: clamp(60px, 6.5vw, 85px);
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
-  min-width: 125px;
+  min-width: clamp(85px, 9.5vw, 125px);
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
-  min-width: 280px;
+  min-width: clamp(180px, 22vw, 280px);
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
-  min-width: 70px;
+  min-width: clamp(50px, 5.5vw, 70px);
 }
 .key-heatmap-container .key-heatmap-stats {
   display: flex;
@@ -2232,87 +2236,85 @@ body {
 @media (max-width: 768px) {
   .key-heatmap-container {
     margin: 10px 0;
-    padding: 15px;
+    padding: 10px;
+  }
+  .key-heatmap-container .key-heatmap-board .key-row {
+    gap: clamp(1px, 0.3vw, 3px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item {
-    min-width: 30px;
-    height: 30px;
-    font-size: 10px;
+    min-width: clamp(25px, 3.5vw, 35px);
+    height: clamp(25px, 3.5vw, 40px);
+    font-size: clamp(8px, 1vw, 12px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
-    font-size: 8px;
+    font-size: clamp(7px, 0.9vw, 11px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
-    font-size: 6px;
+    font-size: clamp(6px, 0.8vw, 10px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
-    min-width: 60px;
+    min-width: clamp(50px, 7vw, 75px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
-    min-width: 45px;
+    min-width: clamp(40px, 5.5vw, 60px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
-    min-width: 65px;
+    min-width: clamp(55px, 8vw, 85px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
-    min-width: 120px;
+    min-width: clamp(100px, 18vw, 180px);
   }
   .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
-    min-width: 35px;
+    min-width: clamp(30px, 4.5vw, 50px);
   }
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row {
-  gap: 6px;
+  gap: clamp(4px, 0.6vw, 8px);
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item {
-  min-width: 75px;
-  height: 60px;
-  font-size: 16px;
+  min-width: clamp(60px, 6vw, 85px);
+  height: clamp(50px, 6vw, 70px);
+  font-size: clamp(14px, 1.6vw, 18px);
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
-  font-size: 15px;
+  font-size: clamp(13px, 1.5vw, 17px);
   margin-bottom: 3px;
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
-  font-size: 12px;
+  font-size: clamp(11px, 1.3vw, 15px);
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
-  min-width: 150px;
+  min-width: clamp(120px, 12vw, 160px);
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
-  min-width: 110px;
+  min-width: clamp(90px, 9vw, 120px);
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
-  min-width: 165px;
+  min-width: clamp(130px, 13vw, 180px);
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
-  min-width: 375px;
+  min-width: clamp(280px, 30vw, 400px);
 }
 :fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
 :-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
 :-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
-  min-width: 90px;
-}
-:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
-:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
-:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
-  min-width: 75px;
+  min-width: clamp(70px, 7vw, 95px);
 }
 
 /*# sourceMappingURL=typepad.css.map */
