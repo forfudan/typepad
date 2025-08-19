@@ -121,6 +121,9 @@ define([], function () {
                     this.updateCurrentTableDisplay();
                     this.showMessage('码表上传成功！', 'success');
 
+                    // 保存用户上传的码表到localStorage
+                    this.saveUserCodeTable(text, format, file.name);
+
                     // 重新显示当前字符的编码
                     this.refreshCurrentChar();
                 } else {
@@ -190,6 +193,75 @@ define([], function () {
         }
 
         /**
+         * 保存用户上传的码表到localStorage
+         */
+        saveUserCodeTable(text, format, filename) {
+            const userCodeTable = {
+                text: text,
+                format: format,
+                filename: filename,
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('userCodeTable', JSON.stringify(userCodeTable));
+            localStorage.setItem('codeTableSource', 'user'); // 标记当前使用的是用户码表
+            console.log('用户码表已保存到localStorage');
+        }
+
+        /**
+         * 加载用户上传的码表
+         */
+        loadUserCodeTable() {
+            try {
+                const savedCodeTable = localStorage.getItem('userCodeTable');
+                if (savedCodeTable) {
+                    const userCodeTable = JSON.parse(savedCodeTable);
+                    this.parseCodeTable(userCodeTable.text, userCodeTable.format);
+                    this.isLoaded = true;
+                    this.currentTableName = userCodeTable.filename;
+                    this.updateCurrentTableDisplay();
+                    console.log('已加载用户上传的码表:', userCodeTable.filename);
+                    return true;
+                }
+            } catch (error) {
+                console.error('加载用户码表失败:', error);
+                localStorage.removeItem('userCodeTable');
+                localStorage.removeItem('codeTableSource');
+            }
+            return false;
+        }
+
+        /**
+         * 清除用户上传的码表
+         */
+        clearUserCodeTable() {
+            localStorage.removeItem('userCodeTable');
+            localStorage.removeItem('codeTableSource');
+            console.log('用户码表已清除');
+        }
+
+        /**
+         * 清除用户码表并重新加载内置方案
+         */
+        async clearUserCodeTableAndReload() {
+            this.clearUserCodeTable();
+            
+            // 重新加载默认内置方案
+            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
+            await this.loadBuiltinCodeTable(savedScheme);
+            
+            // 更新选择器
+            setTimeout(() => {
+                const selectElement = document.getElementById('builtinCodeTableSelect');
+                if (selectElement) {
+                    selectElement.value = savedScheme;
+                }
+            }, 100);
+            
+            this.showMessage('已切换回内置方案', 'success');
+        }
+
+        /**
          * 更新当前码表显示
          */
         updateCurrentTableDisplay() {
@@ -202,7 +274,25 @@ define([], function () {
          * 加载默认码表文件
          */
         async loadDefaultCodeTable() {
-            // 从localStorage读取保存的方案，如果没有则使用默认方案
+            // 检查是否有用户上传的码表
+            const codeTableSource = localStorage.getItem('codeTableSource');
+            
+            if (codeTableSource === 'user') {
+                // 尝试加载用户上传的码表
+                const userLoaded = this.loadUserCodeTable();
+                if (userLoaded) {
+                    // 如果成功加载用户码表，将选择器设置为空或特殊值
+                    setTimeout(() => {
+                        const selectElement = document.getElementById('builtinCodeTableSelect');
+                        if (selectElement) {
+                            selectElement.value = ''; // 不选择任何内置方案
+                        }
+                    }, 100);
+                    return;
+                }
+            }
+            
+            // 如果没有用户码表或加载失败，则加载内置码表
             const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
             await this.loadBuiltinCodeTable(savedScheme);
         }
@@ -228,6 +318,9 @@ define([], function () {
                 this.updateCurrentTableDisplay();
                 this.showMessage('码表加载成功！', 'success');
                 console.log(`${tableConfig.name}加载完成，共`, this.codeTable.size, '条记录');
+                
+                // 切换到内置码表时，清除用户码表标记
+                localStorage.setItem('codeTableSource', 'builtin');
             } catch (error) {
                 console.error('加载码表失败:', error);
                 this.showMessage('码表加载失败，请检查网络连接', 'error');

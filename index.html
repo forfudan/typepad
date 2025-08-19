@@ -573,9 +573,15 @@
             </div>
             
             <input type="file" id="codeTableFile" accept=".txt" style="display: none;">
-            <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
-               上传码表
-            </button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+               <button class="upload-btn" onclick="document.getElementById('codeTableFile').click()">
+                  上传码表
+               </button>
+               <button class="upload-btn" onclick="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.clearUserCodeTableAndReload()" 
+                       style="background-color: #dc3545;" title="清除已上传的码表，切换回内置方案">
+                  清除自定义码表
+               </button>
+            </div>
             
             <!-- 内置码表选择 -->
             <div class="builtin-codetable">
