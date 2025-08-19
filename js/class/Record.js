@@ -34,6 +34,7 @@ define(['Utility', 'ArticleType'], function (Utility,ArticleType) {
               <td>${articleName}</td>                                                       <! --文章名称-->
               <td class="hidden-sm">${Utility.dateFormatter(new Date(this.timeStart))}</td> <! --开始时间-->
               <td><button class="btn btn-danger btn-sm" onclick="engine.delete(${config.IDBIndex}, this)" type="button">删除</button></td>
+              <td><button class="btn btn-primary btn-sm" onclick="engine.copyScore(this)" type="button" title="复制成绩到剪贴板">📋</button></td>
             </tr>`;
       }
 

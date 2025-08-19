@@ -791,6 +791,79 @@ define(
             this.database.delete(id, sender)
          }
 
+         copyScore(sender) {
+            // 獲取當前行的成績數據
+            const row = sender.closest('tr');
+            const cells = row.querySelectorAll('td');
+            
+            // 提取各列的成績數據
+            const rank = cells[0]?.textContent?.trim() || '';
+            const speed = cells[1]?.textContent?.trim() || '';
+            const hitRate = cells[2]?.textContent?.trim() || '';
+            const codeLength = cells[3]?.textContent?.trim() || '';
+            const backspace = cells[4]?.textContent?.trim() || '';
+            const wordCount = cells[5]?.textContent?.trim() || '';
+            const duration = cells[6]?.textContent?.trim() || '';
+            const articleType = cells[7]?.textContent?.trim() || '';
+            const articleName = cells[8]?.textContent?.trim() || '';
+            const time = cells[9]?.textContent?.trim() || '';
+            
+            // 將成績數據組合成一個字符串
+            let scoreText = `打字成绩分享 📊\n`;
+            scoreText += `速度: ${speed} 字/分钟\n`;
+            if (hitRate) scoreText += `正确率: ${hitRate}%\n`;
+            if (codeLength) scoreText += `平均码长: ${codeLength}\n`;
+            if (backspace) scoreText += `退格: ${backspace} 次\n`;
+            scoreText += `字数: ${wordCount} 字\n`;
+            scoreText += `用时: ${duration}\n`;
+            scoreText += `文章类型: ${articleType}\n`;
+            if (articleName) scoreText += `文章: ${articleName}\n`;
+            if (time) scoreText += `时间: ${time}\n`;
+            scoreText += `来自: https://genda.shurufa.app`;
+            
+            // 複製成績到剪貼板
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(scoreText).then(() => {
+                    // 顯示複製成功
+                    const originalText = sender.textContent;
+                    sender.textContent = '✓';
+                    sender.style.background = '#28a745';
+                    setTimeout(() => {
+                        sender.textContent = originalText;
+                        sender.style.background = '';
+                    }, 1000);
+                }).catch(err => {
+                    console.error('复制失败:', err);
+                    this.fallbackCopyTextToClipboard(scoreText, sender);
+                });
+            } else {
+                this.fallbackCopyTextToClipboard(scoreText, sender);
+            }
+         }
+
+         fallbackCopyTextToClipboard(text, sender) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const originalText = sender.textContent;
+                    sender.textContent = '✓';
+                    sender.style.background = '#28a745';
+                    setTimeout(() => {
+                        sender.textContent = originalText;
+                        sender.style.background = '';
+                    }, 1000);
+                }
+            } catch (err) {
+                console.error('Fallback: 复制失败', err);
+            }
+            document.body.removeChild(textArea);
+         }
+
          // 清除记录
          clear(sender) {
             if (sender.innerText !== '确定清除') {
