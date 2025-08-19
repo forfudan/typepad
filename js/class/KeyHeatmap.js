@@ -47,6 +47,10 @@ define([], function () {
 
         /**
          * 处理修饰键的位置检测
+         * 我们要严格区分左右修饰键，
+         * 例如左Shift和右Shift是不同的按键。
+         * 这样可以更准确地反映按键的使用频率和热力分布。
+         * 并且了解左右手的实际负荷。
          */
         recordKeyWithLocation(event) {
             const key = event.key;
