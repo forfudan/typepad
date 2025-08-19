@@ -2,7 +2,7 @@
  * 编码提示类
  * 用于显示当前字符的编码信息
  */
-define([], function() {
+define([], function () {
     class CodeHint {
         constructor() {
             this.codeTable = new Map(); // 存储码表数据
@@ -12,36 +12,53 @@ define([], function() {
             this.codeListElement = document.querySelector('.code-list');
             this.currentTableElement = document.querySelector('.current-table');
             this.uploadMessageElement = document.querySelector('.upload-message');
-            
+
             // 内置码表配置
             this.builtinCodeTables = {
-                'yuhao-riyue': {
-                    name: '宇浩日月方案',
+                'yuhao-ming': {
+                    name: '宇浩·日月·大明输入法',
                     url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt'
                 },
-                'qingyun-joy': {
-                    name: '卿云输入法',
+                'yuhao-joy': {
+                    name: '卿云',
                     url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt'
-                }
+                },
+                'yuhao-star': {
+                    name: '宇浩·星陈',
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt'
+                },
+                'sky': {
+                    name: '宋天·天码',
+                    url: 'https://raw.githubusercontent.com/forfudan/tianma-sky/main/mabiao-sky.txt'
+                },
+                'hao-xi': {
+                    name: '好码·淅码',
+                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-xi.txt'
+                },
+                'hao-sy': {
+                    name: '好码·松烟',
+                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-sy.txt'
+                },
+
             };
-            
+
             // 初始化文件上传功能
             this.initFileUpload();
-            
+
             // 初始化选择框和加载保存的方案
             this.initBuiltinSelector();
-            
+
             // 加载默认码表
             this.loadDefaultCodeTable();
         }
-        
+
         /**
          * 初始化内置码表选择器
          */
         initBuiltinSelector() {
             // 从localStorage读取保存的方案
-            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-riyue';
-            
+            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
+
             // 设置选择框的值
             setTimeout(() => {
                 const selectElement = document.getElementById('builtinCodeTableSelect');
@@ -49,11 +66,11 @@ define([], function() {
                     selectElement.value = savedScheme;
                 }
             }, 100);
-            
+
             // 更新当前方案
             this.currentScheme = savedScheme;
         }
-        
+
         /**
          * 初始化文件上传功能
          */
@@ -65,31 +82,31 @@ define([], function() {
                 });
             }
         }
-        
+
         /**
          * 处理文件上传
          */
         async handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
+
             // 检查文件类型
             if (!file.name.toLowerCase().endsWith('.txt')) {
                 this.showMessage('错误：请上传 .txt 格式的文件', 'error');
                 return;
             }
-            
+
             try {
                 const text = await this.readFileAsText(file);
                 const isValid = this.validateCodeTable(text);
-                
+
                 if (isValid) {
                     this.parseCodeTable(text);
                     this.isLoaded = true;
                     this.currentTableName = file.name;
                     this.updateCurrentTableDisplay();
                     this.showMessage('码表上传成功！', 'success');
-                    
+
                     // 重新显示当前字符的编码
                     this.refreshCurrentChar();
                 } else {
@@ -99,11 +116,11 @@ define([], function() {
                 console.error('读取文件失败:', error);
                 this.showMessage('错误：文件读取失败', 'error');
             }
-            
+
             // 清空文件输入
             event.target.value = '';
         }
-        
+
         /**
          * 读取文件内容
          */
@@ -115,18 +132,18 @@ define([], function() {
                 reader.readAsText(file, 'utf-8');
             });
         }
-        
+
         /**
          * 验证码表格式
          */
         validateCodeTable(text) {
             const lines = text.split('\n').filter(line => line.trim());
             if (lines.length === 0) return false;
-            
+
             // 检查前几行的格式
             const samplesToCheck = Math.min(10, lines.length);
             let validLines = 0;
-            
+
             for (let i = 0; i < samplesToCheck; i++) {
                 const line = lines[i].trim();
                 if (line) {
@@ -137,11 +154,11 @@ define([], function() {
                     }
                 }
             }
-            
+
             // 至少要有80%的行格式正确
             return validLines / samplesToCheck >= 0.8;
         }
-        
+
         /**
          * 显示消息
          */
@@ -149,7 +166,7 @@ define([], function() {
             if (this.uploadMessageElement) {
                 this.uploadMessageElement.textContent = message;
                 this.uploadMessageElement.className = `upload-message ${type}`;
-                
+
                 // 3秒后清除消息
                 setTimeout(() => {
                     this.uploadMessageElement.textContent = '';
@@ -157,7 +174,7 @@ define([], function() {
                 }, 3000);
             }
         }
-        
+
         /**
          * 更新当前码表显示
          */
@@ -166,16 +183,16 @@ define([], function() {
                 this.currentTableElement.textContent = `当前：${this.currentTableName}`;
             }
         }
-        
+
         /**
          * 加载默认码表文件
          */
         async loadDefaultCodeTable() {
             // 从localStorage读取保存的方案，如果没有则使用默认方案
-            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-riyue';
+            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
             await this.loadBuiltinCodeTable(savedScheme);
         }
-        
+
         /**
          * 加载内置码表
          * @param {string} tableKey 码表键名
@@ -186,7 +203,7 @@ define([], function() {
                 console.error('未找到码表配置:', tableKey);
                 return;
             }
-            
+
             try {
                 this.showMessage('正在加载码表...', '');
                 const response = await fetch(tableConfig.url);
@@ -202,33 +219,33 @@ define([], function() {
                 this.showMessage('码表加载失败，请检查网络连接', 'error');
             }
         }
-        
+
         /**
          * 切换内置码表
          * @param {string} tableKey 码表键名
          */
         async switchBuiltinCodeTable(tableKey) {
             console.log('切换码表到:', tableKey);
-            
+
             // 保存用户选择到localStorage
             localStorage.setItem('codeHintScheme', tableKey);
             this.currentScheme = tableKey;
-            
+
             // 加载新码表
             await this.loadBuiltinCodeTable(tableKey);
-            
+
             // 更新选择框
             const selectElement = document.getElementById('builtinCodeTableSelect');
             if (selectElement) {
                 selectElement.value = tableKey;
             }
-            
+
             // 强制刷新当前显示
             console.log('当前码表大小:', this.codeTable.size);
-            
+
             // 重新显示当前字符的编码
             this.refreshCurrentChar();
-            
+
             // 如果当前没有字符显示，至少显示一个示例
             if (!this.currentCharElement || this.currentCharElement.textContent === '-') {
                 // 显示码表的第一个字符作为示例
@@ -239,7 +256,7 @@ define([], function() {
                 }
             }
         }
-        
+
         /**
          * 解析码表文件
          * @param {string} text 码表文件内容
@@ -247,7 +264,7 @@ define([], function() {
         parseCodeTable(text) {
             // 清空现有码表
             this.codeTable.clear();
-            
+
             const lines = text.split('\n');
             for (const line of lines) {
                 const trimmedLine = line.trim();
@@ -257,7 +274,7 @@ define([], function() {
                     if (parts.length >= 2) {
                         const code = parts[0].trim();
                         const chars = parts[1].trim();
-                        
+
                         // 只处理单字，过滤掉词语
                         if (chars.length === 1) {
                             const char = chars;
@@ -270,7 +287,7 @@ define([], function() {
                 }
             }
         }
-        
+
         /**
          * 刷新当前字符的编码显示
          */
@@ -290,22 +307,22 @@ define([], function() {
                 }
             }
         }
-        
+
         /**
          * 显示指定字符的编码
          * @param {string} char 要显示编码的字符
          */
         showCodeForChar(char) {
             if (!this.isLoaded) {
-                this.updateDisplay('-', ['开始输入后显示编码提示...']);
+                this.updateDisplay('-', ['码表加载中...']);
                 return;
             }
-            
+
             if (!char || char.trim() === '') {
                 this.updateDisplay('-', ['请开始打字']);
                 return;
             }
-            
+
             const codes = this.codeTable.get(char);
             if (codes && codes.length > 0) {
                 // 去重并排序
@@ -315,7 +332,7 @@ define([], function() {
                 this.updateDisplay(char, ['无编码']);
             }
         }
-        
+
         /**
          * 更新显示内容
          * @param {string} char 当前字符
@@ -326,11 +343,11 @@ define([], function() {
             if (this.currentCharElement) {
                 this.currentCharElement.textContent = char;
             }
-            
+
             // 更新编码列表
             if (this.codeListElement) {
                 this.codeListElement.innerHTML = '';
-                
+
                 codes.forEach(code => {
                     const codeItem = document.createElement('div');
                     codeItem.className = 'code-item';
@@ -339,7 +356,7 @@ define([], function() {
                 });
             }
         }
-        
+
         /**
          * 根据当前输入位置显示编码提示
          * @param {string} templateText 对照文本
@@ -353,7 +370,7 @@ define([], function() {
                 this.showCodeForChar('');
             }
         }
-        
+
         /**
          * 清空显示
          */
@@ -361,6 +378,6 @@ define([], function() {
             this.updateDisplay('-', ['请开始打字']);
         }
     }
-    
+
     return CodeHint;
 });
