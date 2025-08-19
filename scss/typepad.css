@@ -1181,6 +1181,84 @@ body.black .text-gray {
 body.black .text-black {
   color: #cccccc !important;
 }
+body.black .code-hint-container {
+  background-color: #1c1f24;
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .code-hint-container .code-hint-title {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .code-hint-container .code-hint-content .current-char {
+  color: #00afff;
+}
+body.black .code-hint-container .code-hint-content .code-list .code-item {
+  background-color: rgb(63.75, 63.75, 63.75);
+  color: rgb(165.75, 165.75, 165.75);
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .code-hint-container .code-hint-content .code-list .code-item.highlight {
+  background-color: #00afff;
+  color: #1c1f24;
+  border-color: #008ccc;
+}
+body.black .codetable-manager {
+  background-color: #1c1f24;
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .codetable-manager .codetable-title {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .codetable-manager .codetable-description {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .codetable-manager .codetable-description a {
+  color: #00afff;
+}
+body.black .codetable-manager .codetable-description a:hover {
+  color: #33bfff;
+}
+body.black .codetable-manager .codetable-content .upload-hint {
+  background-color: rgb(63.75, 63.75, 63.75);
+  color: rgb(165.75, 165.75, 165.75);
+  border-left-color: #00afff;
+}
+body.black .codetable-manager .codetable-content .upload-btn {
+  background-color: #26c57d;
+}
+body.black .codetable-manager .codetable-content .upload-btn:hover {
+  background-color: rgb(29.7531914894, 154.2468085106, 97.8723404255);
+}
+body.black .codetable-manager .codetable-content .upload-btn:active {
+  background-color: rgb(25.629787234, 132.870212766, 84.3085106383);
+}
+body.black .codetable-manager .codetable-content .builtin-codetable {
+  background-color: rgb(63.75, 63.75, 63.75);
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .codetable-manager .codetable-content .builtin-codetable .builtin-label {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .codetable-manager .codetable-content .builtin-codetable .builtin-select {
+  background-color: #1c1f24;
+  color: rgb(229.5, 229.5, 229.5);
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .codetable-manager .codetable-content .builtin-codetable .builtin-select:focus {
+  border-color: #00afff;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.25);
+}
+body.black .codetable-manager .codetable-content .builtin-codetable .builtin-select:hover {
+  border-color: rgb(56.1, 56.1, 56.1);
+}
+body.black .codetable-manager .codetable-content .upload-status .current-table {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .codetable-manager .codetable-content .upload-status .upload-message.success {
+  color: #26c57d;
+}
+body.black .codetable-manager .codetable-content .upload-status .upload-message.error {
+  color: #FF3B30;
+}
 
 .animated {
   -webkit-animation-duration: 0.25s;

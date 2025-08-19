@@ -328,4 +328,116 @@ body.black {
       color: darken($color, 20%) !important;
     }
   }
+
+  // 编码提示区域 - 暗黑模式
+  .code-hint-container {
+    background-color: $black-bg;
+    border-color: $black-color-border;
+    
+    .code-hint-title {
+      color: $black-color-text;
+    }
+    
+    .code-hint-content {
+      .current-char {
+        color: $cyan;
+      }
+      
+      .code-list {
+        .code-item {
+          background-color: $black-btn-bg;
+          color: $black-color-text-info;
+          border-color: $black-color-border;
+          
+          &.highlight {
+            background-color: $cyan;
+            color: $black-bg;
+            border-color: darken($cyan, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  // 码表管理区域 - 暗黑模式
+  .codetable-manager {
+    background-color: $black-bg;
+    border-color: $black-color-border;
+    
+    .codetable-title {
+      color: $black-color-text;
+    }
+    
+    .codetable-description {
+      color: $black-color-text-info;
+      
+      a {
+        color: $cyan;
+        
+        &:hover {
+          color: lighten($cyan, 10%);
+        }
+      }
+    }
+    
+    .codetable-content {
+      .upload-hint {
+        background-color: $black-btn-bg;
+        color: $black-color-text-info;
+        border-left-color: $cyan;
+      }
+      
+      .upload-btn {
+        background-color: $green;
+        
+        &:hover {
+          background-color: darken($green, 10%);
+        }
+        
+        &:active {
+          background-color: darken($green, 15%);
+        }
+      }
+      
+      .builtin-codetable {
+        background-color: $black-btn-bg;
+        border-color: $black-color-border;
+        
+        .builtin-label {
+          color: $black-color-text;
+        }
+        
+        .builtin-select {
+          background-color: $black-bg;
+          color: $black-color-text;
+          border-color: $black-color-border;
+          
+          &:focus {
+            border-color: $cyan;
+            box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.25);
+          }
+          
+          &:hover {
+            border-color: $black-color-border-highlight;
+          }
+        }
+      }
+      
+      .upload-status {
+        .current-table {
+          color: $black-color-text-info;
+        }
+        
+        .upload-message {
+          &.success {
+            color: $green;
+          }
+          
+          &.error {
+            color: $red;
+          }
+        }
+      }
+    }
+  }
 }
