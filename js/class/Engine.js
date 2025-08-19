@@ -101,7 +101,8 @@ define(
             typingPad.onkeyup = e => {
                e.preventDefault();
                
-               // 记录按键到热力图，区分左右修饰键
+               // 记录按键到热力图
+               // 区分左右修饰键哦
                this.keyHeatmap.recordKeyWithLocation(e);
                
                if (!this.isFinished && this.isStarted) {
