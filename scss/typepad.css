@@ -2158,17 +2158,17 @@ body {
 .key-heatmap-container .key-heatmap-board {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   margin-bottom: 15px;
 }
 .key-heatmap-container .key-heatmap-board .key-row {
   display: flex;
-  gap: 2px;
+  gap: 4px;
   justify-content: center;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item {
-  min-width: 40px;
-  height: 35px;
+  min-width: 50px;
+  height: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2176,20 +2176,20 @@ body {
   background-color: rgba(59, 130, 246, calc(var(--intensity, 0) * 0.8 + 0.1));
   border: 1px solid #dee2e6;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 500;
   color: #495057;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding: 2px;
+  padding: 4px;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1;
   opacity: 0.8;
 }
@@ -2198,19 +2198,19 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
-  min-width: 80px;
+  min-width: 110px;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
-  min-width: 60px;
+  min-width: 85px;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
-  min-width: 90px;
+  min-width: 125px;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
-  min-width: 200px;
+  min-width: 280px;
 }
 .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
-  min-width: 50px;
+  min-width: 70px;
 }
 .key-heatmap-container .key-heatmap-stats {
   display: flex;
@@ -2260,6 +2260,59 @@ body {
   .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
     min-width: 35px;
   }
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row {
+  gap: 6px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item {
+  min-width: 75px;
+  height: 60px;
+  font-size: 16px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-label {
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item .key-percentage {
+  font-size: 12px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-wide {
+  min-width: 150px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-medium {
+  min-width: 110px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-large {
+  min-width: 165px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-space {
+  min-width: 375px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
+  min-width: 90px;
+}
+:fullscreen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
+:-webkit-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small,
+:-moz-full-screen .key-heatmap-container .key-heatmap-board .key-row .key-item.key-small {
+  min-width: 75px;
 }
 
 /*# sourceMappingURL=typepad.css.map */

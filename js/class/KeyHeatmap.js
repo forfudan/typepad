@@ -5,9 +5,9 @@ define([], function () {
      */
     class KeyHeatmap {
         constructor() {
-            this.keyStats = this.loadKeyStats();
             this.container = null;
             this.maxFrequency = 1;
+            this.keyStats = this.loadKeyStats();
             this.init();
         }
 
@@ -46,6 +46,32 @@ define([], function () {
         }
 
         /**
+         * 处理修饰键的位置检测
+         */
+        recordKeyWithLocation(event) {
+            const key = event.key;
+            let normalizedKey = this.normalizeKey(key);
+            
+            // 严格区分左右修饰键
+            if (key === 'Shift') {
+                normalizedKey = event.location === 1 ? 'LShift' : 'RShift';
+            } else if (key === 'Control') {
+                normalizedKey = event.location === 1 ? 'LCtrl' : 'RCtrl';
+            } else if (key === 'Alt') {
+                normalizedKey = event.location === 1 ? 'LAlt' : 'RAlt';
+            } else if (key === 'Meta') {
+                normalizedKey = event.location === 1 ? 'LCmd' : 'RCmd';
+            }
+            
+            if (normalizedKey) {
+                this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
+                this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
+                this.saveKeyStats();
+                this.updateDisplay();
+            }
+        }
+
+        /**
          * 记录按键
          */
         recordKey(key) {
@@ -70,10 +96,6 @@ define([], function () {
                 'Enter': 'Enter',
                 'Backspace': 'Backspace',
                 'Tab': 'Tab',
-                'Shift': 'Shift',
-                'Control': 'Ctrl',
-                'Alt': 'Alt',
-                'Meta': 'Cmd',
                 'CapsLock': 'Caps',
                 'Escape': 'Esc'
             };
@@ -109,10 +131,12 @@ define([], function () {
                 <div class="key-heatmap-header">
                     <h3>按键频率热力图</h3>
                     <div class="key-heatmap-controls">
+                        <button class="key-heatmap-export" onclick="keyHeatmap.exportStats()">导出</button>
+                        <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">导入</button>
                         <button class="key-heatmap-reset" onclick="keyHeatmap.resetStats()">重置统计</button>
-                        <button class="key-heatmap-toggle" onclick="keyHeatmap.toggleDisplay()">隐藏/显示</button>
                     </div>
                 </div>
+                <input type="file" id="keyHeatmapFileInput" accept=".json" style="display: none;" onchange="keyHeatmap.handleFileImport(event)">
                 <div class="key-heatmap-legend">
                     <span>低频</span>
                     <div class="legend-gradient"></div>
@@ -142,13 +166,13 @@ define([], function () {
         createKeyboard() {
             const keyboard = this.container.querySelector('.key-heatmap-board');
             
-            // 键盘布局定义
+            // 键盘布局定义，严格区分左右修饰键
             const layout = [
                 ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
                 ['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
                 ['Caps', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'Enter'],
-                ['Shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'Shift'],
-                ['Ctrl', 'Alt', 'Space', 'Alt', 'Ctrl']
+                ['LShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'RShift'],
+                ['LCtrl', 'LAlt', 'Space', 'RAlt', 'RCtrl']
             ];
 
             layout.forEach(row => {
@@ -158,7 +182,7 @@ define([], function () {
                 row.forEach(key => {
                     const keyElement = document.createElement('div');
                     keyElement.className = 'key-item';
-                    keyElement.dataset.key = this.normalizeKey(key) || key;
+                    keyElement.dataset.key = key;
                     
                     // 创建按键内容结构：字母 + 百分比
                     keyElement.innerHTML = `
@@ -171,9 +195,9 @@ define([], function () {
                     else if (key === 'Tab') keyElement.classList.add('key-medium');
                     else if (key === 'Caps') keyElement.classList.add('key-medium');
                     else if (key === 'Enter') keyElement.classList.add('key-medium');
-                    else if (key === 'Shift') keyElement.classList.add('key-large');
+                    else if (key === 'LShift' || key === 'RShift') keyElement.classList.add('key-large');
                     else if (key === 'Space') keyElement.classList.add('key-space');
-                    else if (key === 'Ctrl' || key === 'Alt') keyElement.classList.add('key-small');
+                    else if (key === 'LCtrl' || key === 'RCtrl' || key === 'LAlt' || key === 'RAlt') keyElement.classList.add('key-small');
                     
                     rowElement.appendChild(keyElement);
                 });
@@ -212,6 +236,77 @@ define([], function () {
         }
 
         /**
+         * 导出统计数据
+         */
+        exportStats() {
+            const data = {
+                stats: this.keyStats,
+                maxFrequency: this.maxFrequency,
+                totalKeys: Object.values(this.keyStats).reduce((sum, count) => sum + count, 0),
+                exportTime: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `typepad-keystats-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(link.href);
+        }
+
+        /**
+         * 导入统计数据
+         */
+        importStats() {
+            document.getElementById('keyHeatmapFileInput').click();
+        }
+
+        /**
+         * 处理文件导入
+         */
+        handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.stats && typeof data.stats === 'object') {
+                        // 合并统计数据
+                        Object.keys(data.stats).forEach(key => {
+                            this.keyStats[key] = (this.keyStats[key] || 0) + data.stats[key];
+                        });
+                        
+                        // 重新计算最大频率
+                        this.maxFrequency = Object.keys(this.keyStats).length > 0 
+                            ? Math.max(...Object.values(this.keyStats)) 
+                            : 1;
+                        
+                        this.saveKeyStats();
+                        this.updateDisplay();
+                        
+                        alert('数据导入成功！');
+                    } else {
+                        alert('文件格式错误！');
+                    }
+                } catch (error) {
+                    alert('文件解析失败：' + error.message);
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // 清除文件输入，允许重复选择同一文件
+            event.target.value = '';
+        }
+
+        /**
          * 重置统计数据
          */
         resetStats() {
@@ -220,15 +315,6 @@ define([], function () {
                 this.maxFrequency = 1;
                 this.saveKeyStats();
                 this.updateDisplay();
-            }
-        }
-
-        /**
-         * 切换显示/隐藏
-         */
-        toggleDisplay() {
-            if (this.container) {
-                this.container.classList.toggle('hidden');
             }
         }
 

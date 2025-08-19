@@ -533,17 +533,17 @@ $colors  : (
   .key-heatmap-board {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     margin-bottom: 15px;
     
     .key-row {
       display: flex;
-      gap: 2px;
+      gap: 4px;
       justify-content: center;
       
       .key-item {
-        min-width: 40px;
-        height: 35px;
+        min-width: 50px;
+        height: 55px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -551,21 +551,21 @@ $colors  : (
         background-color: rgba(59, 130, 246, calc(var(--intensity, 0) * 0.8 + 0.1));
         border: 1px solid #dee2e6;
         border-radius: 4px;
-        font-size: 11px;
+        font-size: 14px;
         font-weight: 500;
         color: #495057;
         cursor: pointer;
         transition: all 0.2s ease;
-        padding: 2px;
+        padding: 4px;
         
         .key-label {
-          font-size: 10px;
+          font-size: 14px;
           line-height: 1;
-          margin-bottom: 1px;
+          margin-bottom: 2px;
         }
         
         .key-percentage {
-          font-size: 8px;
+          font-size: 14px;
           line-height: 1;
           opacity: 0.8;
         }
@@ -576,11 +576,11 @@ $colors  : (
         }
         
         // 特殊键的宽度
-        &.key-wide { min-width: 80px; }      // Backspace
-        &.key-medium { min-width: 60px; }    // Tab, Caps, Enter
-        &.key-large { min-width: 90px; }     // Shift
-        &.key-space { min-width: 200px; }    // Space
-        &.key-small { min-width: 50px; }     // Ctrl, Alt
+        &.key-wide { min-width: 110px; }      // Backspace
+        &.key-medium { min-width: 85px; }     // Tab, Caps, Enter
+        &.key-large { min-width: 125px; }     // Shift
+        &.key-space { min-width: 280px; }     // Space
+        &.key-small { min-width: 70px; }      // Ctrl, Alt
       }
     }
   }
@@ -631,6 +631,40 @@ $colors  : (
           &.key-space { min-width: 120px; }
           &.key-small { min-width: 35px; }
         }
+      }
+    }
+  }
+}
+
+// 全屏模式下热力图放大
+:fullscreen .key-heatmap-container,
+:-webkit-full-screen .key-heatmap-container,
+:-moz-full-screen .key-heatmap-container {
+  .key-heatmap-board {
+    .key-row {
+      gap: 6px;
+      
+      .key-item {
+        min-width: 75px;
+        height: 60px;
+        font-size: 16px;
+        
+        .key-label {
+          font-size: 15px;
+          margin-bottom: 3px;
+        }
+        
+        .key-percentage {
+          font-size: 12px;
+        }
+        
+        // 全屏模式下特殊键的宽度
+        &.key-wide { min-width: 150px; }      // Backspace
+        &.key-medium { min-width: 110px; }    // Tab, Caps, Enter
+        &.key-large { min-width: 165px; }     // Shift
+        &.key-space { min-width: 375px; }     // Space
+        &.key-small { min-width: 90px; }      // Ctrl, Alt
+        &.key-small { min-width: 75px; }      // Ctrl, Alt
       }
     }
   }
