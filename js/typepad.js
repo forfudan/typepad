@@ -27,15 +27,15 @@ let keyHeatmap; // 暴露 keyHeatmap 以用于 html 绑定方法用
 require.config({
    baseUrl: "./js/class",
    paths: {
-      'ArticleType' : 'ArticleType',
-      'Article'     : 'Article',
-      'Config'      : 'Config',
-      'Engine'      : 'Engine',
-      'CETWord'     : 'CETWord',
-      'Reg'         : 'Reg',
-      'Database'    : 'Database',
-      'CodeHint'    : 'CodeHint',
-      'KeyHeatmap'  : 'KeyHeatmap',
+      'ArticleType': 'ArticleType',
+      'Article': 'Article',
+      'Config': 'Config',
+      'Engine': 'Engine',
+      'CETWord': 'CETWord',
+      'Reg': 'Reg',
+      'Database': 'Database',
+      'CodeHint': 'CodeHint',
+      'KeyHeatmap': 'KeyHeatmap',
    }
 });
 
@@ -45,7 +45,7 @@ window.onresize = resizeContent;
 $('#app').style.overflow = 'hidden'
 
 
-function resizeContent(){
+function resizeContent() {
    $('.editor').style.height = innerHeight + 'px';
 }
 
@@ -74,17 +74,17 @@ require(['ArticleType', 'Article', 'Engine', 'Editor'],
       // 显示历史记录
       engine.fetchAllLog();
 
-/*      Service Worker
-      if ('serviceWorker' in navigator){
-         navigator.serviceWorker
-            .register('/tools/typepad/typepad-sw.js?v=2.68')
-            .then(()=>{
-               console.log('Server Worker has registered');
-            })
-      }*/
+      /*      Service Worker
+            if ('serviceWorker' in navigator){
+               navigator.serviceWorker
+                  .register('/tools/typepad/typepad-sw.js?v=2.68')
+                  .then(()=>{
+                     console.log('Server Worker has registered');
+                  })
+            }*/
    })
 
-document.addEventListener('touchstart', ()=>{}, false); // 取消移动端的 touch 动作
+document.addEventListener('touchstart', () => { }, false); // 取消移动端的 touch 动作
 
 function $(selector) {
    return document.querySelector(selector)

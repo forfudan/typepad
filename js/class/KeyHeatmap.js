@@ -21,8 +21,8 @@ define([], function () {
                     const data = JSON.parse(saved);
                     const stats = data.stats || {};
                     // 重新计算maxFrequency，确保准确性
-                    this.maxFrequency = Object.keys(stats).length > 0 
-                        ? Math.max(...Object.values(stats)) 
+                    this.maxFrequency = Object.keys(stats).length > 0
+                        ? Math.max(...Object.values(stats))
                         : 1;
                     return stats;
                 } catch (e) {
@@ -51,7 +51,7 @@ define([], function () {
         recordKeyWithLocation(event) {
             const key = event.key;
             let normalizedKey = this.normalizeKey(key);
-            
+
             // 严格区分左右修饰键
             if (key === 'Shift') {
                 normalizedKey = event.location === 1 ? 'LShift' : 'RShift';
@@ -62,7 +62,7 @@ define([], function () {
             } else if (key === 'Meta') {
                 normalizedKey = event.location === 1 ? 'LCmd' : 'RCmd';
             }
-            
+
             if (normalizedKey) {
                 this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
                 this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
@@ -77,7 +77,7 @@ define([], function () {
         recordKey(key) {
             // 将按键转换为大写以统一处理
             const normalizedKey = this.normalizeKey(key);
-            
+
             if (normalizedKey) {
                 this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
                 this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
@@ -162,10 +162,16 @@ define([], function () {
 
         /**
          * 创建键盘布局
+         * 和其他的网站的热力图不同，这里宇浩认为应当创建一个完整的键盘布局，
+         * 包括所有的字母、数字和符号键，以及常用的功能键。
+         * 这样可以更直观地展示按键的使用频率和热力分布。
+         * 在输入法界，通常认为左手理论按键频率太大不好，
+         * 但是实际上右手的实际按键频率也很高，因为符号区、回车键、回改键
+         * 以及其他常用的功能键都在右手区域。
          */
         createKeyboard() {
             const keyboard = this.container.querySelector('.key-heatmap-board');
-            
+
             // 键盘布局定义，严格区分左右修饰键
             const layout = [
                 ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
@@ -178,18 +184,18 @@ define([], function () {
             layout.forEach(row => {
                 const rowElement = document.createElement('div');
                 rowElement.className = 'key-row';
-                
+
                 row.forEach(key => {
                     const keyElement = document.createElement('div');
                     keyElement.className = 'key-item';
                     keyElement.dataset.key = key;
-                    
+
                     // 创建按键内容结构：字母 + 百分比
                     keyElement.innerHTML = `
                         <div class="key-label">${key}</div>
                         <div class="key-percentage">0%</div>
                     `;
-                    
+
                     // 设置特殊键的宽度
                     if (key === 'Backspace') keyElement.classList.add('key-wide');
                     else if (key === 'Tab') keyElement.classList.add('key-medium');
@@ -198,10 +204,10 @@ define([], function () {
                     else if (key === 'LShift' || key === 'RShift') keyElement.classList.add('key-large');
                     else if (key === 'Space') keyElement.classList.add('key-space');
                     else if (key === 'LCtrl' || key === 'RCtrl' || key === 'LAlt' || key === 'RAlt') keyElement.classList.add('key-small');
-                    
+
                     rowElement.appendChild(keyElement);
                 });
-                
+
                 keyboard.appendChild(rowElement);
             });
         }
@@ -222,11 +228,11 @@ define([], function () {
                 const frequency = this.keyStats[key] || 0;
                 const intensity = this.maxFrequency > 0 ? frequency / this.maxFrequency : 0;
                 const percentage = totalKeys > 0 ? ((frequency / totalKeys) * 100).toFixed(1) : '0.0';
-                
+
                 // 设置热力图颜色
                 keyElement.style.setProperty('--intensity', intensity);
                 keyElement.setAttribute('title', `${key}: ${frequency} 次 (${percentage}%)`);
-                
+
                 // 更新百分比显示
                 const percentageElement = keyElement.querySelector('.key-percentage');
                 if (percentageElement) {
@@ -244,17 +250,19 @@ define([], function () {
                 maxFrequency: this.maxFrequency,
                 totalKeys: Object.values(this.keyStats).reduce((sum, count) => sum + count, 0),
                 exportTime: new Date().toISOString(),
-                version: '1.0'
+                version: '1.0',
+                website: 'https://genda.shurufa.app',
+                description: '按鍵熱力圖統計數據',
             };
 
             const dataStr = JSON.stringify(data, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            
+
             const link = document.createElement('a');
             link.href = URL.createObjectURL(dataBlob);
-            link.download = `typepad-keystats-${new Date().toISOString().split('T')[0]}.json`;
+            link.download = `genda.shurufa.app-key-stats-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
-            
+
             URL.revokeObjectURL(link.href);
         }
 
@@ -276,21 +284,21 @@ define([], function () {
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    
+
                     if (data.stats && typeof data.stats === 'object') {
                         // 合并统计数据
                         Object.keys(data.stats).forEach(key => {
                             this.keyStats[key] = (this.keyStats[key] || 0) + data.stats[key];
                         });
-                        
+
                         // 重新计算最大频率
-                        this.maxFrequency = Object.keys(this.keyStats).length > 0 
-                            ? Math.max(...Object.values(this.keyStats)) 
+                        this.maxFrequency = Object.keys(this.keyStats).length > 0
+                            ? Math.max(...Object.values(this.keyStats))
                             : 1;
-                        
+
                         this.saveKeyStats();
                         this.updateDisplay();
-                        
+
                         alert('数据导入成功！');
                     } else {
                         alert('文件格式错误！');
@@ -299,9 +307,9 @@ define([], function () {
                     alert('文件解析失败：' + error.message);
                 }
             };
-            
+
             reader.readAsText(file);
-            
+
             // 清除文件输入，允许重复选择同一文件
             event.target.value = '';
         }
@@ -324,9 +332,9 @@ define([], function () {
         getStatsSummary() {
             const totalKeys = Object.values(this.keyStats).reduce((sum, count) => sum + count, 0);
             const topKeys = Object.entries(this.keyStats)
-                .sort(([,a], [,b]) => b - a)
+                .sort(([, a], [, b]) => b - a)
                 .slice(0, 10);
-            
+
             return {
                 totalKeys,
                 topKeys,
