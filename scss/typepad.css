@@ -1271,9 +1271,6 @@ body.black .scheme-name-container .scheme-name-content .scheme-name-input:focus 
 body.black .scheme-name-container .scheme-name-content .scheme-name-input::placeholder {
   color: rgb(140.25, 140.25, 140.25);
 }
-body.black .scheme-name-container .scheme-name-content .scheme-name-hint {
-  color: rgb(165.75, 165.75, 165.75);
-}
 
 .animated {
   -webkit-animation-duration: 0.25s;
@@ -1974,11 +1971,6 @@ body {
 }
 .scheme-name-container .scheme-name-content .scheme-name-input::placeholder {
   color: #6c757d;
-}
-.scheme-name-container .scheme-name-content .scheme-name-hint {
-  font-size: 12px;
-  color: #6c757d;
-  line-height: 1.4;
 }
 @media (max-width: 768px) {
   .scheme-name-container {
