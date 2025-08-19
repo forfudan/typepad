@@ -162,6 +162,12 @@ define([], function () {
 
         /**
          * 创建键盘布局
+         * 和其他的网站的热力图不同，这里宇浩认为应当创建一个完整的键盘布局，
+         * 包括所有的字母、数字和符号键，以及常用的功能键。
+         * 这样可以更直观地展示按键的使用频率和热力分布。
+         * 在输入法界，通常认为左手理论按键频率太大不好，
+         * 但是实际上右手的实际按键频率也很高，因为符号区、回车键、回改键
+         * 以及其他常用的功能键都在右手区域。
          */
         createKeyboard() {
             const keyboard = this.container.querySelector('.key-heatmap-board');
@@ -244,7 +250,9 @@ define([], function () {
                 maxFrequency: this.maxFrequency,
                 totalKeys: Object.values(this.keyStats).reduce((sum, count) => sum + count, 0),
                 exportTime: new Date().toISOString(),
-                version: '1.0'
+                version: '1.0',
+                website: 'https://genda.shurufa.app',
+                description: '按鍵熱力圖統計數據',
             };
 
             const dataStr = JSON.stringify(data, null, 2);
@@ -252,7 +260,7 @@ define([], function () {
             
             const link = document.createElement('a');
             link.href = URL.createObjectURL(dataBlob);
-            link.download = `typepad-keystats-${new Date().toISOString().split('T')[0]}.json`;
+            link.download = `genda.shurufa.app-key-stats-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
             URL.revokeObjectURL(link.href);
