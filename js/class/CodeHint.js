@@ -7,7 +7,7 @@ define([], function () {
         constructor() {
             this.codeTable = new Map(); // 存储码表数据
             this.isLoaded = false;
-            this.currentTableName = '宇浩日月方案'; // 当前码表名称
+            this.currentTableName = '宇浩·日月'; // 当前码表名称
             this.currentCharElement = document.querySelector('.current-char');
             this.codeListElement = document.querySelector('.code-list');
             this.currentTableElement = document.querySelector('.current-table');
@@ -16,7 +16,7 @@ define([], function () {
             // 内置码表配置
             this.builtinCodeTables = {
                 'yuhao-ming': {
-                    name: '宇浩·日月·大明输入法',
+                    name: '宇浩·日月',
                     url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt',
                     format: 'code_first'
                 },
