@@ -561,7 +561,7 @@
          <div class="codetable-content">
             <div class="upload-hint">
                <p>支持上传自定义码表文件(UTF-8), 格式为 编码[空格/Tab]字符，或 字符[空格/Tab]编码</p>
-               <p>默认编码提示为世上首款纯形前缀码　<a href="https://shurufa.app/" target="_blank"><b>宇浩·日月</b></a></p>
+               <p>默认编码提示为世上首款纯形前缀码　<a href="https://shurufa.app/" target="_blank"><b>宇浩·日月 (shurufa.app)</b></a></p>
             </div>
             
             <!-- 格式选择 -->
@@ -586,7 +586,7 @@
             
             <!-- 内置码表选择 -->
             <div class="builtin-codetable">
-               <label for="builtinCodeTableSelect" class="builtin-label">选择内置方案：</label>
+               <label for="builtinCodeTableSelect" class="builtin-label">选择内置编码提示：</label>
                <select id="builtinCodeTableSelect" class="builtin-select" onchange="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.switchBuiltinCodeTable(this.value)">
                   <!-- 选项将由JavaScript动态生成 -->
                </select>
@@ -612,9 +612,8 @@
 
       <!-- 方案名称设置区域 -->
       <div class="scheme-name-container">
-         <div class="scheme-name-title">当前方案设置</div>
+         <div class="scheme-name-title">方案名称设置</div>
          <div class="scheme-name-content">
-            <label for="currentSchemeName" class="scheme-name-label">方案名称：</label>
             <input type="text" id="currentSchemeName" class="scheme-name-input" 
                    placeholder="请输入当前使用的输入法方案名称" 
                    onchange="if(typeof engine !== 'undefined') engine.saveCurrentSchemeName(this.value)">
