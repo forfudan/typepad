@@ -1,0 +1,92 @@
+{
+  "version": "0.0.1",
+  "description": "內置碼表配置文件",
+  "defaultScheme": "yuhao-ming",
+  "builtinCodeTables": [
+    {
+      "key": "yuhao-ming",
+      "name": "宇浩·日月",
+      "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt",
+      "format": "code_first",
+      "description": "世上首款純形前綴碼",
+      "website": "https://shurufa.app/",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "yuhao-joy",
+      "name": "卿雲",
+      "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt",
+      "format": "code_first",
+      "description": "卿雲輸入法",
+      "website": "https://shurufa.app/",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "yuhao-light",
+      "name": "宇浩·光華",
+      "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-light.txt",
+      "format": "code_first",
+      "description": "宇浩光華方案",
+      "website": "https://shurufa.app/",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "yuhao-star",
+      "name": "宇浩·星陳",
+      "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt",
+      "format": "code_first",
+      "description": "宇浩星陳方案",
+      "website": "https://shurufa.app/",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "sky",
+      "name": "宋天·天碼",
+      "url": "https://raw.githubusercontent.com/forfudan/tianma-sky/main/mabiao-sky.txt",
+      "format": "code_first",
+      "description": "天碼輸入法",
+      "website": "http://soongsky.com/sky/",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "hao-xi",
+      "name": "好碼·淅碼",
+      "url": "https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-xi.txt",
+      "format": "code_first",
+      "description": "好碼淅碼方案",
+      "website": "https://github.com/hertz-hwang/wf-hao",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "hao-sy",
+      "name": "好碼·松煙",
+      "url": "https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-sy.txt",
+      "format": "code_first",
+      "description": "好碼松煙方案",
+      "website": "https://github.com/hertz-hwang/wf-hao",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "dao",
+      "name": "刀碼",
+      "url": "https://raw.githubusercontent.com/huge1128/dao/main/刀码B.txt",
+      "format": "char_first",
+      "description": "刀碼",
+      "website": "https://github.com/huge1128/dao",
+      "category": "形碼",
+      "enabled": true
+    }
+  ],
+  "settings": {
+    "cacheTimeout": 86400000,
+    "maxRetries": 3,
+    "retryDelay": 1000
+  }
+}

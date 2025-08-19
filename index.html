@@ -560,7 +560,8 @@
          <div class="codetable-title">码表管理</div>
          <div class="codetable-content">
             <div class="upload-hint">
-               支持上传自定义码表文件(UTF-8), 格式为 编码[空格/Tab]字符，或 字符[空格/Tab]编码
+               <p>支持上传自定义码表文件(UTF-8), 格式为 编码[空格/Tab]字符，或 字符[空格/Tab]编码</p>
+               <p>默认编码提示为世上首款纯形前缀码　<a href="https://shurufa.app/" target="_blank"><b>宇浩·日月</b></a></p>
             </div>
             
             <!-- 格式选择 -->
@@ -587,18 +588,12 @@
             <div class="builtin-codetable">
                <label for="builtinCodeTableSelect" class="builtin-label">选择内置方案：</label>
                <select id="builtinCodeTableSelect" class="builtin-select" onchange="if(typeof engine !== 'undefined' && engine.codeHint) engine.codeHint.switchBuiltinCodeTable(this.value)">
-                  <option value="yuhao-ming" selected>宇浩·日月</option>
-                  <option value="yuhao-joy">卿云输入法</option>
-                  <option value="yuhao-light">宇浩·光华</option>
-                  <option value="yuhao-star">宇浩·星陳</option>
-                  <option value="sky">宋天·天碼</option>
-                  <option value="hao-xi">好码·淅码</option>
-                  <option value="hao-sy">好码·松烟</option>
+                  <!-- 选项将由JavaScript动态生成 -->
                </select>
             </div>
             
             <div class="upload-status">
-               <div class="current-table">当前：<b>宇浩·日月</b> 世上首款纯形前缀码 (<a href="https://shurufa.app/" target="_blank">shurufa.app</a>)</div>
+               <div class="current-table">当前：宇浩·日月</div>
                <div class="upload-message"></div>
             </div>
          </div>

@@ -13,45 +13,20 @@ define([], function () {
             this.currentTableElement = document.querySelector('.current-table');
             this.uploadMessageElement = document.querySelector('.upload-message');
 
-            // 内置码表配置
-            this.builtinCodeTables = {
-                'yuhao-ming': {
-                    name: '宇浩·日月',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt',
-                    format: 'code_first'
-                },
-                'yuhao-joy': {
-                    name: '卿云',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt',
-                    format: 'code_first'
-                },
-                'yuhao-light': {
-                    name: '宇浩·光华',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-light.txt',
-                    format: 'code_first'
-                },
-                'yuhao-star': {
-                    name: '宇浩·星陈',
-                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt',
-                    format: 'code_first'
-                },
-                'sky': {
-                    name: '宋天·天码',
-                    url: 'https://raw.githubusercontent.com/forfudan/tianma-sky/main/mabiao-sky.txt',
-                    format: 'code_first'
-                },
-                'hao-xi': {
-                    name: '好码·淅码',
-                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-xi.txt',
-                    format: 'code_first'
-                },
-                'hao-sy': {
-                    name: '好码·松烟',
-                    url: 'https://raw.githubusercontent.com/hertz-hwang/wf-hao/main/schemas/hao/hao/dazhu-sy.txt',
-                    format: 'code_first'
-                },
-            };
+            // 内置码表配置 - 将从配置文件加载
+            this.builtinCodeTables = {};
+            this.defaultScheme = 'yuhao-ming';
 
+            // 初始化：加载配置文件，然后初始化其他功能
+            this.init();
+        }
+
+        /**
+         * 初始化：加载配置文件和设置功能
+         */
+        async init() {
+            await this.loadConfig();
+            
             // 初始化文件上传功能
             this.initFileUpload();
 
@@ -63,19 +38,94 @@ define([], function () {
         }
 
         /**
+         * 加载码表配置文件
+         */
+        async loadConfig() {
+            try {
+                const response = await fetch('./config/codeTableConfig.json');
+                const config = await response.json();
+                
+                // 转换数组格式为对象格式
+                this.builtinCodeTables = {};
+                config.builtinCodeTables.forEach(table => {
+                    this.builtinCodeTables[table.key] = {
+                        name: table.name,
+                        url: table.url,
+                        format: table.format,
+                        description: table.description,
+                        website: table.website,
+                        category: table.category,
+                        enabled: table.enabled !== false // 默认启用
+                    };
+                });
+                
+                this.defaultScheme = config.defaultScheme || 'yuhao-ming';
+                this.configVersion = config.version || '1.0.0';
+                this.settings = config.settings || {};
+                
+                // 动态生成选择器选项
+                this.generateSelectorOptions();
+                
+                console.log(`码表配置v${this.configVersion}加载完成，共`, Object.keys(this.builtinCodeTables).length, '个方案');
+            } catch (error) {
+                console.error('加载码表配置失败:', error);
+                // 使用默认配置作为备用
+                this.useDefaultConfig();
+            }
+        }
+
+        /**
+         * 使用默认配置（备用方案）
+         */
+        useDefaultConfig() {
+            this.builtinCodeTables = {
+                'yuhao-ming': {
+                    name: '宇浩·日月',
+                    url: 'https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt',
+                    format: 'code_first',
+                    description: '世上首款纯形前缀码'
+                }
+            };
+            this.defaultScheme = 'yuhao-ming';
+            this.generateSelectorOptions();
+        }
+
+        /**
+         * 动态生成选择器选项
+         */
+        generateSelectorOptions() {
+            const selectElement = document.getElementById('builtinCodeTableSelect');
+            if (selectElement) {
+                // 清空现有选项
+                selectElement.innerHTML = '';
+                
+                // 添加新选项（只显示启用的方案）
+                Object.entries(this.builtinCodeTables).forEach(([key, config]) => {
+                    if (config.enabled !== false) { // 默认启用，除非明确设置为false
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = config.name;
+                        option.title = config.description || '';
+                        selectElement.appendChild(option);
+                    }
+                });
+            }
+        }
+
+        /**
          * 初始化内置码表选择器
          */
         initBuiltinSelector() {
             // 从localStorage读取保存的方案
-            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
+            const savedScheme = localStorage.getItem('codeHintScheme') || this.defaultScheme;
 
-            // 设置选择框的值
+            // 设置选择框的值（延迟执行，确保DOM已生成）
             setTimeout(() => {
                 const selectElement = document.getElementById('builtinCodeTableSelect');
                 if (selectElement) {
                     selectElement.value = savedScheme;
                 }
-            }, 100);
+            }, 200);
 
             // 更新当前方案
             this.currentScheme = savedScheme;
@@ -247,7 +297,7 @@ define([], function () {
             this.clearUserCodeTable();
             
             // 重新加载默认内置方案
-            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
+            const savedScheme = localStorage.getItem('codeHintScheme') || this.defaultScheme;
             await this.loadBuiltinCodeTable(savedScheme);
             
             // 更新选择器
@@ -256,7 +306,7 @@ define([], function () {
                 if (selectElement) {
                     selectElement.value = savedScheme;
                 }
-            }, 100);
+            }, 200);
             
             this.showMessage('已切换回内置方案', 'success');
         }
@@ -287,13 +337,13 @@ define([], function () {
                         if (selectElement) {
                             selectElement.value = ''; // 不选择任何内置方案
                         }
-                    }, 100);
+                    }, 200);
                     return;
                 }
             }
             
             // 如果没有用户码表或加载失败，则加载内置码表
-            const savedScheme = localStorage.getItem('codeHintScheme') || 'yuhao-ming';
+            const savedScheme = localStorage.getItem('codeHintScheme') || this.defaultScheme;
             await this.loadBuiltinCodeTable(savedScheme);
         }
 
