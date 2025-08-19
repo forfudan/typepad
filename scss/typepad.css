@@ -1222,15 +1222,6 @@ body.black .codetable-manager .codetable-content .upload-hint {
   color: rgb(165.75, 165.75, 165.75);
   border-left-color: #00afff;
 }
-body.black .codetable-manager .codetable-content .upload-btn {
-  background-color: #26c57d;
-}
-body.black .codetable-manager .codetable-content .upload-btn:hover {
-  background-color: rgb(29.7531914894, 154.2468085106, 97.8723404255);
-}
-body.black .codetable-manager .codetable-content .upload-btn:active {
-  background-color: rgb(25.629787234, 132.870212766, 84.3085106383);
-}
 body.black .codetable-manager .codetable-content .builtin-codetable {
   background-color: rgb(63.75, 63.75, 63.75);
   border-color: rgb(39.15625, 43.3515625, 50.34375);
@@ -1250,23 +1241,22 @@ body.black .codetable-manager .codetable-content .builtin-codetable .builtin-sel
 body.black .codetable-manager .codetable-content .builtin-codetable .builtin-select:hover {
   border-color: rgb(56.1, 56.1, 56.1);
 }
-body.black .codetable-manager .codetable-content .upload-status .current-table {
+body.black .codetable-manager .codetable-content .builtin-codetable .upload-btn {
+  background-color: #00afff;
+  color: #1c1f24;
+  border-color: #00afff;
+}
+body.black .codetable-manager .codetable-content .builtin-codetable .upload-btn:hover {
+  background-color: #008ccc;
+}
+body.black .codetable-manager .codetable-content .builtin-codetable .current-table, body.black .codetable-manager .codetable-content .builtin-codetable .upload-message {
   color: rgb(165.75, 165.75, 165.75);
-}
-body.black .codetable-manager .codetable-content .upload-status .upload-message.success {
-  color: #26c57d;
-}
-body.black .codetable-manager .codetable-content .upload-status .upload-message.error {
-  color: #FF3B30;
 }
 body.black .scheme-name-container {
   background-color: #1c1f24;
   border-color: rgb(39.15625, 43.3515625, 50.34375);
 }
 body.black .scheme-name-container .scheme-name-title {
-  color: rgb(229.5, 229.5, 229.5);
-}
-body.black .scheme-name-container .scheme-name-content .scheme-name-label {
   color: rgb(229.5, 229.5, 229.5);
 }
 body.black .scheme-name-container .scheme-name-content .scheme-name-input {
@@ -1889,23 +1879,6 @@ body {
   border-left: 3px solid #17a2b8;
   line-height: 1.4;
 }
-.codetable-manager .codetable-content .upload-btn {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  width: fit-content;
-}
-.codetable-manager .codetable-content .upload-btn:hover {
-  background-color: #218838;
-}
-.codetable-manager .codetable-content .upload-btn:active {
-  background-color: #1e7e34;
-}
 .codetable-manager .codetable-content .builtin-codetable {
   display: flex;
   flex-direction: row;
@@ -1941,20 +1914,23 @@ body {
 .codetable-manager .codetable-content .builtin-codetable .builtin-select:hover {
   border-color: #adb5bd;
 }
-.codetable-manager .codetable-content .upload-status .current-table {
-  font-size: 13px;
-  color: #6c757d;
-  margin-bottom: 4px;
-}
-.codetable-manager .codetable-content .upload-status .upload-message {
+.codetable-manager .codetable-content .builtin-codetable .upload-btn {
+  padding: 6px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
   font-size: 12px;
-  min-height: 16px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
 }
-.codetable-manager .codetable-content .upload-status .upload-message.success {
-  color: #28a745;
+.codetable-manager .codetable-content .builtin-codetable .upload-btn:hover {
+  background-color: #0056b3;
 }
-.codetable-manager .codetable-content .upload-status .upload-message.error {
-  color: #dc3545;
+.codetable-manager .codetable-content .builtin-codetable .current-table, .codetable-manager .codetable-content .builtin-codetable .upload-message {
+  font-size: 12px;
+  color: #6c757d;
+  white-space: nowrap;
 }
 @media (max-width: 768px) {
   .codetable-manager {
@@ -1980,11 +1956,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-.scheme-name-container .scheme-name-content .scheme-name-label {
-  font-size: 13px;
-  color: #495057;
-  font-weight: 500;
 }
 .scheme-name-container .scheme-name-content .scheme-name-input {
   padding: 8px 12px;
