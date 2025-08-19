@@ -809,17 +809,17 @@ define(
             const time = cells[9]?.textContent?.trim() || '';
             
             // 將成績數據組合成一個字符串
-            let scoreText = `打字成绩分享 📊\n`;
-            scoreText += `速度: ${speed} 字/分钟\n`;
-            if (hitRate) scoreText += `正确率: ${hitRate}%\n`;
-            if (codeLength) scoreText += `平均码长: ${codeLength}\n`;
+            let scoreText = `打字成績分享\n`;
+            scoreText += `速度: ${speed} 字/分\n`;
+            if (hitRate) scoreText += `擊鍵: ${hitRate} 擊/秒\n`;
+            if (codeLength) scoreText += `碼長: ${codeLength} 碼/字\n`;
             if (backspace) scoreText += `退格: ${backspace} 次\n`;
-            scoreText += `字数: ${wordCount} 字\n`;
-            scoreText += `用时: ${duration}\n`;
-            scoreText += `文章类型: ${articleType}\n`;
+            scoreText += `字數: ${wordCount} 字\n`;
+            scoreText += `用時: ${duration}\n`;
+            scoreText += `文章類型: ${articleType}\n`;
             if (articleName) scoreText += `文章: ${articleName}\n`;
-            if (time) scoreText += `时间: ${time}\n`;
-            scoreText += `来自: https://genda.shurufa.app`;
+            if (time) scoreText += `時間: ${time}\n`;
+            scoreText += `來自: https://genda.shurufa.app`;
             
             // 複製成績到剪貼板
             if (navigator.clipboard && window.isSecureContext) {
