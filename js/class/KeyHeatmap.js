@@ -41,7 +41,7 @@ define([], function () {
             
             // 当量表 - 从 equivTable.json 配置文件加载
             this.equivTable = new Map();
-            this.loadEquivTable();
+            this.equivTableLoaded = false; // 标记当量表是否已加载
             
             this.init();
         }
@@ -114,8 +114,15 @@ define([], function () {
                 });
                 
                 console.log(`成功加载当量表，共 ${this.equivTable.size} 个按键组合`);
+                this.equivTableLoaded = true;
+                
+                // 当量表加载完成后，重新更新显示
+                if (this.container) {
+                    this.updateDisplay();
+                }
             } catch (error) {
                 console.warn('加载当量表失败，将使用空的当量表:', error);
+                this.equivTableLoaded = false;
                 // 如果加载失败，保持空的Map，这样当量计算会返回0
             }
         }
@@ -378,6 +385,9 @@ define([], function () {
             this.createContainer();
             this.createKeyboard();
             this.updateDisplay();
+            
+            // 异步加载当量表
+            this.loadEquivTable();
         }
 
         /**
@@ -514,10 +524,18 @@ define([], function () {
             const validPairsElement = this.container.querySelector('.valid-pairs');
             
             if (averageEquivElement) {
-                averageEquivElement.textContent = equivStats.averageEquiv.toFixed(2);
+                if (this.equivTableLoaded) {
+                    averageEquivElement.textContent = equivStats.averageEquiv.toFixed(2);
+                } else {
+                    averageEquivElement.textContent = '加载中...';
+                }
             }
             if (validPairsElement) {
-                validPairsElement.textContent = equivStats.totalValidPairs.toLocaleString();
+                if (this.equivTableLoaded) {
+                    validPairsElement.textContent = equivStats.totalValidPairs.toLocaleString();
+                } else {
+                    validPairsElement.textContent = '加载中...';
+                }
             }
 
             // 更新每个按键的热力图显示
