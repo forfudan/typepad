@@ -622,6 +622,7 @@ body.black {
       background-color: rgba(220, 53, 69, 0.9);
       color: white;
       border-color: lighten($red, 20%);
+      backdrop-filter: blur(10px);
     }
   }
 }

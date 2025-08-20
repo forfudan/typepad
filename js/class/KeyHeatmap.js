@@ -420,9 +420,9 @@ define([], function () {
                     </div>
                     <div class="key-heatmap-controls">
                         <button class="key-heatmap-export" onclick="keyHeatmap.exportStats()">导出数据</button>
-                        <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">导入数据(增量)</button>
-                        <button class="key-heatmap-screenshot" onclick="keyHeatmap.captureHeatmap()">截图分享</button>
-                        <button class="key-heatmap-reset" onclick="keyHeatmap.resetStats()">重置统计</button>
+                        <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">增量导入</button>
+                        <button class="key-heatmap-screenshot" onclick="keyHeatmap.captureHeatmap()">分享</button>
+                        <button class="key-heatmap-reset" onclick="keyHeatmap.resetStats()">重置</button>
                     </div>
                 </div>
                 <input type="file" id="keyHeatmapFileInput" accept=".json" style="display: none;" onchange="keyHeatmap.handleFileImport(event)">
@@ -711,82 +711,308 @@ define([], function () {
         }
 
         /**
-         * 截图并复制到剪贴板
+         * 截图并复制到剪贴板（增强兼容性版本）
          */
         async captureHeatmap() {
+            const button = document.querySelector('.key-heatmap-screenshot');
+            const originalText = button.textContent;
+            
             try {
-                // 检查浏览器是否支持所需API
-                if (!navigator.clipboard || !window.html2canvas) {
-                    this.showCaptureError('截图功能需要现代浏览器支持。建议使用最新版本的 Chrome、Firefox 或 Safari。');
-                    return;
-                }
-
                 // 显示加载状态
-                const button = document.querySelector('.key-heatmap-screenshot');
-                const originalText = button.textContent;
                 button.textContent = '截图中...';
                 button.disabled = true;
 
-                // 等待html2canvas库加载
-                await this.loadHtml2Canvas();
+                // 检查 Clipboard API 支持（Edge/Safari可能有限制）
+                const hasClipboardAPI = navigator.clipboard && navigator.clipboard.write;
+                
+                // 检测浏览器类型
+                const isEdge = /Edge|Edg/.test(navigator.userAgent);
+                const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+                
+                // 尝试加载html2canvas库
+                let canvasLibLoaded = false;
+                try {
+                    await this.loadHtml2Canvas();
+                    canvasLibLoaded = window.html2canvas !== undefined;
+                } catch (error) {
+                    console.warn('html2canvas加载失败:', error);
+                    canvasLibLoaded = false;
+                }
+
+                // 如果html2canvas加载失败，直接使用DOM到图片的备用方案
+                if (!canvasLibLoaded) {
+                    console.log('html2canvas不可用，使用备用截图方案');
+                    await this.captureWithFallback();
+                    return;
+                }
 
                 // 截取热力图容器
                 const canvas = await html2canvas(this.container, {
-                    backgroundColor: null,
+                    backgroundColor: document.body.classList.contains('black') ? '#0f0f13' : '#ffffff',
                     scale: 2, // 提高清晰度
                     useCORS: true,
-                    allowTaint: true,
+                    allowTaint: false, // Edge兼容性调整
                     logging: false,
                     width: this.container.offsetWidth,
-                    height: this.container.offsetHeight
+                    height: this.container.offsetHeight,
+                    onclone: function(clonedDoc) {
+                        // 确保克隆文档中的样式正确加载
+                        clonedDoc.querySelector('body').style.margin = '0';
+                        clonedDoc.querySelector('body').style.padding = '0';
+                    }
                 });
 
-                // 将canvas转换为blob
-                canvas.toBlob(async (blob) => {
-                    try {
-                        // 复制到剪贴板
-                        await navigator.clipboard.write([
-                            new ClipboardItem({
-                                'image/png': blob
-                            })
-                        ]);
-
-                        // 显示成功消息
-                        this.showCaptureSuccess();
-                    } catch (error) {
-                        console.error('复制到剪贴板失败:', error);
-                        this.showCaptureError('复制到剪贴板失败，请检查浏览器权限设置。');
-                    } finally {
-                        // 恢复按钮状态
-                        button.textContent = originalText;
-                        button.disabled = false;
-                    }
-                }, 'image/png', 0.9);
+                // 尝试复制到剪贴板，失败则提供下载
+                if (hasClipboardAPI && !isEdge && !isSafari) {
+                    // Chrome/Firefox: 使用 Clipboard API
+                    await this.copyCanvasToClipboard(canvas);
+                } else {
+                    // Edge/Safari/旧版浏览器: 提供下载功能
+                    this.downloadCanvas(canvas);
+                }
 
             } catch (error) {
                 console.error('截图失败:', error);
-                this.showCaptureError('截图失败，请重试。');
-                
+                // 最后的备用方案：提示用户手动截图
+                this.showFallbackInstructions();
+            } finally {
                 // 恢复按钮状态
-                const button = document.querySelector('.key-heatmap-screenshot');
-                button.textContent = '截图分享';
+                button.textContent = originalText;
                 button.disabled = false;
             }
         }
 
         /**
-         * 动态加载html2canvas库
+         * 备用截图方案 - 生成信息卡片
+         */
+        async captureWithFallback() {
+            try {
+                // 创建一个固定尺寸的canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 600;
+                
+                const ctx = canvas.getContext('2d');
+                
+                // 设置背景色
+                const isDark = document.body.classList.contains('black');
+                ctx.fillStyle = isDark ? '#0f0f13' : '#ffffff';
+                ctx.fillRect(0, 0, 800, 600);
+                
+                // 绘制边框
+                ctx.strokeStyle = isDark ? '#333' : '#ddd';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(20, 20, 760, 560);
+                
+                // 设置文本样式
+                ctx.fillStyle = isDark ? '#e1e1e1' : '#333333';
+                ctx.textAlign = 'center';
+                
+                // 绘制主标题
+                ctx.font = 'bold 24px Arial, sans-serif';
+                const schemeInput = document.querySelector('.scheme-input');
+                const userInput = document.querySelector('.user-input');
+                const schemeName = schemeInput ? schemeInput.value.trim() : '';
+                const userName = userInput ? userInput.value.trim() : '';
+                
+                let fullTitle = '按键频率统计信息';
+                if (schemeName || userName) {
+                    fullTitle += ' ';
+                    if (schemeName) fullTitle += ` ${schemeName}`;
+                    if (userName) fullTitle += ` ${userName}`;
+                }
+                
+                ctx.fillText(fullTitle, 400, 80);
+                
+                // 绘制统计信息
+                ctx.font = '16px Arial, sans-serif';
+                const stats = this.getBasicStats();
+                let yPos = 150;
+                const lineHeight = 30;
+                
+                ctx.fillText(`累计按键数: ${stats.totalKeys}`, 400, yPos);
+                yPos += lineHeight;
+                ctx.fillText(`最常用按键频数: ${stats.maxFrequency}`, 400, yPos);
+                yPos += lineHeight;
+                ctx.fillText(`左右手互击率: ${stats.alternationRate}`, 400, yPos);
+                yPos += lineHeight;
+                ctx.fillText(`按键组合平均当量: ${stats.averageEquiv}`, 400, yPos);
+                
+                // 绘制说明文字
+                ctx.font = '14px Arial, sans-serif';
+                ctx.fillStyle = isDark ? '#888' : '#666';
+                yPos = 450;
+                ctx.fillText('📊 这是简化版统计信息', 400, yPos);
+                yPos += 25;
+                ctx.fillText('🎯 完整热力图和键盘布局还请自行截图哦！', 400, yPos);
+                
+                // 绘制网站信息
+                ctx.font = '12px Arial, sans-serif';
+                ctx.fillStyle = isDark ? '#555' : '#999';
+                ctx.fillText('生成于 genda.shurufa.app', 400, 550);
+                
+                // 直接下载
+                this.downloadCanvas(canvas);
+                
+            } catch (error) {
+                console.error('备用截图方案也失败:', error);
+                this.showFallbackInstructions();
+            }
+        }
+
+        /**
+         * 获取基础统计信息
+         */
+        getBasicStats() {
+            const totalKeys = Object.values(this.keyStats).reduce((sum, count) => sum + count, 0);
+            const handStats = this.calculateHandAlternationRate();
+            const equivStats = this.calculateWeightedEquivalent();
+            
+            return {
+                totalKeys: totalKeys.toLocaleString(),
+                maxFrequency: this.maxFrequency.toLocaleString(),
+                alternationRate: `${handStats.rate}%`,
+                averageEquiv: equivStats.averageEquiv.toFixed(2)
+            };
+        }
+
+        /**
+         * 显示手动截图说明
+         */
+        showFallbackInstructions() {
+            const instructions = `
+                📸 自动截图功能暂不可用，请手动截图：
+                
+                🖥️ 电脑端：
+                • Windows: 按 Win + Shift + S
+                • Mac: 按 Cmd + Shift + 4
+                
+                📱 手机端：
+                • 按电源键 + 音量减键
+                
+                💡 建议使用 Chrome 浏览器获得最佳效果
+            `;
+            
+            this.showCaptureError(instructions);
+        }
+
+        /**
+         * 复制canvas到剪贴板
+         */
+        async copyCanvasToClipboard(canvas) {
+            return new Promise((resolve, reject) => {
+                canvas.toBlob(async (blob) => {
+                    try {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({
+                                'image/png': blob
+                            })
+                        ]);
+                        this.showCaptureSuccess('✅ 截图已复制到剪贴板，可以直接粘贴分享了哟！');
+                        resolve();
+                    } catch (error) {
+                        // 剪贴板API失败，改为下载
+                        this.downloadCanvas(canvas);
+                        resolve();
+                    }
+                }, 'image/png', 0.9);
+            });
+        }
+
+        /**
+         * 下载canvas为图片文件
+         */
+        downloadCanvas(canvas) {
+            try {
+                // 生成文件名
+                const schemeInput = document.querySelector('.scheme-input');
+                const userInput = document.querySelector('.user-input');
+                const schemeName = schemeInput ? schemeInput.value.trim() : '';
+                const userName = userInput ? userInput.value.trim() : '';
+                
+                let filename = '按键频率热力图';
+                if (schemeName) filename += `_${schemeName}`;
+                if (userName) filename += `_${userName}`;
+                filename += `_${new Date().toISOString().slice(0, 10)}.png`;
+
+                // 创建下载链接
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showCaptureSuccess('📁 图片已保存到下载文件夹，可以分享使用了哟！');
+                }, 'image/png', 0.9);
+            } catch (error) {
+                throw new Error('下载功能也失败了，请检查浏览器设置');
+            }
+        }
+
+        /**
+         * 动态加载html2canvas库（带重试和超时）
          */
         async loadHtml2Canvas() {
             if (window.html2canvas) {
                 return; // 已经加载
             }
 
+            // 多个CDN源，按优先级排列
+            const cdnUrls = [
+                'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
+                'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+            ];
+
+            let lastError = null;
+
+            for (const url of cdnUrls) {
+                try {
+                    await this.loadScriptWithTimeout(url, 10000); // 10秒超时
+                    if (window.html2canvas) {
+                        console.log(`html2canvas从 ${url} 加载成功`);
+                        return;
+                    }
+                } catch (error) {
+                    console.warn(`从 ${url} 加载html2canvas失败:`, error);
+                    lastError = error;
+                    continue;
+                }
+            }
+
+            throw new Error(`所有CDN都加载失败: ${lastError?.message || '未知错误'}`);
+        }
+
+        /**
+         * 带超时的脚本加载
+         */
+        loadScriptWithTimeout(url, timeout = 10000) {
             return new Promise((resolve, reject) => {
                 const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-                script.onload = resolve;
-                script.onerror = () => reject(new Error('html2canvas库加载失败'));
+                script.src = url;
+                
+                // 设置超时
+                const timeoutId = setTimeout(() => {
+                    script.remove();
+                    reject(new Error(`加载超时: ${url}`));
+                }, timeout);
+
+                script.onload = () => {
+                    clearTimeout(timeoutId);
+                    resolve();
+                };
+
+                script.onerror = () => {
+                    clearTimeout(timeoutId);
+                    script.remove();
+                    reject(new Error(`加载失败: ${url}`));
+                };
+
                 document.head.appendChild(script);
             });
         }
@@ -794,10 +1020,10 @@ define([], function () {
         /**
          * 显示截图成功消息
          */
-        showCaptureSuccess() {
+        showCaptureSuccess(customMessage) {
             const message = document.createElement('div');
             message.className = 'capture-message success';
-            message.innerHTML = '✅ 截图已复制到剪贴板，可以直接粘贴分享！';
+            message.innerHTML = customMessage || '✅ 截图已复制到剪贴板，可以直接粘贴分享！';
             this.showMessage(message);
         }
 
