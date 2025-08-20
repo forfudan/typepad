@@ -1,8 +1,20 @@
-<img width="100" src="img/logo.png"/>
+<img width="100" src="img/logo.png"/>　　
+<img width="100" src="https://raw.githubusercontent.com/forfudan/yu/main/src/public/logo_blue.png"/>
 
 ## 玫枫跟打器
 Roseo Maple Type Pad
 
+## 宇浩定制版
+
+在原版玫楓跟打器的基礎上，增加了以下功能：
+
+1. 增加編碼提示功能，在打字的時候提示當前漢字的編碼。
+1. 為編碼提示功能添加一批內置的碼表。
+1. 支持用戶上傳自定義碼表。
+1. 增加成績複製按鈕，方便用戶將成績複製到剪貼板從而分享到其他地方。
+1. 增加了按鍵頻率統計功能。
+1. 用熱力圖顯示鍵位頻率。
+1. 支持導入和導出按鍵頻率到本地文件。
 
 ## 界面
 
