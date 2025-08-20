@@ -8,6 +8,8 @@ define([], function () {
             this.container = null;
             this.maxFrequency = 1;
             this.keyStats = this.loadKeyStats();
+            this.keyPairStats = this.loadKeyPairStats(); // 新增：按键对统计
+            this.lastKey = null; // 记录上一个按键，用于计算按键对
             this.init();
         }
 
@@ -39,10 +41,45 @@ define([], function () {
         saveKeyStats() {
             const data = {
                 stats: this.keyStats,
+                keyPairStats: this.keyPairStats,
                 maxFrequency: this.maxFrequency,
                 lastUpdate: Date.now()
             };
             localStorage.setItem('typepad_key_stats', JSON.stringify(data));
+        }
+
+        /**
+         * 加载按键对统计数据
+         */
+        loadKeyPairStats() {
+            const saved = localStorage.getItem('typepad_key_stats');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    return data.keyPairStats || {};
+                } catch (e) {
+                    console.warn('Failed to load key pair stats:', e);
+                }
+            }
+            return {};
+        }
+
+        /**
+         * 记录按键对频率
+         */
+        recordKeyPair(currentKey) {
+            if (this.lastKey && currentKey) {
+                const pair = `${this.lastKey}-${currentKey}`;
+                this.keyPairStats[pair] = (this.keyPairStats[pair] || 0) + 1;
+            }
+            this.lastKey = currentKey;
+        }
+
+        /**
+         * 重置按键对记录状态（用于新段落开始时）
+         */
+        resetKeyPairState() {
+            this.lastKey = null;
         }
 
         /**
@@ -68,8 +105,13 @@ define([], function () {
             }
             
             if (normalizedKey) {
+                // 记录单个按键频率
                 this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
                 this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
+                
+                // 记录按键对频率
+                this.recordKeyPair(normalizedKey);
+                
                 this.saveKeyStats();
                 this.updateDisplay();
             }
@@ -83,8 +125,13 @@ define([], function () {
             const normalizedKey = this.normalizeKey(key);
             
             if (normalizedKey) {
+                // 记录单个按键频率
                 this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
                 this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
+                
+                // 记录按键对频率
+                this.recordKeyPair(normalizedKey);
+                
                 this.saveKeyStats();
                 this.updateDisplay();
             }
@@ -249,14 +296,18 @@ define([], function () {
          * 导出统计数据
          */
         exportStats() {
+            const totalKeyPairs = Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0);
+            
             const data = {
                 stats: this.keyStats,
+                keyPairStats: this.keyPairStats,
                 maxFrequency: this.maxFrequency,
                 totalKeys: Object.values(this.keyStats).reduce((sum, count) => sum + count, 0),
+                totalKeyPairs: totalKeyPairs,
                 exportTime: new Date().toISOString(),
                 version: '1.0',
                 website: 'https://genda.shurufa.app',
-                description: '按鍵熱力圖統計數據',
+                description: '按鍵統計數據',
             };
 
             const dataStr = JSON.stringify(data, null, 2);
@@ -290,10 +341,17 @@ define([], function () {
                     const data = JSON.parse(e.target.result);
                     
                     if (data.stats && typeof data.stats === 'object') {
-                        // 合并统计数据
+                        // 合并单键统计数据
                         Object.keys(data.stats).forEach(key => {
                             this.keyStats[key] = (this.keyStats[key] || 0) + data.stats[key];
                         });
+                        
+                        // 合并按键对统计数据
+                        if (data.keyPairStats && typeof data.keyPairStats === 'object') {
+                            Object.keys(data.keyPairStats).forEach(pair => {
+                                this.keyPairStats[pair] = (this.keyPairStats[pair] || 0) + data.keyPairStats[pair];
+                            });
+                        }
                         
                         // 重新计算最大频率
                         this.maxFrequency = Object.keys(this.keyStats).length > 0 
@@ -324,7 +382,9 @@ define([], function () {
         resetStats() {
             if (confirm('你确定要重置所有按键统计数据吗？最好先备份一下数据哦！')) {
                 this.keyStats = {};
+                this.keyPairStats = {}; // 同时清空按键对数据
                 this.maxFrequency = 1;
+                this.lastKey = null; // 重置上一个按键记录
                 this.saveKeyStats();
                 this.updateDisplay();
             }
@@ -335,15 +395,40 @@ define([], function () {
          */
         getStatsSummary() {
             const totalKeys = Object.values(this.keyStats).reduce((sum, count) => sum + count, 0);
+            const totalKeyPairs = Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0);
             const topKeys = Object.entries(this.keyStats)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10);
+            const topKeyPairs = Object.entries(this.keyPairStats)
                 .sort(([,a], [,b]) => b - a)
                 .slice(0, 10);
             
             return {
                 totalKeys,
+                totalKeyPairs,
                 topKeys,
+                topKeyPairs,
                 maxFrequency: this.maxFrequency
             };
+        }
+
+        /**
+         * 调试方法：在控制台显示按键对统计
+         */
+        debugKeyPairs() {
+            console.log('=== 按键对频率统计 ===');
+            console.log('总按键对数量:', Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0));
+            
+            const sortedPairs = Object.entries(this.keyPairStats)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 20);
+            
+            console.log('前20个最频繁的按键对:');
+            sortedPairs.forEach(([pair, count], index) => {
+                console.log(`${index + 1}. ${pair}: ${count}次`);
+            });
+            
+            return sortedPairs;
         }
     }
 
