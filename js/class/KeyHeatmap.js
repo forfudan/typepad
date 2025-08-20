@@ -10,6 +10,35 @@ define([], function () {
             this.keyStats = this.loadKeyStats();
             this.keyPairStats = this.loadKeyPairStats(); // 新增：按键对统计
             this.lastKey = null; // 记录上一个按键，用于计算按键对
+            
+            // 左右手键位映射
+            this.leftHandKeys = new Set([
+                // 左手字母
+                'Q', 'W', 'E', 'R', 'T',
+                'A', 'S', 'D', 'F', 'G',
+                'Z', 'X', 'C', 'V', 'B',
+                // 左手数字
+                '1', '2', '3', '4', '5',
+                // 左手符号
+                '`', 'Tab', 'Caps', 'LShift', 'LCtrl', 'LAlt', 'LCmd',
+                // 左手符号(需要Shift的)
+                '!', '@', '#', '$', '%', '~'
+            ]);
+            
+            this.rightHandKeys = new Set([
+                // 右手字母  
+                'Y', 'U', 'I', 'O', 'P',
+                'H', 'J', 'K', 'L',
+                'N', 'M',
+                // 右手数字 (宇浩：很多分体键盘的6在左手)
+                '6', '7', '8', '9', '0',
+                // 右手符号
+                '-', '=', '[', ']', '\\', ';', "'", ',', '.', '/',
+                'Backspace', 'Enter', 'RShift', 'RCtrl', 'RAlt', 'RCmd',
+                // 右手符号(需要Shift的)
+                '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '"', '<', '>', '?'
+            ]);
+            
             this.init();
         }
 
@@ -80,6 +109,76 @@ define([], function () {
          */
         resetKeyPairState() {
             this.lastKey = null;
+        }
+
+        /**
+         * 判断按键属于哪只手
+         */
+        getKeyHand(key) {
+            if (this.leftHandKeys.has(key)) {
+                return 'left';
+            } else if (this.rightHandKeys.has(key)) {
+                return 'right';
+            } else {
+                // 对于Space等中性键，我们认为它是双手键
+                return 'neutral';
+            }
+        }
+
+        /**
+         * 计算左右手互击率
+         */
+        calculateHandAlternationRate() {
+            const totalPairs = Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0);
+            if (totalPairs === 0) {
+                return {
+                    total: 0,
+                    alternating: 0,
+                    rate: 0,
+                    leftToRight: 0,
+                    rightToLeft: 0,
+                    sameHand: 0
+                };
+            }
+
+            let alternatingCount = 0;
+            let leftToRightCount = 0;
+            let rightToLeftCount = 0;
+            let sameHandCount = 0;
+
+            Object.entries(this.keyPairStats).forEach(([pair, count]) => {
+                const [key1, key2] = pair.split('-');
+                const hand1 = this.getKeyHand(key1);
+                const hand2 = this.getKeyHand(key2);
+                
+                // 跳过包含中性键的按键对
+                if (hand1 === 'neutral' || hand2 === 'neutral') {
+                    return;
+                }
+                
+                if (hand1 !== hand2) {
+                    alternatingCount += count;
+                    if (hand1 === 'left' && hand2 === 'right') {
+                        leftToRightCount += count;
+                    } else if (hand1 === 'right' && hand2 === 'left') {
+                        rightToLeftCount += count;
+                    }
+                } else {
+                    sameHandCount += count;
+                }
+            });
+
+            const validPairs = alternatingCount + sameHandCount;
+            const rate = validPairs > 0 ? (alternatingCount / validPairs) * 100 : 0;
+
+            return {
+                total: validPairs,
+                alternating: alternatingCount,
+                rate: Math.round(rate * 100) / 100, // 保留两位小数
+                leftToRight: leftToRightCount,
+                rightToLeft: rightToLeftCount,
+                sameHand: sameHandCount
+            };
         }
 
         /**
@@ -195,8 +294,15 @@ define([], function () {
                 </div>
                 <div class="key-heatmap-board"></div>
                 <div class="key-heatmap-stats">
-                    <span>总按键数: <span class="total-keys">0</span></span>
-                    <span>最高频率: <span class="max-frequency">0</span></span>
+                    <div class="stats-row">
+                        <span>总按键数: <span class="total-keys">0</span></span>
+                        <span>最高频率: <span class="max-frequency">0</span></span>
+                    </div>
+                    <div class="stats-row hand-alternation-stats">
+                        <span>左右手互击率: <span class="alternation-rate">0%</span></span>
+                        <span>互击次数: <span class="alternation-count">0</span></span>
+                        <span>同手次数: <span class="same-hand-count">0</span></span>
+                    </div>
                 </div>
             `;
 
@@ -273,6 +379,22 @@ define([], function () {
             this.container.querySelector('.total-keys').textContent = totalKeys.toLocaleString();
             this.container.querySelector('.max-frequency').textContent = this.maxFrequency.toLocaleString();
 
+            // 计算并更新左右手互击率
+            const handStats = this.calculateHandAlternationRate();
+            const alternationRateElement = this.container.querySelector('.alternation-rate');
+            const alternationCountElement = this.container.querySelector('.alternation-count');
+            const sameHandCountElement = this.container.querySelector('.same-hand-count');
+            
+            if (alternationRateElement) {
+                alternationRateElement.textContent = `${handStats.rate}%`;
+            }
+            if (alternationCountElement) {
+                alternationCountElement.textContent = handStats.alternating.toLocaleString();
+            }
+            if (sameHandCountElement) {
+                sameHandCountElement.textContent = handStats.sameHand.toLocaleString();
+            }
+
             // 更新每个按键的热力图显示
             this.container.querySelectorAll('.key-item').forEach(keyElement => {
                 const key = keyElement.dataset.key;
@@ -297,17 +419,19 @@ define([], function () {
          */
         exportStats() {
             const totalKeyPairs = Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0);
+            const handStats = this.calculateHandAlternationRate();
             
             const data = {
                 stats: this.keyStats,
                 keyPairStats: this.keyPairStats,
+                handAlternationStats: handStats, // 新增：左右手互击率数据
                 maxFrequency: this.maxFrequency,
                 totalKeys: Object.values(this.keyStats).reduce((sum, count) => sum + count, 0),
                 totalKeyPairs: totalKeyPairs,
                 exportTime: new Date().toISOString(),
-                version: '1.0',
+                version: '1.2', // 版本升级，表示包含左右手互击率数据
                 website: 'https://genda.shurufa.app',
-                description: '按鍵統計數據',
+                description: '按鍵統計數據（包含左右手互擊率分析）',
             };
 
             const dataStr = JSON.stringify(data, null, 2);
@@ -396,6 +520,7 @@ define([], function () {
         getStatsSummary() {
             const totalKeys = Object.values(this.keyStats).reduce((sum, count) => sum + count, 0);
             const totalKeyPairs = Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0);
+            const handStats = this.calculateHandAlternationRate();
             const topKeys = Object.entries(this.keyStats)
                 .sort(([,a], [,b]) => b - a)
                 .slice(0, 10);
@@ -406,6 +531,7 @@ define([], function () {
             return {
                 totalKeys,
                 totalKeyPairs,
+                handAlternationStats: handStats,
                 topKeys,
                 topKeyPairs,
                 maxFrequency: this.maxFrequency

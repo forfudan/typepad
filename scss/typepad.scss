@@ -591,19 +591,25 @@ $colors  : (
   
   .key-heatmap-stats {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    gap: 8px;
     font-size: 12px;
     color: #6c757d;
     
-    span {
+    .stats-row {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
+      justify-content: space-around;
       
-      .total-keys, .max-frequency {
-        font-weight: bold;
-        color: #495057;
+      span {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        
+        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count {
+          font-weight: bold;
+          color: #495057;
+        }
       }
     }
   }

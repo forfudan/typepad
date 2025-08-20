@@ -518,8 +518,10 @@ body.black {
     .key-heatmap-stats {
       color: $black-color-text-info;
       
-      .total-keys, .max-frequency {
-        color: $black-color-text;
+      .stats-row span {
+        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count {
+          color: $black-color-text;
+        }
       }
     }
   }
