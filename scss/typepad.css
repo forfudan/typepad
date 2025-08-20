@@ -1310,7 +1310,7 @@ body.black .key-heatmap-container .key-heatmap-board .key-row .key-item:hover {
 body.black .key-heatmap-container .key-heatmap-stats {
   color: rgb(165.75, 165.75, 165.75);
 }
-body.black .key-heatmap-container .key-heatmap-stats .stats-row span .total-keys, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .max-frequency, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-rate, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-count {
+body.black .key-heatmap-container .key-heatmap-stats .stats-row span .total-keys, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .max-frequency, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-rate, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-count, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .average-equiv, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .valid-pairs {
   color: rgb(229.5, 229.5, 229.5);
 }
 
@@ -2233,7 +2233,7 @@ body {
   align-items: center;
   gap: 2px;
 }
-.key-heatmap-container .key-heatmap-stats .stats-row span .total-keys, .key-heatmap-container .key-heatmap-stats .stats-row span .max-frequency, .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-rate, .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-count {
+.key-heatmap-container .key-heatmap-stats .stats-row span .total-keys, .key-heatmap-container .key-heatmap-stats .stats-row span .max-frequency, .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-rate, .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-count, .key-heatmap-container .key-heatmap-stats .stats-row span .average-equiv, .key-heatmap-container .key-heatmap-stats .stats-row span .valid-pairs {
   font-weight: bold;
   color: #495057;
 }

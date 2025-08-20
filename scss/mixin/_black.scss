@@ -519,7 +519,7 @@ body.black {
       color: $black-color-text-info;
       
       .stats-row span {
-        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count {
+        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count, .average-equiv, .valid-pairs {
           color: $black-color-text;
         }
       }

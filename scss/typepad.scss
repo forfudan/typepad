@@ -606,7 +606,7 @@ $colors  : (
         align-items: center;
         gap: 2px;
         
-        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count {
+        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count, .average-equiv, .valid-pairs {
           font-weight: bold;
           color: #495057;
         }
