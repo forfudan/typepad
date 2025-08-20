@@ -473,6 +473,66 @@ $colors  : (
     align-items: center;
     margin-bottom: 15px;
     
+    .key-heatmap-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .title-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: #495057;
+        margin: 0;
+      }
+      
+      .title-inputs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        
+        .title-separator {
+          color: #6c757d;
+          font-size: 12px;
+        }
+        
+        .scheme-input,
+        .user-input {
+          border: none;
+          border-bottom: 1px solid #ced4da;
+          background: transparent;
+          padding: 3px 6px;
+          font-size: 12px;
+          color: #495057;
+          outline: none;
+          min-width: 70px;
+          max-width: 180px;
+          transition: all 0.2s ease;
+          
+          &::placeholder {
+            color: #adb5bd;
+            font-style: italic;
+          }
+          
+          &:focus {
+            border-bottom-color: #007bff;
+            background: rgba(0, 123, 255, 0.05);
+          }
+          
+          &:not(:placeholder-shown) {
+            font-weight: 500;
+          }
+        }
+        
+        .scheme-input {
+          color: #007bff;
+        }
+        
+        .user-input {
+          color: #28a745;
+        }
+      }
+    }
+    
     h3 {
       margin: 0;
       font-size: 16px;
@@ -647,6 +707,38 @@ $colors  : (
   .key-heatmap-container {
     margin: 10px 0;
     padding: 10px;
+    
+    .key-heatmap-header {
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+      
+      .key-heatmap-title {
+        flex-direction: column;
+        gap: 6px;
+        
+        .title-inputs {
+          justify-content: center;
+          
+          .scheme-input,
+          .user-input {
+            font-size: 11px;
+            min-width: 55px;
+            max-width: 110px;
+          }
+        }
+      }
+      
+      .key-heatmap-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+        
+        button {
+          font-size: 11px;
+          padding: 5px 10px;
+        }
+      }
+    }
     
     .key-heatmap-stats {
       padding: 10px;

@@ -1275,6 +1275,33 @@ body.black .key-heatmap-container {
   background-color: rgb(63.75, 63.75, 63.75);
   border-color: rgb(39.15625, 43.3515625, 50.34375);
 }
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-text {
+  color: rgb(229.5, 229.5, 229.5);
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .title-separator {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input,
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input {
+  color: rgb(229.5, 229.5, 229.5);
+  border-bottom-color: rgb(39.15625, 43.3515625, 50.34375);
+  background: rgba(28, 31, 36, 0.6);
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input::placeholder,
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input::placeholder {
+  color: rgb(114.75, 114.75, 114.75);
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input:focus,
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input:focus {
+  border-bottom-color: #00afff;
+  background: rgba(74, 222, 200, 0.15);
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input {
+  color: #00afff;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input {
+  color: rgb(109.9744680851, 227.0255319149, 174.0212765957);
+}
 body.black .key-heatmap-container .key-heatmap-header h3 {
   color: rgb(229.5, 229.5, 229.5);
 }
@@ -1308,10 +1335,25 @@ body.black .key-heatmap-container .key-heatmap-board .key-row .key-item:hover {
   box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
 }
 body.black .key-heatmap-container .key-heatmap-stats {
+  background: rgba(28, 31, 36, 0.9);
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item {
+  background: #1c1f24;
+  border-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item:hover {
+  border-color: rgb(83.78125, 92.7578125, 107.71875);
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+body.black .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-label {
   color: rgb(165.75, 165.75, 165.75);
 }
-body.black .key-heatmap-container .key-heatmap-stats .stats-row span .total-keys, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .max-frequency, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-rate, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-count, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .average-equiv, body.black .key-heatmap-container .key-heatmap-stats .stats-row span .valid-pairs {
+body.black .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-value {
   color: rgb(229.5, 229.5, 229.5);
+}
+body.black .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-note {
+  color: rgb(114.75, 114.75, 114.75);
 }
 
 .animated {
@@ -2113,6 +2155,59 @@ body {
   align-items: center;
   margin-bottom: 15px;
 }
+.key-heatmap-container .key-heatmap-header .key-heatmap-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #495057;
+  margin: 0;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .title-separator {
+  color: #6c757d;
+  font-size: 12px;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input,
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input {
+  border: none;
+  border-bottom: 1px solid #ced4da;
+  background: transparent;
+  padding: 3px 6px;
+  font-size: 12px;
+  color: #495057;
+  outline: none;
+  min-width: 70px;
+  max-width: 180px;
+  transition: all 0.2s ease;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input::placeholder,
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input::placeholder {
+  color: #adb5bd;
+  font-style: italic;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input:focus,
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input:focus {
+  border-bottom-color: #007bff;
+  background: rgba(0, 123, 255, 0.05);
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input:not(:placeholder-shown),
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input:not(:placeholder-shown) {
+  font-weight: 500;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input {
+  color: #007bff;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input {
+  color: #28a745;
+}
 .key-heatmap-container .key-heatmap-header h3 {
   margin: 0;
   font-size: 16px;
@@ -2217,31 +2312,102 @@ body {
   min-width: clamp(50px, 5.5vw, 70px);
 }
 .key-heatmap-container .key-heatmap-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 12px;
-  color: #6c757d;
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(248, 249, 250, 0.8);
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
 }
-.key-heatmap-container .key-heatmap-stats .stats-row {
-  display: flex;
-  justify-content: space-around;
+.key-heatmap-container .key-heatmap-stats .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
 }
-.key-heatmap-container .key-heatmap-stats .stats-row span {
+.key-heatmap-container .key-heatmap-stats .stats-grid .stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  text-align: center;
+  padding: 8px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
 }
-.key-heatmap-container .key-heatmap-stats .stats-row span .total-keys, .key-heatmap-container .key-heatmap-stats .stats-row span .max-frequency, .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-rate, .key-heatmap-container .key-heatmap-stats .stats-row span .hand-alternation-count, .key-heatmap-container .key-heatmap-stats .stats-row span .average-equiv, .key-heatmap-container .key-heatmap-stats .stats-row span .valid-pairs {
+.key-heatmap-container .key-heatmap-stats .stats-grid .stat-item:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+}
+.key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-label {
+  font-size: 11px;
+  color: #6c757d;
+  font-weight: 500;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+.key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-value {
+  font-size: 16px;
   font-weight: bold;
   color: #495057;
+  margin-bottom: 2px;
+  font-family: "JetBrains Mono", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
+.key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-note {
+  font-size: 9px;
+  color: #868e96;
+  font-style: italic;
 }
 
 @media (max-width: 768px) {
   .key-heatmap-container {
     margin: 10px 0;
     padding: 10px;
+  }
+  .key-heatmap-container .key-heatmap-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .key-heatmap-container .key-heatmap-header .key-heatmap-title {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs {
+    justify-content: center;
+  }
+  .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .scheme-input,
+  .key-heatmap-container .key-heatmap-header .key-heatmap-title .title-inputs .user-input {
+    font-size: 11px;
+    min-width: 55px;
+    max-width: 110px;
+  }
+  .key-heatmap-container .key-heatmap-header .key-heatmap-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .key-heatmap-container .key-heatmap-header .key-heatmap-controls button {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  .key-heatmap-container .key-heatmap-stats {
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .key-heatmap-container .key-heatmap-stats .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+  }
+  .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item {
+    padding: 6px;
+  }
+  .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-label {
+    font-size: 10px;
+  }
+  .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-value {
+    font-size: 14px;
+  }
+  .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-note {
+    font-size: 8px;
   }
   .key-heatmap-container .key-heatmap-board .key-row {
     gap: clamp(1px, 0.3vw, 3px);

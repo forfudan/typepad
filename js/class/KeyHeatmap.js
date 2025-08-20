@@ -399,7 +399,25 @@ define([], function () {
             container.className = 'key-heatmap-container';
             container.innerHTML = `
                 <div class="key-heatmap-header">
-                    <h3>按键频率热力图</h3>
+                    <div class="key-heatmap-title">
+                        <span class="title-text">按键频率热力图</span>
+                        <div class="title-inputs">
+                            <input 
+                                type="text" 
+                                class="scheme-input" 
+                                placeholder="输入方案名称"
+                                maxlength="20"
+                                oninput="keyHeatmap.updateTitle()"
+                            >
+                            <input 
+                                type="text" 
+                                class="user-input" 
+                                placeholder="用户昵称"
+                                maxlength="15"
+                                oninput="keyHeatmap.updateTitle()"
+                            >
+                        </div>
+                    </div>
                     <div class="key-heatmap-controls">
                         <button class="key-heatmap-export" onclick="keyHeatmap.exportStats()">导出数据</button>
                         <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">导入数据(增量)</button>
@@ -460,6 +478,9 @@ define([], function () {
                 document.body.appendChild(container);
             }
             this.container = container;
+            
+            // 加载保存的方案名和用户昵称
+            this.loadTitleInputs();
         }
 
         /**
@@ -703,6 +724,84 @@ define([], function () {
                 topKeyPairs,
                 maxFrequency: this.maxFrequency
             };
+        }
+
+        /**
+         * 更新标题显示
+         */
+        updateTitle() {
+            const schemeInput = this.container.querySelector('.scheme-input');
+            const userInput = this.container.querySelector('.user-input');
+            const titleText = this.container.querySelector('.title-text');
+            const separator = this.container.querySelector('.title-separator');
+            
+            const schemeName = schemeInput.value.trim();
+            const userName = userInput.value.trim();
+            
+            // 根据输入内容动态调整输入框宽度
+            this.adjustInputWidth(schemeInput);
+            this.adjustInputWidth(userInput);
+            
+            // 更新标题显示
+            let titleContent = '按键频率热力图';
+            if (schemeName || userName) {
+                titleContent += ' ——';
+                if (schemeName) {
+                    titleContent += ` ${schemeName}`;
+                }
+                if (userName) {
+                    titleContent += ` ${userName}`;
+                }
+            }
+            
+            // 保存到localStorage
+            localStorage.setItem('typepad_scheme_name', schemeName);
+            localStorage.setItem('typepad_user_name', userName);
+        }
+        
+        /**
+         * 动态调整输入框宽度
+         */
+        adjustInputWidth(input) {
+            const text = input.value || input.placeholder;
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            // 获取输入框的字体样式
+            const computedStyle = window.getComputedStyle(input);
+            context.font = `${computedStyle.fontSize} ${computedStyle.fontFamily}`;
+            
+            // 计算文本宽度，加上一些余量
+            const textWidth = context.measureText(text).width;
+            const padding = 20; // 输入框内边距
+            const minWidth = 80; // 最小宽度
+            const maxWidth = 200; // 最大宽度
+            
+            const newWidth = Math.max(minWidth, Math.min(maxWidth, textWidth + padding));
+            input.style.width = `${newWidth}px`;
+        }
+        
+        /**
+         * 加载保存的方案名和用户昵称
+         */
+        loadTitleInputs() {
+            const schemeInput = this.container.querySelector('.scheme-input');
+            const userInput = this.container.querySelector('.user-input');
+            
+            const savedScheme = localStorage.getItem('typepad_scheme_name') || '';
+            const savedUser = localStorage.getItem('typepad_user_name') || '';
+            
+            if (schemeInput) {
+                schemeInput.value = savedScheme;
+                this.adjustInputWidth(schemeInput);
+            }
+            
+            if (userInput) {
+                userInput.value = savedUser;
+                this.adjustInputWidth(userInput);
+            }
+            
+            this.updateTitle();
         }
 
         /**

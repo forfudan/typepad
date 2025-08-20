@@ -461,6 +461,42 @@ body.black {
     border-color: $black-color-border;
     
     .key-heatmap-header {
+      .key-heatmap-title {
+        .title-text {
+          color: $black-color-text;
+        }
+        
+        .title-inputs {
+          .title-separator {
+            color: $black-color-text-info;
+          }
+          
+          .scheme-input,
+          .user-input {
+            color: $black-color-text;
+            border-bottom-color: $black-color-border;
+            background: rgba(28, 31, 36, 0.6);
+            
+            &::placeholder {
+              color: $black-color-text-subtitle;
+            }
+            
+            &:focus {
+              border-bottom-color: $cyan;
+              background: rgba(74, 222, 200, 0.15);
+            }
+          }
+          
+          .scheme-input {
+            color: $cyan;
+          }
+          
+          .user-input {
+            color: lighten($green, 20%);
+          }
+        }
+      }
+      
       h3 {
         color: $black-color-text;
       }
