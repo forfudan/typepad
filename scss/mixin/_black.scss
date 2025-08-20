@@ -461,6 +461,42 @@ body.black {
     border-color: $black-color-border;
     
     .key-heatmap-header {
+      .key-heatmap-title {
+        .title-text {
+          color: $black-color-text;
+        }
+        
+        .title-inputs {
+          .title-separator {
+            color: $black-color-text-info;
+          }
+          
+          .scheme-input,
+          .user-input {
+            color: $black-color-text;
+            border-bottom-color: $black-color-border;
+            background: rgba(28, 31, 36, 0.6);
+            
+            &::placeholder {
+              color: $black-color-text-subtitle;
+            }
+            
+            &:focus {
+              border-bottom-color: $cyan;
+              background: rgba(74, 222, 200, 0.15);
+            }
+          }
+          
+          .scheme-input {
+            color: $cyan;
+          }
+          
+          .user-input {
+            color: lighten($green, 20%);
+          }
+        }
+      }
+      
       h3 {
         color: $black-color-text;
       }
@@ -481,6 +517,20 @@ body.black {
             
             &:hover {
               background-color: darken($red, 10%);
+            }
+          }
+          
+          &.key-heatmap-screenshot {
+            background-color: lighten($green, 10%);
+            color: $black-bg;
+            
+            &:hover {
+              background-color: $green;
+            }
+            
+            &:disabled {
+              background-color: $black-color-text-subtitle;
+              color: $black-bg;
             }
           }
         }
@@ -516,13 +566,63 @@ body.black {
     }
     
     .key-heatmap-stats {
-      color: $black-color-text-info;
+      background: rgba(28, 31, 36, 0.9);
+      border-color: $black-color-border;
       
-      .stats-row span {
-        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count {
-          color: $black-color-text;
+      .stats-grid {
+        .stat-item {
+          background: $black-bg;
+          border-color: $black-color-border;
+          
+          &:hover {
+            border-color: lighten($black-color-border, 20%);
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+          }
+          
+          .stat-label {
+            color: $black-color-text-info;
+          }
+          
+          .stat-value {
+            color: $black-color-text;
+          }
+          
+          .stat-note {
+            color: $black-color-text-subtitle;
+          }
         }
       }
+    }
+    
+    .key-heatmap-footer {
+      border-top-color: $black-color-border;
+      
+      .heatmap-note {
+        color: $black-color-text-info;
+        
+        a {
+          color: $cyan;
+          
+          &:hover {
+            color: lighten($cyan, 10%);
+          }
+        }
+      }
+    }
+  }
+  
+  .capture-message {
+    &.success {
+      background-color: rgba(40, 167, 69, 0.9);
+      color: white;
+      border-color: lighten($green, 20%);
+    }
+    
+    &.error {
+      background-color: rgba(220, 53, 69, 0.9);
+      color: white;
+      border-color: lighten($red, 20%);
+      backdrop-filter: blur(10px);
     }
   }
 }
