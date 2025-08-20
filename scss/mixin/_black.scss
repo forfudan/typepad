@@ -516,11 +516,30 @@ body.black {
     }
     
     .key-heatmap-stats {
-      color: $black-color-text-info;
+      background: rgba(28, 31, 36, 0.9);
+      border-color: $black-color-border;
       
-      .stats-row span {
-        .total-keys, .max-frequency, .hand-alternation-rate, .hand-alternation-count, .average-equiv, .valid-pairs {
-          color: $black-color-text;
+      .stats-grid {
+        .stat-item {
+          background: $black-bg;
+          border-color: $black-color-border;
+          
+          &:hover {
+            border-color: lighten($black-color-border, 20%);
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+          }
+          
+          .stat-label {
+            color: $black-color-text-info;
+          }
+          
+          .stat-value {
+            color: $black-color-text;
+          }
+          
+          .stat-note {
+            color: $black-color-text-subtitle;
+          }
         }
       }
     }

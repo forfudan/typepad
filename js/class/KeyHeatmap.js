@@ -414,18 +414,39 @@ define([], function () {
                 </div>
                 <div class="key-heatmap-board"></div>
                 <div class="key-heatmap-stats">
-                    <div class="stats-row">
-                        <span>总按键数: <span class="total-keys">0</span></span>
-                        <span>最高频数: <span class="max-frequency">0</span></span>
-                    </div>
-                    <div class="stats-row hand-alternation-stats">
-                        <span>左右手互击率: <span class="alternation-rate">0%</span></span>
-                        <span>互击次数(空格折半): <span class="alternation-count">0</span></span>
-                        <span>同手次数(空格折半): <span class="same-hand-count">0</span></span>
-                    </div>
-                    <div class="stats-row equiv-stats">
-                        <span>频数加权平均当量: <span class="average-equiv">0.00</span></span>
-                        <span>有效按键组合数量: <span class="valid-pairs">0</span></span>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">累计按键数: </span>
+                            <span class="stat-value total-keys">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">最常用按键频数: </span>
+                            <span class="stat-value max-frequency">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">左右手互击率: </span>
+                            <span class="stat-value alternation-rate">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">互击次数: </span>
+                            <span class="stat-value alternation-count">0</span>
+                            <span class="stat-note">(空格算作0.5)</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">同手次数: </span>
+                            <span class="stat-value same-hand-count">0</span>
+                            <span class="stat-note">(空格算作0.5)</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">按键组合平均当量: </span>
+                            <span class="stat-value average-equiv">0.00</span>
+                            <span class="stat-note">(频数加权)</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">有效按键组合总数: </span>
+                            <span class="stat-value valid-pairs">0</span>
+                            <span class="stat-note">(计入当量的按键对)</span>
+                        </div>
                     </div>
                 </div>
             `;
