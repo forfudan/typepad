@@ -239,7 +239,8 @@ define([], function () {
         /**
          * 计算加权平均当量
          * 使用按键对频率和当量表计算整体当量值
-         * 详见: https://shurufa.app/docs/statistics.html
+         * 详见: 琼林撷英：中文输入法常用概念术语
+         * https://shurufa.app/docs/concepts.html
          */
         calculateWeightedEquivalent() {
             let totalWeightedEquiv = 0;
