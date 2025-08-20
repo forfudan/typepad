@@ -519,6 +519,20 @@ body.black {
               background-color: darken($red, 10%);
             }
           }
+          
+          &.key-heatmap-screenshot {
+            background-color: lighten($green, 10%);
+            color: $black-bg;
+            
+            &:hover {
+              background-color: $green;
+            }
+            
+            &:disabled {
+              background-color: $black-color-text-subtitle;
+              color: $black-bg;
+            }
+          }
         }
       }
     }
@@ -578,6 +592,36 @@ body.black {
           }
         }
       }
+    }
+    
+    .key-heatmap-footer {
+      border-top-color: $black-color-border;
+      
+      .heatmap-note {
+        color: $black-color-text-info;
+        
+        a {
+          color: $cyan;
+          
+          &:hover {
+            color: lighten($cyan, 10%);
+          }
+        }
+      }
+    }
+  }
+  
+  .capture-message {
+    &.success {
+      background-color: rgba(40, 167, 69, 0.9);
+      color: white;
+      border-color: lighten($green, 20%);
+    }
+    
+    &.error {
+      background-color: rgba(220, 53, 69, 0.9);
+      color: white;
+      border-color: lighten($red, 20%);
     }
   }
 }

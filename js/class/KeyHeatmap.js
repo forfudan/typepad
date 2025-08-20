@@ -421,6 +421,7 @@ define([], function () {
                     <div class="key-heatmap-controls">
                         <button class="key-heatmap-export" onclick="keyHeatmap.exportStats()">导出数据</button>
                         <button class="key-heatmap-import" onclick="keyHeatmap.importStats()">导入数据(增量)</button>
+                        <button class="key-heatmap-screenshot" onclick="keyHeatmap.captureHeatmap()">截图分享</button>
                         <button class="key-heatmap-reset" onclick="keyHeatmap.resetStats()">重置统计</button>
                     </div>
                 </div>
@@ -466,6 +467,13 @@ define([], function () {
                             <span class="stat-note">(计入当量的按键对)</span>
                         </div>
                     </div>
+                </div>
+                <div class="key-heatmap-footer">
+                    <p class="heatmap-note">
+                        💡 关于中文输入法常用概念以及其定义，请参阅
+                        <a href="https://shurufa.app/docs/concepts.html" target="_blank" rel="noopener noreferrer"><span style="text-decoration: wavy underline;">琼林撷英</span></a>
+                        一文
+                    </p>
                 </div>
             `;
 
@@ -703,7 +711,129 @@ define([], function () {
         }
 
         /**
-         * 获取按键统计摘要
+         * 截图并复制到剪贴板
+         */
+        async captureHeatmap() {
+            try {
+                // 检查浏览器是否支持所需API
+                if (!navigator.clipboard || !window.html2canvas) {
+                    this.showCaptureError('截图功能需要现代浏览器支持。建议使用最新版本的 Chrome、Firefox 或 Safari。');
+                    return;
+                }
+
+                // 显示加载状态
+                const button = document.querySelector('.key-heatmap-screenshot');
+                const originalText = button.textContent;
+                button.textContent = '截图中...';
+                button.disabled = true;
+
+                // 等待html2canvas库加载
+                await this.loadHtml2Canvas();
+
+                // 截取热力图容器
+                const canvas = await html2canvas(this.container, {
+                    backgroundColor: null,
+                    scale: 2, // 提高清晰度
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    width: this.container.offsetWidth,
+                    height: this.container.offsetHeight
+                });
+
+                // 将canvas转换为blob
+                canvas.toBlob(async (blob) => {
+                    try {
+                        // 复制到剪贴板
+                        await navigator.clipboard.write([
+                            new ClipboardItem({
+                                'image/png': blob
+                            })
+                        ]);
+
+                        // 显示成功消息
+                        this.showCaptureSuccess();
+                    } catch (error) {
+                        console.error('复制到剪贴板失败:', error);
+                        this.showCaptureError('复制到剪贴板失败，请检查浏览器权限设置。');
+                    } finally {
+                        // 恢复按钮状态
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }
+                }, 'image/png', 0.9);
+
+            } catch (error) {
+                console.error('截图失败:', error);
+                this.showCaptureError('截图失败，请重试。');
+                
+                // 恢复按钮状态
+                const button = document.querySelector('.key-heatmap-screenshot');
+                button.textContent = '截图分享';
+                button.disabled = false;
+            }
+        }
+
+        /**
+         * 动态加载html2canvas库
+         */
+        async loadHtml2Canvas() {
+            if (window.html2canvas) {
+                return; // 已经加载
+            }
+
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('html2canvas库加载失败'));
+                document.head.appendChild(script);
+            });
+        }
+
+        /**
+         * 显示截图成功消息
+         */
+        showCaptureSuccess() {
+            const message = document.createElement('div');
+            message.className = 'capture-message success';
+            message.innerHTML = '✅ 截图已复制到剪贴板，可以直接粘贴分享！';
+            this.showMessage(message);
+        }
+
+        /**
+         * 显示截图错误消息
+         */
+        showCaptureError(errorText) {
+            const message = document.createElement('div');
+            message.className = 'capture-message error';
+            message.innerHTML = `❌ ${errorText}`;
+            this.showMessage(message);
+        }
+
+        /**
+         * 显示临时消息
+         */
+        showMessage(messageElement) {
+            // 移除之前的消息
+            const existingMessage = document.querySelector('.capture-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            // 添加新消息
+            this.container.appendChild(messageElement);
+
+            // 3秒后自动移除
+            setTimeout(() => {
+                if (messageElement.parentNode) {
+                    messageElement.remove();
+                }
+            }, 3000);
+        }
+
+        /**
+         * 重置统计数据
          */
         getStatsSummary() {
             const totalKeys = Object.values(this.keyStats).reduce((sum, count) => sum + count, 0);

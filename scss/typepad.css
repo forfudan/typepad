@@ -1320,6 +1320,17 @@ body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls butt
 body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset:hover {
   background-color: rgb(252, 13.3913043478, 0);
 }
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-screenshot {
+  background-color: rgb(67.2212765957, 218.7787234043, 150.1489361702);
+  color: #1c1f24;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-screenshot:hover {
+  background-color: #26c57d;
+}
+body.black .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-screenshot:disabled {
+  background-color: rgb(114.75, 114.75, 114.75);
+  color: #1c1f24;
+}
 body.black .key-heatmap-container .key-heatmap-legend {
   color: rgb(165.75, 165.75, 165.75);
 }
@@ -1354,6 +1365,28 @@ body.black .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .sta
 }
 body.black .key-heatmap-container .key-heatmap-stats .stats-grid .stat-item .stat-note {
   color: rgb(114.75, 114.75, 114.75);
+}
+body.black .key-heatmap-container .key-heatmap-footer {
+  border-top-color: rgb(39.15625, 43.3515625, 50.34375);
+}
+body.black .key-heatmap-container .key-heatmap-footer .heatmap-note {
+  color: rgb(165.75, 165.75, 165.75);
+}
+body.black .key-heatmap-container .key-heatmap-footer .heatmap-note a {
+  color: #00afff;
+}
+body.black .key-heatmap-container .key-heatmap-footer .heatmap-note a:hover {
+  color: #33bfff;
+}
+body.black .capture-message.success {
+  background-color: rgba(40, 167, 69, 0.9);
+  color: white;
+  border-color: rgb(109.9744680851, 227.0255319149, 174.0212765957);
+}
+body.black .capture-message.error {
+  background-color: rgba(220, 53, 69, 0.9);
+  color: white;
+  border-color: rgb(255, 155.5797101449, 150);
 }
 
 .animated {
@@ -2235,6 +2268,16 @@ body {
 .key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-reset:hover {
   background-color: #c82333;
 }
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-screenshot {
+  background-color: #28a745;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-screenshot:hover {
+  background-color: #218838;
+}
+.key-heatmap-container .key-heatmap-header .key-heatmap-controls button.key-heatmap-screenshot:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
 .key-heatmap-container .key-heatmap-legend {
   display: flex;
   align-items: center;
@@ -2356,6 +2399,58 @@ body {
   font-size: 9px;
   color: #868e96;
   font-style: italic;
+}
+.key-heatmap-container .key-heatmap-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #e9ecef;
+}
+.key-heatmap-container .key-heatmap-footer .heatmap-note {
+  margin: 0;
+  font-size: 11px;
+  color: #6c757d;
+  text-align: center;
+  line-height: 1.4;
+}
+.key-heatmap-container .key-heatmap-footer .heatmap-note a {
+  color: #007bff;
+  text-decoration: none;
+}
+.key-heatmap-container .key-heatmap-footer .heatmap-note a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+.key-heatmap-container .capture-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out;
+}
+.key-heatmap-container .capture-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.key-heatmap-container .capture-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 768px) {
