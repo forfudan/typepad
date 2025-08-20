@@ -100,6 +100,7 @@ define([], function () {
             if (this.lastKey && currentKey) {
                 const pair = `${this.lastKey}-${currentKey}`;
                 this.keyPairStats[pair] = (this.keyPairStats[pair] || 0) + 1;
+                console.log(`记录按键对: ${pair}, 当前计数: ${this.keyPairStats[pair]}`);
             }
             this.lastKey = currentKey;
         }
@@ -146,12 +147,35 @@ define([], function () {
             let rightToLeftCount = 0;
             let sameHandCount = 0;
 
+            // 调试日志
+            console.log('计算互击率，当前按键对统计：', this.keyPairStats);
+
             Object.entries(this.keyPairStats).forEach(([pair, count]) => {
                 const [key1, key2] = pair.split('-');
                 const hand1 = this.getKeyHand(key1);
                 const hand2 = this.getKeyHand(key2);
                 
-                // 跳过包含中性键的按键对
+                // 特殊处理包含空格的按键对
+                if (key1 === 'Space' || key2 === 'Space') {
+                    console.log(`处理空格按键对: ${pair}, 计数: ${count}`);
+                    // 空格算作0.5个同手，0.5个互击
+                    alternatingCount += count * 0.5;
+                    sameHandCount += count * 0.5;
+                    
+                    // 根据非空格键的手部归属来分配左右互击
+                    const nonSpaceKey = key1 === 'Space' ? key2 : key1;
+                    const nonSpaceHand = this.getKeyHand(nonSpaceKey);
+                    if (nonSpaceHand === 'left') {
+                        leftToRightCount += count * 0.25; // 左手->空格(右手部分)
+                        rightToLeftCount += count * 0.25; // 空格(左手部分)->左手
+                    } else if (nonSpaceHand === 'right') {
+                        leftToRightCount += count * 0.25; // 空格(左手部分)->右手
+                        rightToLeftCount += count * 0.25; // 右手->空格(右手部分)
+                    }
+                    return;
+                }
+                
+                // 跳过其他中性键的按键对
                 if (hand1 === 'neutral' || hand2 === 'neutral') {
                     return;
                 }
@@ -171,14 +195,17 @@ define([], function () {
             const validPairs = alternatingCount + sameHandCount;
             const rate = validPairs > 0 ? (alternatingCount / validPairs) * 100 : 0;
 
-            return {
-                total: validPairs,
-                alternating: alternatingCount,
+            const result = {
+                total: Math.round(validPairs * 100) / 100, // 保留两位小数
+                alternating: Math.round(alternatingCount * 100) / 100,
                 rate: Math.round(rate * 100) / 100, // 保留两位小数
-                leftToRight: leftToRightCount,
-                rightToLeft: rightToLeftCount,
-                sameHand: sameHandCount
+                leftToRight: Math.round(leftToRightCount * 100) / 100,
+                rightToLeft: Math.round(rightToLeftCount * 100) / 100,
+                sameHand: Math.round(sameHandCount * 100) / 100
             };
+            
+            console.log('计算结果：', result);
+            return result;
         }
 
         /**
@@ -296,12 +323,12 @@ define([], function () {
                 <div class="key-heatmap-stats">
                     <div class="stats-row">
                         <span>总按键数: <span class="total-keys">0</span></span>
-                        <span>最高频率: <span class="max-frequency">0</span></span>
+                        <span>最高频数: <span class="max-frequency">0</span></span>
                     </div>
                     <div class="stats-row hand-alternation-stats">
                         <span>左右手互击率: <span class="alternation-rate">0%</span></span>
-                        <span>互击次数: <span class="alternation-count">0</span></span>
-                        <span>同手次数: <span class="same-hand-count">0</span></span>
+                        <span>互击次数(空格折半): <span class="alternation-count">0</span></span>
+                        <span>同手次数(空格折半): <span class="same-hand-count">0</span></span>
                     </div>
                 </div>
             `;
