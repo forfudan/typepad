@@ -1037,6 +1037,11 @@ define(
             if (this.codeHint) {
                this.codeHint.updateForPosition(this.currentWords, 0);
             }
+            
+            // 重置按键对记录状态
+            if (this.keyHeatmap) {
+               this.keyHeatmap.resetKeyPairState();
+            }
          }
 
          // 内容改变时更新编码提示
