@@ -757,7 +757,7 @@ define(
             html = html + untypedHtml
             template.innerHTML = html;
 
-            // 滚动对照区到当前所输入的位置 - 激进的打字机模式
+            // 滚动对照区到当前所输入的位置 - 按视觉行滚动机制
             let currentCharElement = $('.current-char');
             if (currentCharElement) {
                 // 自动检测行高（如果还没有检测过）
