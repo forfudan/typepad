@@ -56,7 +56,11 @@ body{
   background-color: transparentize(white, 0.3);
   @include border-radius($radius-main);
   &.big{
-    max-height: 200px;
+    max-height: 280px;
+  }
+  @media (min-width: 769px){
+    min-height: 200px;
+    max-height: 280px;
   }
   @media (max-width: $separate-mobile){
     margin-bottom: 5px;
@@ -81,7 +85,11 @@ body{
     width: 100%;
     display: block;
     &.big{
-      max-height: 200px;
+      max-height: 280px;
+    }
+    @media (min-width: 769px){
+      min-height: 200px;
+      max-height: 280px;
     }
     &:focus{
       border-color: $color-border-clearly;
@@ -116,8 +124,6 @@ body{
     white-space: inherit;
   }
   .current-char{
-    background-color: transparentize($color-main, 0.8);
-    color: $text-main !important;
     white-space: inherit;
     position: relative;
   }

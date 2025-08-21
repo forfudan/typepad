@@ -768,22 +768,23 @@ define(
                 // 检测当前字符在第几个视觉行
                 let currentLineIndex = this.getCurrentLineIndex(currentCharElement);
                 
-                // 如果行号变化了，说明用户换到了新的视觉行
-                if (currentLineIndex > this.lastLineIndex) {
-                    // 检查当前字符是否接近可视区域底部
-                    let containerHeight = templateWrapper.clientHeight;
-                    let elementRect = currentCharElement.getBoundingClientRect();
-                    let containerRect = templateWrapper.getBoundingClientRect();
+                // 检查当前字符是否在容器的垂直中间位置
+                let containerHeight = templateWrapper.clientHeight;
+                let elementRect = currentCharElement.getBoundingClientRect();
+                let containerRect = templateWrapper.getBoundingClientRect();
+                
+                let relativePosition = elementRect.top - containerRect.top;
+                let isAtMiddle = relativePosition >= containerHeight * 0.3;
+                
+                // 如果当前字符到达中间位置附近，或者行号发生变化，就滚动
+                if (isAtMiddle || currentLineIndex !== this.lastLineIndex) {
+                    // 向下滚动一行，保持打字机效果
+                    let scrollTarget = currentLineIndex * this.lineHeight - containerHeight * 0.4;
                     
-                    let relativePosition = elementRect.top - containerRect.top;
-                    if (relativePosition > containerHeight * 0.7) {
-                        // 滚动使当前行显示在容器的上半部分
-                        let scrollTarget = currentLineIndex * this.lineHeight - containerHeight * 0.3;
-                        templateWrapper.scrollTo({
-                            top: Math.max(0, scrollTarget),
-                            behavior: 'smooth'
-                        });
-                    }
+                    templateWrapper.scrollTo({
+                        top: Math.max(0, scrollTarget),
+                        behavior: 'smooth'
+                    });
                     
                     this.lastLineIndex = currentLineIndex;
                 }
