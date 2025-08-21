@@ -116,8 +116,6 @@ body{
     white-space: inherit;
   }
   .current-char{
-    background-color: transparentize($color-main, 0.8);
-    color: $text-main !important;
     white-space: inherit;
     position: relative;
   }
