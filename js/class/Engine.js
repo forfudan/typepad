@@ -65,6 +65,10 @@ define(
             this.codeHint = new CodeHint(); // 编码提示实例
             this.keyHeatmap = new KeyHeatmap(); // 按键热力图实例
 
+            // 添加行滚动相关属性
+            this.lastLineIndex = 0;  // 记录上一次的行号
+            this.lineHeight = 0;     // 行高（自动检测）
+
             // 初始化方案名称输入框
             this.initSchemeName();
 
@@ -737,13 +741,56 @@ define(
             let logLength = theLastResult.start + theLastResult.words.length // 已上屏记录的长度
 
             let untypedString = this.currentWords.substring(logLength - tempCharacterLength)
-            let untypedHtml = `<span class='${untypedStringClassName}'>${untypedString}</span>`;
+            
+            // 将未输入的文字分为当前要输入的字符和其余字符
+            let currentChar = untypedString.charAt(0) || '';
+            let remainingChars = untypedString.substring(1) || '';
+            
+            let untypedHtml;
+            if (currentChar) {
+                // 标记当前要输入的字符，方便定位滚动
+                untypedHtml = `<span class="current-char">${currentChar}</span><span class='${untypedStringClassName}'>${remainingChars}</span>`;
+            } else {
+                untypedHtml = `<span class='${untypedStringClassName}'>${untypedString}</span>`;
+            }
+            
             html = html + untypedHtml
             template.innerHTML = html;
 
-            // 滚动对照区到当前所输入的位置
-            let offsetTop = $('.' + untypedStringClassName).offsetTop;
-            templateWrapper.scrollTo(0, offsetTop - HEIGHT_TEMPLATE / 2);
+            // 滚动对照区到当前所输入的位置 - 按视觉行滚动机制
+            let currentCharElement = $('.current-char');
+            if (currentCharElement) {
+                // 自动检测行高（如果还没有检测过）
+                if (this.lineHeight === 0) {
+                    this.detectLineHeight();
+                }
+                
+                // 检测当前字符在第几个视觉行
+                let currentLineIndex = this.getCurrentLineIndex(currentCharElement);
+                
+                // 如果行号变化了，说明用户换到了新的视觉行
+                if (currentLineIndex > this.lastLineIndex) {
+                    // 检查当前字符是否在可视区域内
+                    let containerHeight = templateWrapper.clientHeight;
+                    let currentScroll = templateWrapper.scrollTop;
+                    let elementRect = currentCharElement.getBoundingClientRect();
+                    let containerRect = templateWrapper.getBoundingClientRect();
+                    
+                    // 如果当前字符接近或超出可视区域底部，才滚动
+                    let relativePosition = elementRect.top - containerRect.top;
+                    if (relativePosition > containerHeight * 0.7) {
+                        // 滚动使当前行显示在容器的上半部分
+                        let scrollTarget = currentLineIndex * this.lineHeight - containerHeight * 0.3;
+                        templateWrapper.scrollTo({
+                            top: Math.max(0, scrollTarget),
+                            behavior: 'smooth'
+                        });
+                        console.log(`Scrolled to line ${currentLineIndex}, target: ${scrollTarget}px`);
+                    }
+                    
+                    this.lastLineIndex = currentLineIndex;
+                }
+            }
 
 
             if (this.config.articleType === ArticleType.word) {
@@ -778,6 +825,90 @@ define(
             if (this.codeHint) {
                this.codeHint.updateForPosition(this.currentWords, currentPosition);
             }
+         }
+
+         // 自动检测行高 - 更精确的视觉行高检测
+         detectLineHeight() {
+            // 创建两个临时的span元素来测量实际视觉行高
+            let testElement1 = document.createElement('span');
+            let testElement2 = document.createElement('span');
+            
+            testElement1.textContent = '测试文字测试文字测试文字';
+            testElement2.innerHTML = '测试文字测试文字测试文字<br>测试文字测试文字测试文字';
+            
+            // 应用相同的样式
+            let templateStyle = window.getComputedStyle(template);
+            testElement1.style.fontSize = templateStyle.fontSize;
+            testElement1.style.lineHeight = templateStyle.lineHeight;
+            testElement1.style.fontFamily = templateStyle.fontFamily;
+            testElement2.style.fontSize = templateStyle.fontSize;
+            testElement2.style.lineHeight = templateStyle.lineHeight;
+            testElement2.style.fontFamily = templateStyle.fontFamily;
+            
+            // 临时添加到DOM中测量
+            template.appendChild(testElement1);
+            template.appendChild(testElement2);
+            
+            let height1 = testElement1.offsetHeight;
+            let height2 = testElement2.offsetHeight;
+            
+            // 移除测试元素
+            template.removeChild(testElement1);
+            template.removeChild(testElement2);
+            
+            // 计算实际行高
+            this.lineHeight = height2 - height1;
+            
+            // 如果无法通过这种方式检测，使用备用方案
+            if (this.lineHeight <= 0) {
+                let fontSize = parseFloat(templateStyle.fontSize);
+                let lineHeight = parseFloat(templateStyle.lineHeight);
+                
+                if (isNaN(lineHeight) || lineHeight < fontSize) {
+                    this.lineHeight = Math.ceil(fontSize * 1.4);
+                } else {
+                    this.lineHeight = Math.ceil(lineHeight);
+                }
+            }
+            
+            console.log('Detected visual line height:', this.lineHeight);
+         }
+
+         // 获取当前字符在第几个视觉行（考虑soft-wrap）
+         getCurrentLineIndex(element) {
+            // 获取当前字符相对于template容器顶部的位置
+            let elementRect = element.getBoundingClientRect();
+            let templateRect = template.getBoundingClientRect();
+            
+            // 计算相对位置
+            let relativeTop = elementRect.top - templateRect.top;
+            
+            // 计算视觉行号（从0开始）
+            let lineIndex = Math.floor(relativeTop / this.lineHeight);
+            
+            console.log(`Current char at visual line: ${lineIndex}, relativeTop: ${relativeTop}, lineHeight: ${this.lineHeight}`);
+            
+            return Math.max(0, lineIndex);
+         }
+
+         // 向下滚动指定行数
+         scrollDownByLines(lines) {
+            let currentScroll = templateWrapper.scrollTop;
+            let scrollDistance = lines * this.lineHeight;
+            
+            // 平滑滚动
+            templateWrapper.scrollTo({
+                top: currentScroll + scrollDistance,
+                behavior: 'smooth'
+            });
+            
+            console.log(`Scrolled down ${lines} lines (${scrollDistance}px)`);
+         }
+
+         // 重置行滚动状态（在开始新段落时调用）
+         resetLineScrolling() {
+            this.lastLineIndex = 0;
+            this.lineHeight = 0; // 重新检测行高
          }
 
          // 英文模式：进入
@@ -1037,6 +1168,9 @@ define(
             if (this.codeHint) {
                this.codeHint.updateForPosition(this.currentWords, 0);
             }
+            
+            // 重置行滚动状态
+            this.resetLineScrolling();
             
             // 重置按键对记录状态
             if (this.keyHeatmap) {
