@@ -770,13 +770,11 @@ define(
                 
                 // 如果行号变化了，说明用户换到了新的视觉行
                 if (currentLineIndex > this.lastLineIndex) {
-                    // 检查当前字符是否在可视区域内
+                    // 检查当前字符是否接近可视区域底部
                     let containerHeight = templateWrapper.clientHeight;
-                    let currentScroll = templateWrapper.scrollTop;
                     let elementRect = currentCharElement.getBoundingClientRect();
                     let containerRect = templateWrapper.getBoundingClientRect();
                     
-                    // 如果当前字符接近或超出可视区域底部，才滚动
                     let relativePosition = elementRect.top - containerRect.top;
                     if (relativePosition > containerHeight * 0.7) {
                         // 滚动使当前行显示在容器的上半部分
@@ -785,7 +783,6 @@ define(
                             top: Math.max(0, scrollTarget),
                             behavior: 'smooth'
                         });
-                        console.log(`Scrolled to line ${currentLineIndex}, target: ${scrollTarget}px`);
                     }
                     
                     this.lastLineIndex = currentLineIndex;
@@ -827,9 +824,9 @@ define(
             }
          }
 
-         // 自动检测行高 - 更精确的视觉行高检测
+         // 自动检测行高 - 检测视觉行高
          detectLineHeight() {
-            // 创建两个临时的span元素来测量实际视觉行高
+            // 创建测试元素来测量实际视觉行高
             let testElement1 = document.createElement('span');
             let testElement2 = document.createElement('span');
             
@@ -859,7 +856,7 @@ define(
             // 计算实际行高
             this.lineHeight = height2 - height1;
             
-            // 如果无法通过这种方式检测，使用备用方案
+            // 备用方案
             if (this.lineHeight <= 0) {
                 let fontSize = parseFloat(templateStyle.fontSize);
                 let lineHeight = parseFloat(templateStyle.lineHeight);
@@ -870,8 +867,6 @@ define(
                     this.lineHeight = Math.ceil(lineHeight);
                 }
             }
-            
-            console.log('Detected visual line height:', this.lineHeight);
          }
 
          // 获取当前字符在第几个视觉行（考虑soft-wrap）
@@ -886,23 +881,7 @@ define(
             // 计算视觉行号（从0开始）
             let lineIndex = Math.floor(relativeTop / this.lineHeight);
             
-            console.log(`Current char at visual line: ${lineIndex}, relativeTop: ${relativeTop}, lineHeight: ${this.lineHeight}`);
-            
             return Math.max(0, lineIndex);
-         }
-
-         // 向下滚动指定行数
-         scrollDownByLines(lines) {
-            let currentScroll = templateWrapper.scrollTop;
-            let scrollDistance = lines * this.lineHeight;
-            
-            // 平滑滚动
-            templateWrapper.scrollTo({
-                top: currentScroll + scrollDistance,
-                behavior: 'smooth'
-            });
-            
-            console.log(`Scrolled down ${lines} lines (${scrollDistance}px)`);
          }
 
          // 重置行滚动状态（在开始新段落时调用）
