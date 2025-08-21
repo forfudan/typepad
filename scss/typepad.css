@@ -1709,7 +1709,13 @@ body {
   border-radius: 7px;
 }
 .template-container.big {
-  max-height: 200px;
+  max-height: 280px;
+}
+@media (min-width: 769px) {
+  .template-container {
+    min-height: 200px;
+    max-height: 280px;
+  }
 }
 @media (max-width: 768px) {
   .template-container {
@@ -1739,7 +1745,13 @@ body {
   display: block;
 }
 .typing-container textarea.big {
-  max-height: 200px;
+  max-height: 280px;
+}
+@media (min-width: 769px) {
+  .typing-container textarea {
+    min-height: 200px;
+    max-height: 280px;
+  }
 }
 .typing-container textarea:focus {
   border-color: #ccc;

@@ -774,9 +774,9 @@ define(
                 let containerRect = templateWrapper.getBoundingClientRect();
                 
                 let relativePosition = elementRect.top - containerRect.top;
-                let isAtMiddle = relativePosition >= containerHeight * 0.5;
+                let isAtMiddle = relativePosition >= containerHeight * 0.3;
                 
-                // 如果当前字符到达中间位置，或者行号发生变化，就滚动
+                // 如果当前字符到达中间位置附近，或者行号发生变化，就滚动
                 if (isAtMiddle || currentLineIndex !== this.lastLineIndex) {
                     // 向下滚动一行，保持打字机效果
                     let scrollTarget = currentLineIndex * this.lineHeight - containerHeight * 0.4;
