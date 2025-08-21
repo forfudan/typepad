@@ -72,6 +72,7 @@ body{
     overflow: hidden;
     @include border-radius($radius-main);
     -webkit-appearance: none;
+    appearance: none;
     white-space: pre-wrap;
     border: 1px solid $color-border;
     resize: none;
@@ -113,6 +114,12 @@ body{
     background-color: $red;
     color: white !important;
     white-space: inherit;
+  }
+  .current-char{
+    background-color: transparentize($color-main, 0.8);
+    color: $text-main !important;
+    white-space: inherit;
+    position: relative;
   }
   @media (max-width: $separate-mobile){
     font-size: $fz-typing-mobile;
