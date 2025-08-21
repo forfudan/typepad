@@ -1,27 +1,27 @@
 define([], function () {
     /**
-     * 按键热力图管理类
-     * 记录和可视化按键频率
+     * 按鍵熱力圖管理類
+     * 記錄和可視化按鍵頻率
      */
     class KeyHeatmap {
         constructor() {
             this.container = null;
             this.maxFrequency = 1;
             this.keyStats = this.loadKeyStats();
-            this.keyPairStats = this.loadKeyPairStats(); // 新增：按键对统计
-            this.lastKey = null; // 记录上一个按键，用于计算按键对
+            this.keyPairStats = this.loadKeyPairStats(); // 新增：按鍵對統計
+            this.lastKey = null; // 記錄上一個按鍵，用於計算按鍵對
             
-            // 左右手键位映射
+            // 左右手鍵位映射
             this.leftHandKeys = new Set([
                 // 左手字母
                 'Q', 'W', 'E', 'R', 'T',
                 'A', 'S', 'D', 'F', 'G',
                 'Z', 'X', 'C', 'V', 'B',
-                // 左手数字
+                // 左手數字
                 '1', '2', '3', '4', '5',
-                // 左手符号
+                // 左手符號
                 '`', 'Tab', 'Caps', 'LShift', 'LCtrl', 'LAlt', 'LCmd',
-                // 左手符号(需要Shift的)
+                // 左手符號(需要Shift的)
                 '!', '@', '#', '$', '%', '~'
             ]);
             
@@ -30,24 +30,24 @@ define([], function () {
                 'Y', 'U', 'I', 'O', 'P',
                 'H', 'J', 'K', 'L',
                 'N', 'M',
-                // 右手数字 (宇浩：很多分体键盘的6在左手)
+                // 右手數字 (宇浩：很多分體鍵盤的6在左手)
                 '6', '7', '8', '9', '0',
-                // 右手符号
+                // 右手符號
                 '-', '=', '[', ']', '\\', ';', "'", ',', '.', '/',
                 'Backspace', 'Enter', 'RShift', 'RCtrl', 'RAlt', 'RCmd',
-                // 右手符号(需要Shift的)
+                // 右手符號(需要Shift的)
                 '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '"', '<', '>', '?'
             ]);
             
-            // 当量表 - 从 equivTable.json 配置文件加载
+            // 當量表 - 從 equivTable.json 配置文件加載
             this.equivTable = new Map();
-            this.equivTableLoaded = false; // 标记当量表是否已加载
+            this.equivTableLoaded = false; // 標記當量表是否已加載
             
             this.init();
         }
 
         /**
-         * 从localStorage加载按键统计数据
+         * 從localStorage加載按鍵統計數據
          */
         loadKeyStats() {
             const saved = localStorage.getItem('typepad_key_stats');
@@ -55,7 +55,7 @@ define([], function () {
                 try {
                     const data = JSON.parse(saved);
                     const stats = data.stats || {};
-                    // 重新计算maxFrequency，确保准确性
+                    // 重新計算maxFrequency，確保準確性
                     this.maxFrequency = Object.keys(stats).length > 0 
                         ? Math.max(...Object.values(stats)) 
                         : 1;
@@ -69,7 +69,7 @@ define([], function () {
         }
 
         /**
-         * 保存按键统计数据到localStorage
+         * 保存按鍵統計數據到localStorage
          */
         saveKeyStats() {
             const data = {
@@ -82,7 +82,7 @@ define([], function () {
         }
 
         /**
-         * 加载按键对统计数据
+         * 加載按鍵對統計數據
          */
         loadKeyPairStats() {
             const saved = localStorage.getItem('typepad_key_stats');
@@ -98,7 +98,7 @@ define([], function () {
         }
 
         /**
-         * 从外部 JSON 文件加载当量表
+         * 從外部 JSON 文件加載當量表
          */
         async loadEquivTable() {
             try {
@@ -108,7 +108,7 @@ define([], function () {
                 }
                 const equivConfig = await response.json();
                 
-                // 将JSON对象转换为Map
+                // 將JSON對象轉換為Map
                 Object.entries(equivConfig.data).forEach(([keys, equiv]) => {
                     this.equivTable.set(keys, equiv);
                 });
@@ -116,19 +116,19 @@ define([], function () {
                 console.log(`成功加载当量表，共 ${this.equivTable.size} 个按键组合`);
                 this.equivTableLoaded = true;
                 
-                // 当量表加载完成后，重新更新显示
+                // 當量表加載完成後，重新更新顯示
                 if (this.container) {
                     this.updateDisplay();
                 }
             } catch (error) {
                 console.warn('加载当量表失败，将使用空的当量表:', error);
                 this.equivTableLoaded = false;
-                // 如果加载失败，保持空的Map，这样当量计算会返回0
+                // 如果加載失敗，保持空的Map，這樣當量計算會返回0
             }
         }
 
         /**
-         * 记录按键对频率
+         * 記錄按鍵對頻率
          */
         recordKeyPair(currentKey) {
             if (this.lastKey && currentKey) {
@@ -139,14 +139,14 @@ define([], function () {
         }
 
         /**
-         * 重置按键对记录状态（用于新段落开始时）
+         * 重置按鍵對記錄狀態（用於新段落開始時）
          */
         resetKeyPairState() {
             this.lastKey = null;
         }
 
         /**
-         * 判断按键属于哪只手
+         * 判斷按鍵屬於哪只手
          */
         getKeyHand(key) {
             if (this.leftHandKeys.has(key)) {
@@ -154,13 +154,13 @@ define([], function () {
             } else if (this.rightHandKeys.has(key)) {
                 return 'right';
             } else {
-                // 对于Space等中性键，我们认为它是双手键
+                // 對於Space等中性鍵，我們認為它是雙手鍵
                 return 'neutral';
             }
         }
 
         /**
-         * 计算左右手互击率
+         * 計算左右手互擊率
          */
         calculateHandAlternationRate() {
             const totalPairs = Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0);
@@ -185,13 +185,13 @@ define([], function () {
                 const hand1 = this.getKeyHand(key1);
                 const hand2 = this.getKeyHand(key2);
                 
-                // 特殊处理包含空格的按键对
+                // 特殊處理包含空格的按鍵對
                 if (key1 === 'Space' || key2 === 'Space') {
-                    // 空格算作0.5个同手，0.5个互击
+                    // 空格算作0.5個同手，0.5個互擊
                     alternatingCount += count * 0.5;
                     sameHandCount += count * 0.5;
                     
-                    // 根据非空格键的手部归属来分配左右互击
+                    // 根據非空格鍵的手部歸屬來分配左右互擊
                     const nonSpaceKey = key1 === 'Space' ? key2 : key1;
                     const nonSpaceHand = this.getKeyHand(nonSpaceKey);
                     if (nonSpaceHand === 'left') {
@@ -204,7 +204,7 @@ define([], function () {
                     return;
                 }
                 
-                // 跳过其他中性键的按键对
+                // 跳過其他中性鍵的按鍵對
                 if (hand1 === 'neutral' || hand2 === 'neutral') {
                     return;
                 }
@@ -225,9 +225,9 @@ define([], function () {
             const rate = validPairs > 0 ? (alternatingCount / validPairs) * 100 : 0;
 
             const result = {
-                total: Math.round(validPairs * 100) / 100, // 保留两位小数
+                total: Math.round(validPairs * 100) / 100, // 保留兩位小數
                 alternating: Math.round(alternatingCount * 100) / 100,
-                rate: Math.round(rate * 100) / 100, // 保留两位小数
+                rate: Math.round(rate * 100) / 100, // 保留兩位小數
                 leftToRight: Math.round(leftToRightCount * 100) / 100,
                 rightToLeft: Math.round(rightToLeftCount * 100) / 100,
                 sameHand: Math.round(sameHandCount * 100) / 100
@@ -237,9 +237,9 @@ define([], function () {
         }
 
         /**
-         * 计算加权平均当量
-         * 使用按键对频率和当量表计算整体当量值
-         * 详见: 琼林撷英：中文输入法常用概念术语
+         * 計算加權平均當量
+         * 使用按鍵對頻率和當量表計算整體當量值
+         * 詳見: 瓊林擷英：中文輸入法常用概念術語
          * https://shurufa.app/docs/concepts.html
          */
         calculateWeightedEquivalent() {
@@ -247,7 +247,7 @@ define([], function () {
             let totalValidPairs = 0;
             
             Object.entries(this.keyPairStats).forEach(([pair, count]) => {
-                // 将按键对转换为当量表格式
+                // 將按鍵對轉換為當量表格式
                 const equivKey = this.convertPairToEquivKey(pair);
                 
                 if (equivKey && this.equivTable.has(equivKey)) {
@@ -269,18 +269,18 @@ define([], function () {
         }
 
         /**
-         * 将按键对转换为当量表中的键格式
+         * 將按鍵對轉換為當量表中的鍵格式
          * 例如：'A-Space' -> 'a_', 'Space-B' -> '_b'
          */
         convertPairToEquivKey(pair) {
             const [key1, key2] = pair.split('-');
             
-            // 转换为当量表格式：小写字母，空格用_表示
+            // 轉換為當量表格式：小寫字母，空格用_表示
             const convertKey = (key) => {
                 if (key === 'Space') {
                     return '_';
                 }
-                // 只处理字母和分号，其他键忽略
+                // 只處理字母和分號，其他鍵忽略
                 if (key.length === 1 && /[A-Za-z;]/.test(key)) {
                     return key.toLowerCase();
                 }
@@ -290,7 +290,7 @@ define([], function () {
             const convertedKey1 = convertKey(key1);
             const convertedKey2 = convertKey(key2);
             
-            // 只有当两个键都能转换时才返回有效的当量键
+            // 只有當兩個鍵都能轉換時才返回有效的當量鍵
             if (convertedKey1 !== null && convertedKey2 !== null) {
                 return convertedKey1 + convertedKey2;
             }
@@ -299,17 +299,17 @@ define([], function () {
         }
 
         /**
-         * 处理修饰键的位置检测
-         * 我们要严格区分左右修饰键，
-         * 例如左Shift和右Shift是不同的按键。
-         * 这样可以更准确地反映按键的使用频率和热力分布。
-         * 并且了解左右手的实际负荷。
+         * 處理修飾鍵的位置檢測
+         * 我們要嚴格區分左右修飾鍵，
+         * 例如左Shift和右Shift是不同的按鍵。
+         * 這樣可以更準確地反映按鍵的使用頻率和熱力分布。
+         * 並且瞭解左右手的實際負荷。
          */
         recordKeyWithLocation(event) {
             const key = event.key;
             let normalizedKey = this.normalizeKey(key);
             
-            // 严格区分左右修饰键
+            // 嚴格區分左右修飾鍵
             if (key === 'Shift') {
                 normalizedKey = event.location === 1 ? 'LShift' : 'RShift';
             } else if (key === 'Control') {
@@ -321,11 +321,11 @@ define([], function () {
             }
             
             if (normalizedKey) {
-                // 记录单个按键频率
+                // 記錄單個按鍵頻率
                 this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
                 this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
                 
-                // 记录按键对频率
+                // 記錄按鍵對頻率
                 this.recordKeyPair(normalizedKey);
                 
                 this.saveKeyStats();
@@ -334,18 +334,18 @@ define([], function () {
         }
 
         /**
-         * 记录按键
+         * 記錄按鍵
          */
         recordKey(key) {
-            // 将按键转换为大写以统一处理
+            // 將按鍵轉換為大寫以統一處理
             const normalizedKey = this.normalizeKey(key);
             
             if (normalizedKey) {
-                // 记录单个按键频率
+                // 記錄單個按鍵頻率
                 this.keyStats[normalizedKey] = (this.keyStats[normalizedKey] || 0) + 1;
                 this.maxFrequency = Math.max(this.maxFrequency, this.keyStats[normalizedKey]);
                 
-                // 记录按键对频率
+                // 記錄按鍵對頻率
                 this.recordKeyPair(normalizedKey);
                 
                 this.saveKeyStats();
@@ -354,10 +354,10 @@ define([], function () {
         }
 
         /**
-         * 标准化按键名称
+         * 標準化按鍵名稱
          */
         normalizeKey(key) {
-            // 特殊键名映射
+            // 特殊鍵名映射
             const keyMap = {
                 ' ': 'Space',
                 'Enter': 'Enter',
@@ -371,7 +371,7 @@ define([], function () {
                 return keyMap[key];
             }
 
-            // 字母、数字、符号直接使用大写
+            // 字母、數字、符號直接使用大寫
             if (key.length === 1) {
                 return key.toUpperCase();
             }
@@ -380,19 +380,19 @@ define([], function () {
         }
 
         /**
-         * 初始化热力图容器
+         * 初始化熱力圖容器
          */
         init() {
             this.createContainer();
             this.createKeyboard();
             this.updateDisplay();
             
-            // 异步加载当量表
+            // 異步加載當量表
             this.loadEquivTable();
         }
 
         /**
-         * 创建热力图容器
+         * 創建熱力圖容器
          */
         createContainer() {
             const container = document.createElement('div');
@@ -477,33 +477,33 @@ define([], function () {
                 </div>
             `;
 
-            // 找到成绩表格容器并在其后插入热力图
+            // 找到成績表格容器並在其後插入熱力圖
             const tableContainer = document.querySelector('.table-container');
             if (tableContainer) {
                 tableContainer.insertAdjacentElement('afterend', container);
             } else {
-                // 如果找不到表格容器，则添加到页面底部
+                // 如果找不到表格容器，則添加到頁面底部
                 document.body.appendChild(container);
             }
             this.container = container;
             
-            // 加载保存的方案名和用户昵称
+            // 加載保存的方案名和用戶暱稱
             this.loadTitleInputs();
         }
 
         /**
-         * 创建键盘布局
-         * 和其他的网站的热力图不同，这里宇浩认为应当创建一个完整的键盘布局，
-         * 包括所有的字母、数字和符号键，以及常用的功能键。
-         * 这样可以更直观地展示按键的使用频率和热力分布。
-         * 在输入法界，通常认为左手理论按键频率太大不好，
-         * 但是实际上右手的实际按键频率也很高，因为符号区、回车键、回改键
-         * 以及其他常用的功能键都在右手区域。
+         * 創建鍵盤佈局
+         * 和其他的網站的熱力圖不同，這裡宇浩認為應當創建一個完整的鍵盤佈局，
+         * 包括所有的字母、數字和符號鍵，以及常用的功能鍵。
+         * 這樣可以更直觀地展示按鍵的使用頻率和熱力分布。
+         * 在輸入法界，通常認為左手理論按鍵頻率太大不好，
+         * 但是實際上右手的實際按鍵頻率也很高，因為符號區、回車鍵、回改鍵
+         * 以及其他常用的功能鍵都在右手區域。
          */
         createKeyboard() {
             const keyboard = this.container.querySelector('.key-heatmap-board');
             
-            // 键盘布局定义，严格区分左右修饰键
+            // 鍵盤佈局定義，嚴格區分左右修飾鍵
             const layout = [
                 ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
                 ['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
@@ -544,7 +544,7 @@ define([], function () {
         }
 
         /**
-         * 更新热力图显示
+         * 更新熱力圖顯示
          */
         updateDisplay() {
             if (!this.container) return;
@@ -553,7 +553,7 @@ define([], function () {
             this.container.querySelector('.total-keys').textContent = totalKeys.toLocaleString();
             this.container.querySelector('.max-frequency').textContent = this.maxFrequency.toLocaleString();
 
-            // 计算并更新左右手互击率
+            // 計算並更新左右手互擊率
             const handStats = this.calculateHandAlternationRate();
             const alternationRateElement = this.container.querySelector('.alternation-rate');
             const alternationCountElement = this.container.querySelector('.alternation-count');
@@ -569,7 +569,7 @@ define([], function () {
                 sameHandCountElement.textContent = handStats.sameHand.toLocaleString();
             }
 
-            // 计算并更新当量信息
+            // 計算並更新當量信息
             const equivStats = this.calculateWeightedEquivalent();
             const averageEquivElement = this.container.querySelector('.average-equiv');
             const validPairsElement = this.container.querySelector('.valid-pairs');
@@ -578,29 +578,29 @@ define([], function () {
                 if (this.equivTableLoaded) {
                     averageEquivElement.textContent = equivStats.averageEquiv.toFixed(2);
                 } else {
-                    averageEquivElement.textContent = '加载中...';
+                    averageEquivElement.textContent = '加載中...';
                 }
             }
             if (validPairsElement) {
                 if (this.equivTableLoaded) {
                     validPairsElement.textContent = equivStats.totalValidPairs.toLocaleString();
                 } else {
-                    validPairsElement.textContent = '加载中...';
+                    validPairsElement.textContent = '加載中...';
                 }
             }
 
-            // 更新每个按键的热力图显示
+            // 更新每個按鍵的熱力圖顯示
             this.container.querySelectorAll('.key-item').forEach(keyElement => {
                 const key = keyElement.dataset.key;
                 const frequency = this.keyStats[key] || 0;
                 const intensity = this.maxFrequency > 0 ? frequency / this.maxFrequency : 0;
                 const percentage = totalKeys > 0 ? ((frequency / totalKeys) * 100).toFixed(1) : '0.0';
                 
-                // 设置热力图颜色
+                // 設置熱力圖顏色
                 keyElement.style.setProperty('--intensity', intensity);
                 keyElement.setAttribute('title', `${key}: ${frequency} 次 (${percentage}%)`);
                 
-                // 更新百分比显示
+                // 更新百分比顯示
                 const percentageElement = keyElement.querySelector('.key-percentage');
                 if (percentageElement) {
                     percentageElement.textContent = `${percentage}%`;
@@ -609,7 +609,7 @@ define([], function () {
         }
 
         /**
-         * 导出统计数据
+         * 導出統計數據
          */
         exportStats() {
             const totalKeyPairs = Object.values(this.keyPairStats).reduce((sum, count) => sum + count, 0);
@@ -619,13 +619,13 @@ define([], function () {
             const data = {
                 stats: this.keyStats,
                 keyPairStats: this.keyPairStats,
-                handAlternationStats: handStats, // 新增：左右手互击率数据
-                equivalentStats: equivStats, // 新增：当量统计数据
+                handAlternationStats: handStats,
+                equivalentStats: equivStats,
                 maxFrequency: this.maxFrequency,
                 totalKeys: Object.values(this.keyStats).reduce((sum, count) => sum + count, 0),
                 totalKeyPairs: totalKeyPairs,
                 exportTime: new Date().toISOString(),
-                version: '1.3', // 版本升级，表示包含当量数据
+                version: '1.0',
                 website: 'https://genda.shurufa.app',
                 description: '按鍵統計數據（包含左右手互擊率分析和當量分析）',
             };
@@ -633,23 +633,49 @@ define([], function () {
             const dataStr = JSON.stringify(data, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             
+            // 生成自定義文件名
+            const schemeInput = this.container ? this.container.querySelector('.scheme-input') : null;
+            const userInput = this.container ? this.container.querySelector('.user-input') : null;
+            const schemeName = schemeInput ? schemeInput.value.trim() : '';
+            const userName = userInput ? userInput.value.trim() : '';
+            
+            // 生成日期和時間字符串
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0].replace(/-/g, ''); // YYYYMMDD
+            const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, ''); // HHmmss
+            
+            let filename;
+            if (schemeName && userName) {
+                // 如果有方案名稱和用戶暱稱
+                filename = `genda.shurufa.app-${schemeName}-${userName}-${dateStr}-${timeStr}.json`;
+            } else if (schemeName) {
+                // 如果只有方案名稱
+                filename = `genda.shurufa.app-${schemeName}-${dateStr}-${timeStr}.json`;
+            } else if (userName) {
+                // 如果只有用戶暱稱
+                filename = `genda.shurufa.app-${userName}-${dateStr}-${timeStr}.json`;
+            } else {
+                // 如果沒有填寫任何信息
+                filename = `genda.shurufa.app-${dateStr}-${timeStr}.json`;
+            }
+            
             const link = document.createElement('a');
             link.href = URL.createObjectURL(dataBlob);
-            link.download = `genda.shurufa.app-key-stats-${new Date().toISOString().split('T')[0]}.json`;
+            link.download = filename;
             link.click();
             
             URL.revokeObjectURL(link.href);
         }
 
         /**
-         * 导入统计数据
+         * 導入統計數據
          */
         importStats() {
             document.getElementById('keyHeatmapFileInput').click();
         }
 
         /**
-         * 处理文件导入
+         * 處理文件導入
          */
         handleFileImport(event) {
             const file = event.target.files[0];
