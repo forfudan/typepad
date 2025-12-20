@@ -5,10 +5,10 @@
   "builtinCodeTables": [
     {
       "key": "yuhao-ming",
-      "name": "宇浩·日月",
+      "name": "日月",
       "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ming.txt",
       "format": "code_first",
-      "description": "世上首款純形前綴碼",
+      "description": "世上首款純形前綴碼·宇浩系列輸入法",
       "website": "https://shurufa.app/",
       "category": "形碼",
       "enabled": true
@@ -18,28 +18,38 @@
       "name": "卿雲",
       "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-joy.txt",
       "format": "code_first",
-      "description": "卿雲輸入法",
+      "description": "宇浩系列輸入法",
       "website": "https://shurufa.app/",
       "category": "形碼",
       "enabled": true
     },
     {
       "key": "yuhao-light",
-      "name": "宇浩·光華",
+      "name": "光華",
       "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-light.txt",
       "format": "code_first",
-      "description": "宇浩光華方案",
+      "description": "宇浩系列輸入法",
       "website": "https://shurufa.app/",
       "category": "形碼",
       "enabled": true
     },
     {
       "key": "yuhao-star",
-      "name": "宇浩·星陳",
+      "name": "星陳",
       "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-star.txt",
       "format": "code_first",
-      "description": "宇浩星陳方案",
+      "description": "宇浩系列輸入法",
       "website": "https://shurufa.app/",
+      "category": "形碼",
+      "enabled": true
+    },
+    {
+      "key": "yuhao-ling",
+      "name": "靈明",
+      "url": "https://raw.githubusercontent.com/forfudan/yu/main/src/public/mabiao-ling.txt",
+      "format": "code_first",
+      "description": "配天之靈",
+      "website": "https://ling.shurufa.app/",
       "category": "形碼",
       "enabled": true
     },
